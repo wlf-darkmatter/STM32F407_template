@@ -340,7 +340,4 @@ ASALocalRun/
 healthchecksdb
 /Listings
 /Objects
-/STM32.vcxproj.filters
-/STM32.vcxproj
-/STM32.sln
-/STM32.rc
+

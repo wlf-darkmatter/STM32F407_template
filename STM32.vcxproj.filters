@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="CORE">
+      <UniqueIdentifier>{93cd2408-43db-4aa8-8f1a-e2388ec8dbc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FWLIB">
+      <UniqueIdentifier>{ad558960-daea-406c-8da5-7dd9cd6e6834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FWLIB\inc">
+      <UniqueIdentifier>{10c9ea42-33af-472e-aedc-c93689eda020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FWLIB\src">
+      <UniqueIdentifier>{2a43f01a-f0e8-45f1-b8a4-29feb561c16d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HardWare">
+      <UniqueIdentifier>{a2c6dbf3-995c-460f-957a-5268d09c0b4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SYSTEM">
+      <UniqueIdentifier>{09d67bcd-1694-4513-8c45-930041c49e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="USER">
+      <UniqueIdentifier>{1ad87b5a-e857-4adb-b636-a3892cc5b703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Font">
+      <UniqueIdentifier>{fde780cd-9b8b-4431-8998-f409f15a964d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CORE\core_cm4.h">
+      <Filter>CORE</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\misc.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_adc.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_can.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_crc.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_cryp.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_dac.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_dbgmcu.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_dcmi.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_dma.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_dma2d.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_exti.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_flash.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_flash_ramfunc.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_fmc.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_fsmc.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_gpio.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_i2c.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_iwdg.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_ltdc.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_pwr.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_rcc.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_rng.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_rtc.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_sai.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_sdio.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_spi.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_syscfg.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_tim.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_usart.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_wwdg.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\stm32f4xx_hash.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="HardWare\LED_STM32F407ZET6.h">
+      <Filter>HardWare</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEM\delay.h">
+      <Filter>SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEM\sys.h">
+      <Filter>SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEM\usart.h">
+      <Filter>SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="USER\stm32f4xx_conf.h">
+      <Filter>USER</Filter>
+    </ClInclude>
+    <ClInclude Include="USER\stm32f4xx_it.h">
+      <Filter>USER</Filter>
+    </ClInclude>
+    <ClInclude Include="USER\system_stm32f4xx.h">
+      <Filter>USER</Filter>
+    </ClInclude>
+    <ClInclude Include="USER\stm32f4xx.h">
+      <Filter>USER</Filter>
+    </ClInclude>
+    <ClInclude Include="CORE\core_cm4_simd.h">
+      <Filter>CORE</Filter>
+    </ClInclude>
+    <ClInclude Include="CORE\core_cmFunc.h">
+      <Filter>CORE</Filter>
+    </ClInclude>
+    <ClInclude Include="CORE\core_cmInstr.h">
+      <Filter>CORE</Filter>
+    </ClInclude>
+    <ClInclude Include="HardWare\Beep.h">
+      <Filter>HardWare</Filter>
+    </ClInclude>
+    <ClInclude Include="HardWare\Key_STM32F407ZET6.h">
+      <Filter>HardWare</Filter>
+    </ClInclude>
+    <ClInclude Include="HardWare\Tim.h">
+      <Filter>HardWare</Filter>
+    </ClInclude>
+    <ClInclude Include="HardWare\PWM.h">
+      <Filter>HardWare</Filter>
+    </ClInclude>
+    <ClInclude Include="HardWare\OLED.h">
+      <Filter>HardWare</Filter>
+    </ClInclude>
+    <ClInclude Include="FWLIB\inc\wlf_I2C.h">
+      <Filter>FWLIB\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Font\oledfont.h">
+      <Filter>Font</Filter>
+    </ClInclude>
+    <ClInclude Include="HardWare\WIFI_ESP8266.h">
+      <Filter>HardWare</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FWLIB\src\misc.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_adc.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_can.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_crc.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_cryp.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_cryp_aes.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_cryp_des.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_cryp_tdes.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_dac.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_dbgmcu.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_dcmi.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_dma.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_dma2d.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_exti.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_flash.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_flash_ramfunc.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_fmc.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_fsmc.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_gpio.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_hash.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_hash_md5.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_hash_sha1.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_i2c.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_iwdg.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_ltdc.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_pwr.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_rcc.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_rng.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_rtc.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_sai.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_sdio.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_spi.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_syscfg.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_tim.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_usart.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\stm32f4xx_wwdg.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="HardWare\Beep.c">
+      <Filter>HardWare</Filter>
+    </ClCompile>
+    <ClCompile Include="HardWare\LED_STM32F407ZET6.c">
+      <Filter>HardWare</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\delay.c">
+      <Filter>SYSTEM</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\sys.c">
+      <Filter>SYSTEM</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\usart.c">
+      <Filter>SYSTEM</Filter>
+    </ClCompile>
+    <ClCompile Include="USER\stm32f4xx_it.c">
+      <Filter>USER</Filter>
+    </ClCompile>
+    <ClCompile Include="USER\system_stm32f4xx.c">
+      <Filter>USER</Filter>
+    </ClCompile>
+    <ClCompile Include="USER\main.c">
+      <Filter>USER</Filter>
+    </ClCompile>
+    <ClCompile Include="HardWare\Key_STM32F407ZET6.c">
+      <Filter>HardWare</Filter>
+    </ClCompile>
+    <ClCompile Include="HardWare\Tim.c">
+      <Filter>HardWare</Filter>
+    </ClCompile>
+    <ClCompile Include="HardWare\PWM.c">
+      <Filter>HardWare</Filter>
+    </ClCompile>
+    <ClCompile Include="HardWare\OLED.c">
+      <Filter>HardWare</Filter>
+    </ClCompile>
+    <ClCompile Include="FWLIB\src\wlf_I2C.c">
+      <Filter>FWLIB\src</Filter>
+    </ClCompile>
+    <ClCompile Include="HardWare\WIFI_ESP8266.c">
+      <Filter>HardWare</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CORE\startup_stm32f40_41xxx.s">
+      <Filter>CORE</Filter>
+    </None>
+  </ItemGroup>
+</Project>
