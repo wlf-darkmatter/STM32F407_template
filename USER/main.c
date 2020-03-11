@@ -30,25 +30,17 @@ int main(void) {
 	OLED_DrawStr(0, 0, "Welcome [LiuQian].", 12, 1);
 	OLED_DrawStr(0, 12, "OLED Initialized", 12, 1);
 
-	printf("ESP8266_init-----------------\n");
+	
 	ESP8266_init();	//esp8266进行初始化
 
-	printf("ESP8266_WiFiEmit-----------------\n");
 	ESP8266_WiFiEmit("WLF-Control", "00000000");
 	
-	printf("ESP8266_WiFiConnect-----------------\n");
 	ESP8266_WiFiConnect("东南沿海王大哥", "19981213");
 
 //	ESP8266_WiFiConnect("地球暗物质", "wang123456");
-	printf("ESP8266_TCP_Server-----------------\n");
+	
 	ESP8266_TCP_Server();
-	printf("ESP8266_restart-----------------\n");
-	ESP8266_restart();
 
-	printf("ESP8266_send_data-----------------\n");
-	ESP8266_send_data("12", 50);
-	printf("ESP8266_quit_trans-----------------\n");
-	ESP8266_quit_trans();
 /*
 	OLED_DrawChar(0, 0, 'P', 24, 1);
 	OLED_DrawStr(0, 0, "I love you ",24,1);

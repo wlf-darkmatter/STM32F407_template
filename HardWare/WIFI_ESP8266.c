@@ -55,6 +55,7 @@ u16 USART2_RX_STA = 0;
 char info[50];
 
 void ESP8266_restart(void) {
+	printf("-----------------ESP8266_restart-----------------\n");
 	//让Wifi模块重启的命令
 	printf("进入重启程序\n");
 	for (int i = 0; i < 10; i++) {//重复次数不大于10*3次
@@ -74,7 +75,7 @@ void ESP8266_restart(void) {
 //占用OLED一小部分用于显示
 //设置工作模式 1：station模式   2：AP模式  3：兼容 AP+station模式	
 void ESP8266_init(void) {
-	
+	printf("-----------------ESP8266_init-----------------\n");
 	TIM7_INT_Init(1000 - 1, 840 - 1);		//10ms中断
 	usart2_init(115200);
 	int timeout = (int)Get_TIMx_OutputTime(TIM7);
@@ -110,6 +111,8 @@ AT+CIPMODE=<mode>		OK					是否进入透传模式
 }
 
 void ESP8266_WiFiConnect(char* SSID, char* passward) {
+
+	printf("-----------------ESP8266_WiFiConnect-----------------\n");
 	char CWJAP_str[60];//用于存放控制命令
 	memset(CWJAP_str, '\0', 60 * sizeof(char));//清零
 
@@ -146,7 +149,7 @@ void ESP8266_WiFiConnect(char* SSID, char* passward) {
 //	chl : 通道号
 //	ecn : 加密方式:（0 - OPEN， 1 - WEP， 2 - WPA_PSK， 3 - WPA2_PSK， 4 - WPA_WPA2_PSK）
 void ESP8266_WiFiEmit(char* SSID, char* passward) {
-	
+	printf("-----------------ESP8266_WiFiEmit-----------------\n");
 	char CWSAP_str[60];//用于存放控制命令
 	memset(CWSAP_str, '\0', 60 * sizeof(char));//清零
 
@@ -174,6 +177,7 @@ void ESP8266_WiFiEmit(char* SSID, char* passward) {
 }
 
 void ESP8266_TCP_Server(void) {
+	printf("-----------------ESP8266_TCP_Server-----------------\n");
 	char TCP_info[50];
 	memset(TCP_info, '\0', 50 * sizeof(char));//清零
 
@@ -208,8 +212,8 @@ void ESP8266_TCP_Server(void) {
 	*************************************************************************
 	*/
 	if (ESP8266_send_cmd("AT+CIPSERVER=1,525", "OK", 200) == 0) {//创建服务器
-		OLED_DrawStr(0, 48, "TCP Established.      ", 12, 1);
-		delay_ms(4000);
+		OLED_DrawStr(0, 48, "TCP Established.        ", 12, 1);
+
 
 		/*例如：
 		CIFSR:APIP,"192.168.4.1"
@@ -349,8 +353,8 @@ u8* ESP8266_check_cmd(u8* str) {
 
 //ESP8266退出透传模式   返回值:0,退出成功;1,退出失败
 //配置wifi模块，通过想wifi模块连续发送3个+（每个+号之间 超过10ms,这样认为是连续三次发送+）
-u8 ESP8266_quit_trans(void)
-{
+u8 ESP8266_quit_trans(void) {
+	printf("-----------------ESP8266_quit_trans-----------------\n");
 	u8 result = 1;
 	usart2_printf("+++");
 	delay_ms(1000);					//等待500ms太少 要1000ms才可以退出
@@ -500,8 +504,8 @@ void TIM7_INT_Init(u16 arr, u16 psc) {
 //向ESP8266发送数据
 //cmd:发送的命令字符串;waittime:等待时间(单位:10ms)
 //返回值:发送数据后，服务器的返回验证码
-u8* ESP8266_send_data(char* cmd, u16 waittime)
-{
+u8* ESP8266_send_data(char* cmd, u16 waittime) {
+	printf("-----------------ESP8266_send_data-----------------\n");
 	char temp[5];
 	char* ack = temp;
 	USART2_RX_STA = 0;
