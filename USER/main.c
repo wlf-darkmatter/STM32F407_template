@@ -15,10 +15,8 @@
 
 int main(void) {
 
-
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
 	
-
 	delay_init(168);
 	LED_Init();
 //	Beep_Init();
