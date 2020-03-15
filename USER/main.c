@@ -9,6 +9,7 @@
 #include <wlf_I2C.h>
 #include <OLED.h>
 #include <WIFI_ESP8266.h>
+#include <TFT_LCD_2.8in.h>
 /*不要使用PA13和PA14，它们分别对应着SW-DIO和SW-CLK，且本身一直处于AF复用模式*/
 
 
@@ -31,16 +32,17 @@ int main(void) {
 	OLED_DrawStr(0, 12, "OLED Initialized", 12, 1);
 
 	
-	ESP8266_init();	//esp8266进行初始化
+//	ESP8266_init();	//esp8266进行初始化
 
-	ESP8266_WiFiEmit("WLF-Control", "00000000");
+//	ESP8266_WiFiEmit("WLF-Control", "00000000");
 	
-	ESP8266_WiFiConnect("东南沿海王大哥", "19981213");
+//	ESP8266_WiFiConnect("东南沿海王大哥", "19981213");
 
 //	ESP8266_WiFiConnect("地球暗物质", "wang123456");
 	
-	ESP8266_TCP_Server();
+//	ESP8266_TCP_Server();
 
+	TFT_PinDetect(ENABLE);
 /*
 	OLED_DrawChar(0, 0, 'P', 24, 1);
 	OLED_DrawStr(0, 0, "I love you ",24,1);
@@ -77,3 +79,8 @@ int main(void) {
 
 TIM3_INT_Init(5000 - 1, 8400 - 1);//一般情况下，Tout=(I+1)*(II+1)/84 (单位us)
 */
+
+
+
+
+
