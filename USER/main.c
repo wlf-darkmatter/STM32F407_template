@@ -21,7 +21,7 @@ int main(void) {
 	LED_Init();
 //	Beep_Init();
 	usart1_init(57600);
-	
+
 
 	Key_Init();
 	OLED_Init();
@@ -40,7 +40,7 @@ int main(void) {
 	
 //	ESP8266_TCP_Server();
 
-	TFT_PinDetect(ENABLE);
+//	TFT_PinDetect(ENABLE);
 /*
 	OLED_DrawChar(0, 0, 'P', 24, 1);
 	OLED_DrawStr(0, 0, "I love you ",24,1);
@@ -56,9 +56,6 @@ int main(void) {
 */
 
 	
-
-
-
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);//降低系统中断优先级分组4
 	while (1) {
