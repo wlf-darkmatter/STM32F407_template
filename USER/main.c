@@ -22,14 +22,15 @@ int main(void) {
 //	Beep_Init();
 	usart1_init(57600);
 
-
+	LCD_Init();
+	
 	Key_Init();
 	OLED_Init();
 	OLED_Clear();
 	OLED_DrawStr(0, 0, "Welcome [LiuQian].", 12, 1);
 	OLED_DrawStr(0, 12, "OLED Initialized", 12, 1);
 
-	
+
 //	ESP8266_init();	//esp8266进行初始化
 
 //	ESP8266_WiFiEmit("WLF-Control", "00000000");

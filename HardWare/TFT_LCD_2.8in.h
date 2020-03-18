@@ -130,7 +130,7 @@ void LCD_Set_Window(u16 sx, u16 sy, u16 width, u16 height);	//设置窗口
 void LCD_Init(void);
 
 void LCD_FSMC_Init(void);//配置FSMC的设置
-void LCD_GPIO_Init(void);//配置FSMC对应的IO口
+void LCD_TFTPin_Init(void);//配置FSMC对应的IO口
 
 
 
