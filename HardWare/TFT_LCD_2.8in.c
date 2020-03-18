@@ -3,36 +3,174 @@
 #include <delay.h>
 #include "usart.h"
 void LCD_Init(void){
+	LCD_FSMC_Init();
+	LCD_GPIO_Init();
 
-	
-
-
-
-//	FSMC_NORSRAMInit();
 	}
 
+//写寄存器
+//LCD_Reg:寄存器地址
+//LCD_RegValue:要写入的数据
+void LCD_WriteReg(u16 LCD_Reg, u16 LCD_RegValue) {
+	LCD->LCD_REG = LCD_Reg;		//写入要写的寄存器序号	 
+	LCD->LCD_RAM = LCD_RegValue;//写入数据	    		 
+}
+//读寄存器
+//LCD_Reg:寄存器地址
+//返回值:读到的数据
+u16 LCD_ReadReg(u16 LCD_Reg) {
+	LCD->LCD_REG = LCD_Reg;	//写入要读的寄存器序号
+	delay_us(5);
+	return LCD->LCD_RAM;	//返回读到的值
+}
+
+
 void LCD_FSMC_Init(void) {
-	
 	FSMC_NORSRAMInitTypeDef LCD_FSMC_InitStructure;
 
 	LCD_FSMC_InitStructure.FSMC_Bank = FSMC_Bank1_NORSRAM4;//使用Bank1的储存块4
 	LCD_FSMC_InitStructure.FSMC_MemoryType = FSMC_MemoryType_SRAM;//储存模式为SRAM
-	LCD_FSMC_InitStructure.FSMC_ExtendedMode = FSMC_ExtendedMode_Enable;//使用拓展功能
+	LCD_FSMC_InitStructure.FSMC_ExtendedMode = FSMC_ExtendedMode_Enable;//使用拓展功能,读写使用不同的时序
 	LCD_FSMC_InitStructure.FSMC_MemoryDataWidth= FSMC_MemoryDataWidth_16b;//使用的是16位
-	LCD_FSMC_InitStructure.FSMC_WriteOperation=FSMC_WriteOperation_Enable;//使能【写】
-	LCD_FSMC_InitStructure.FSMC_DataAddressMux=FSMC_DataAddressMux_Disable;//地址位和数据位复用吗?【不复用】
-	FSMC_NORSRAMInit(&LCD_FSMC_InitStructure);
-
-
-	FSMC_NORSRAMTimingInitTypeDef LCD_FSMC_RWT_Structure;//Read & Write Timing——【FSMC_BTRx】
-	FSMC_NORSRAMTimingInitTypeDef LCD_FSMC_WT_Structure;//Write Timing——【FSMC_BWTRx】
-
+	LCD_FSMC_InitStructure.FSMC_WriteOperation = FSMC_WriteOperation_Enable;//使能【写】
+	LCD_FSMC_InitStructure.FSMC_DataAddressMux = FSMC_DataAddressMux_Disable;//地址位和数据位复用吗?【不复用】
+	LCD_FSMC_InitStructure.FSMC_BurstAccessMode = FSMC_BurstAccessMode_Disable;// FSMC_BurstAccessMode_Disable; 
+	LCD_FSMC_InitStructure.FSMC_WaitSignalPolarity = FSMC_WaitSignalPolarity_Low;//等待信号极性=【低】
+	LCD_FSMC_InitStructure.FSMC_AsynchronousWait = FSMC_AsynchronousWait_Disable;//异步等待=【不可用】
+	LCD_FSMC_InitStructure.FSMC_WrapMode = FSMC_WrapMode_Disable;
+	LCD_FSMC_InitStructure.FSMC_WaitSignalActive = FSMC_WaitSignalActive_BeforeWaitState;
+	LCD_FSMC_InitStructure.FSMC_WriteBurst = FSMC_WriteBurst_Disable;
 	
+	//配置读写模式相关的结构体【FSMC_NORSRAMTimingInitTypeDef】【FSMC_NORSRAMTimingInitTypeDef】
+	FSMC_NORSRAMTimingInitTypeDef  LCD_FSMC_RWT_Structure;//Read & Write Timing——【FSMC_BTRx】
+	FSMC_NORSRAMTimingInitTypeDef  LCD_FSMC_WT_Structure;//Write Timing——【FSMC_BWTRx】
+	{
+		LCD_FSMC_RWT_Structure.FSMC_AddressSetupTime = 0XF;		//地址建立时间（ADDSET）为16个HCLK 1/168M=6ns*16=96ns
+		LCD_FSMC_RWT_Structure.FSMC_AddressHoldTime = 0x00;		//地址保持时间（ADDHLD）模式A未用到	
+		LCD_FSMC_RWT_Structure.FSMC_DataSetupTime = 60;			//数据保存时间为60个HCLK	=6*60=360ns
+		LCD_FSMC_RWT_Structure.FSMC_BusTurnAroundDuration = 0x00;
+		LCD_FSMC_RWT_Structure.FSMC_CLKDivision = 0x00;
+		LCD_FSMC_RWT_Structure.FSMC_DataLatency = 0x00;
+		LCD_FSMC_RWT_Structure.FSMC_AccessMode = FSMC_AccessMode_A;	//模式A 
+
+		LCD_FSMC_WT_Structure.FSMC_AddressSetupTime = 9;		//地址建立时间（ADDSET）为9个HCLK =54ns 
+		LCD_FSMC_WT_Structure.FSMC_AddressHoldTime = 0x00;	//地址保持时间（A		
+		LCD_FSMC_WT_Structure.FSMC_DataSetupTime = 8;			//数据保存时间为6ns*9个HCLK=54ns
+		LCD_FSMC_WT_Structure.FSMC_BusTurnAroundDuration = 0x00;
+		LCD_FSMC_WT_Structure.FSMC_CLKDivision = 0x00;
+		LCD_FSMC_WT_Structure.FSMC_DataLatency = 0x00;
+		LCD_FSMC_WT_Structure.FSMC_AccessMode = FSMC_AccessMode_A;	 //模式A 
+	}
+
+	LCD_FSMC_InitStructure.FSMC_ReadWriteTimingStruct = &LCD_FSMC_RWT_Structure;	//读写时序
+	LCD_FSMC_InitStructure.FSMC_WriteTimingStruct = &LCD_FSMC_WT_Structure;			//写时序
+
+	FSMC_NORSRAMInit(&LCD_FSMC_InitStructure);
+	FSMC_NORSRAMCmd(FSMC_Bank1_NORSRAM4, ENABLE);  // 使能BANK1 
+	RCC_AHB3PeriphClockCmd(RCC_AHB3Periph_FSMC, ENABLE);//使能FSMC时钟
+}
+void LCD_GPIO_Init(void) {
+	GPIO_InitTypeDef LCD_Pin_InitStructure;
+	/******************************************/
+	//【地址线】A0-A15
+	/******************************************/
+	//PF0、PF1、PF2、PF3、PF4、PF5、  PF12、PF13、PF14、PF15
+	//A0、 A1、 A2、 A3、 A4、 A5、   A6、  A7、  A8、  A9
+	LCD_Pin_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+	LCD_Pin_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
+	LCD_Pin_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
+	LCD_Pin_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
+	LCD_Pin_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
+	GPIO_Init(GPIOF, &LCD_Pin_InitStructure);//初始化 
+	//PG0、PG1、PG2、PG3、PG4、PG5
+	//A10、A11、A12、A13、A14、A15
+	LCD_Pin_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5;
+	LCD_Pin_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
+	LCD_Pin_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
+	LCD_Pin_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
+	LCD_Pin_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
+	GPIO_Init(GPIOG, &LCD_Pin_InitStructure);//初始化 
+
+
+
+	/************************************/
+	//检测【数据线】D0-D7
+	/************************************/
+
+	//PD14 PD15 PD0 PD1
+	//D0   D1   D2  D3
+	LCD_Pin_InitStructure.GPIO_Pin = GPIO_Pin_14 | GPIO_Pin_15 | GPIO_Pin_0 | GPIO_Pin_1;
+	LCD_Pin_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
+	LCD_Pin_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
+	LCD_Pin_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
+	LCD_Pin_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
+	GPIO_Init(GPIOD, &LCD_Pin_InitStructure);//初始化
+	//PE7  PE8  PE9  PE10
+	//D4   D5   D6   D7
+	LCD_Pin_InitStructure.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10;
+	LCD_Pin_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
+	LCD_Pin_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
+	LCD_Pin_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
+	LCD_Pin_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
+	GPIO_Init(GPIOE, &LCD_Pin_InitStructure);//初始化
+
+	//PD4 PD5 PD6	
+	//NOE NWE NWAIT
+	LCD_Pin_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6;
+	LCD_Pin_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
+	LCD_Pin_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
+	LCD_Pin_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
+	LCD_Pin_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
+	GPIO_Init(GPIOD, &LCD_Pin_InitStructure);//初始化
+
+	//FSMC NE4
+	//PG12
+	LCD_Pin_InitStructure.GPIO_Pin = GPIO_Pin_12;
+	LCD_Pin_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
+	LCD_Pin_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
+	LCD_Pin_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
+	LCD_Pin_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
+	GPIO_Init(GPIOG, &LCD_Pin_InitStructure);//初始化
+
+	//PB0
+	LCD_Pin_InitStructure.GPIO_Pin = GPIO_Pin_0;
+	LCD_Pin_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
+	LCD_Pin_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
+	LCD_Pin_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
+	LCD_Pin_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
+	GPIO_Init(GPIOB, &LCD_Pin_InitStructure);//初始化
+
+
+
+
+
+	GPIO_PinAFConfig(GPIOD, GPIO_PinSource0, GPIO_AF_FSMC);//PD0,AF12
+	GPIO_PinAFConfig(GPIOD, GPIO_PinSource1, GPIO_AF_FSMC);//PD1,AF12
+	GPIO_PinAFConfig(GPIOD, GPIO_PinSource4, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOD, GPIO_PinSource5, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOD, GPIO_PinSource8, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOD, GPIO_PinSource9, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOD, GPIO_PinSource10, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOD, GPIO_PinSource14, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOD, GPIO_PinSource15, GPIO_AF_FSMC);//PD15,AF12
+
+	GPIO_PinAFConfig(GPIOE, GPIO_PinSource7, GPIO_AF_FSMC);//PE7,AF12
+	GPIO_PinAFConfig(GPIOE, GPIO_PinSource8, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOE, GPIO_PinSource9, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOE, GPIO_PinSource10, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOE, GPIO_PinSource11, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOE, GPIO_PinSource12, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOE, GPIO_PinSource13, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOE, GPIO_PinSource14, GPIO_AF_FSMC);
+	GPIO_PinAFConfig(GPIOE, GPIO_PinSource15, GPIO_AF_FSMC);//PE15,AF12
+
+	GPIO_PinAFConfig(GPIOF, GPIO_PinSource12, GPIO_AF_FSMC);//PF12,AF12
+	GPIO_PinAFConfig(GPIOG, GPIO_PinSource12, GPIO_AF_FSMC);
+
 
 
 
 }
-
 void TFT_PinDetect(FunctionalState NewState) {
 	if (NewState == DISABLE) {
 		return;
