@@ -10,8 +10,8 @@
 #include <OLED.h>
 #include <WIFI_ESP8266.h>
 #include <TFT_LCD_2.8in.h>
-/*不要使用PA13和PA14，它们分别对应着SW-DIO和SW-CLK，且本身一直处于AF复用模式*/
-
+/*不要使用PA13和PA14，它们分别对应着【SW-DIO】和【SW-CLK】，且本身一直处于AF复用模式*/
+/*配置外设的时候要记得先使能时钟，然后在配置，因为需要一段时间等待时钟正常运行*/
 
 int main(void) {
 

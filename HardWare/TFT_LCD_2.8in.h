@@ -2,8 +2,7 @@
 #define __TFT_LCD_2_8IN_H
 #include "sys.h"
 
-typedef struct
-{
+typedef struct {
 	u16 width;			//LCD 宽度
 	u16 height;			//LCD 高度
 	u16 id;				//LCD ID
@@ -24,15 +23,14 @@ extern u16  BACK_COLOR; //背景颜色.默认为白色
 //-----------------LCD端口定义---------------- 
 #define	LCD_LED PBout(15)  		//LCD背光    		 PB15 	    
 //LCD地址结构体
-typedef struct
-{
+typedef struct {
 	u16 LCD_REG;
 	u16 LCD_RAM;
 } LCD_TypeDef;
 
-//使用NOR/SRAM的 Bank1.sector4,地址位HADDR[27,26]=11 A6作为数据命令区分线 
-//注意设置时STM32内部会右移一位对齐! 111 1110=0X7E			    
-#define LCD_BASE        ((u32)(0x6C000000 | 0x0000007E))
+//使用NOR/SRAM的 Bank1.sector4,地址位HADDR[27,26]=11 A6作为数据命令区分线
+//注意设置时STM32内部会右移一位对齐! 111 1110=0X7E
+#define LCD_BASE        ((u32)(0x6C000000 + 0x0000007E))
 #define LCD             ((LCD_TypeDef *) LCD_BASE)
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -51,8 +49,8 @@ typedef struct
 
 //画笔颜色
 #define WHITE         	 0xFFFF
-#define BLACK         	 0x0000	  
-#define BLUE         	 0x001F  
+#define BLACK         	 0x0000
+#define BLUE         	 0x001F
 #define BRED             0XF81F
 #define GRED 			 0XFFE0
 #define GBLUE			 0X07FF
@@ -67,7 +65,7 @@ typedef struct
 //GUI颜色
 
 #define DARKBLUE      	 0X01CF	//深蓝色
-#define LIGHTBLUE      	 0X7D7C	//浅蓝色  
+#define LIGHTBLUE      	 0X7D7C	//浅蓝色
 #define GRAYBLUE       	 0X5458 //灰蓝色
 //以上三色为PANEL的颜色 
 
@@ -78,7 +76,7 @@ typedef struct
 #define LGRAYBLUE        0XA651 //浅灰蓝色(中间层颜色)
 #define LBBLUE           0X2B12 //浅棕蓝色(选择条目的反色)
 
-void LCD_Init(void);													   	//初始化
+
 void LCD_DisplayOn(void);													//开显示
 void LCD_DisplayOff(void);													//关显示
 void LCD_Clear(u16 Color);	 												//清屏
@@ -96,14 +94,13 @@ void LCD_ShowNum(u16 x, u16 y, u32 num, u8 len, u8 size);  						//显示一个数字
 void LCD_ShowxNum(u16 x, u16 y, u32 num, u8 len, u8 size, u8 mode);				//显示 数字
 void LCD_ShowString(u16 x, u16 y, u16 width, u16 height, u8 size, u8* p);		//显示一个字符串,12/16字体
 
-void LCD_WriteReg(u16 LCD_Reg, u16 LCD_RegValue);
-u16 LCD_ReadReg(u16 LCD_Reg);
 void LCD_WriteRAM_Prepare(void);
 void LCD_WriteRAM(u16 RGB_Code);
 void LCD_SSD_BackLightSet(u8 pwm);							//SSD1963 背光控制
 void LCD_Scan_Dir(u8 dir);									//设置屏扫描方向
 void LCD_Display_Dir(u8 dir);								//设置屏幕显示方向
-void LCD_Set_Window(u16 sx, u16 sy, u16 width, u16 height);	//设置窗口					   						   																			 
+void LCD_Set_Window(u16 sx, u16 sy, u16 width, u16 height);	//设置窗口
+
 //LCD分辨率设置
 #define SSD_HOR_RESOLUTION		800		//LCD水平分辨率
 #define SSD_VER_RESOLUTION		480		//LCD垂直分辨率
@@ -125,6 +122,8 @@ void LCD_Set_Window(u16 sx, u16 sy, u16 width, u16 height);	//设置窗口
 
 
 
+void LCD_WriteReg(u16 LCD_Reg, u16 LCD_RegValue);
+u16 LCD_ReadReg(u16 LCD_Reg);
 
 //LCD的初始化函数
 void LCD_Init(void);

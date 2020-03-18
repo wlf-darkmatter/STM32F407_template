@@ -7,7 +7,10 @@ void LCD_Init(void){
 	LCD_TFTPin_Init();
 	LCD_FSMC_Init();
 
-	delay_ms(50);
+	/*******************/
+
+	/*****************/
+	delay_ms(30);
 	LCD_WriteReg(0x0000, 0x0001);
 	delay_ms(50); // delay 50 ms
 	printf("%d", LCD_ReadReg(0x0000));
@@ -20,6 +23,7 @@ void LCD_WriteReg(u16 LCD_Reg, u16 LCD_RegValue) {
 	LCD->LCD_REG = LCD_Reg;		//写入要写的寄存器序号	 
 	LCD->LCD_RAM = LCD_RegValue;//写入数据	    		 
 }
+
 //读寄存器
 //LCD_Reg:寄存器地址
 //返回值:读到的数据
@@ -31,6 +35,10 @@ u16 LCD_ReadReg(u16 LCD_Reg) {
 
 
 void LCD_FSMC_Init(void) {
+
+
+	RCC_AHB3PeriphClockCmd(RCC_AHB3Periph_FSMC, ENABLE);//使能FSMC时钟
+
 	FSMC_NORSRAMInitTypeDef LCD_FSMC_InitStructure;
 
 	LCD_FSMC_InitStructure.FSMC_Bank = FSMC_Bank1_NORSRAM4;//使用Bank1的储存块4
@@ -72,12 +80,15 @@ void LCD_FSMC_Init(void) {
 	LCD_FSMC_InitStructure.FSMC_ReadWriteTimingStruct = &LCD_FSMC_RWT_Structure;	//读写时序
 	LCD_FSMC_InitStructure.FSMC_WriteTimingStruct = &LCD_FSMC_WT_Structure;			//写时序
 
-	FSMC_NORSRAMInit(&LCD_FSMC_InitStructure);
+	FSMC_NORSRAMInit(&LCD_FSMC_InitStructure);//初始化FSMC配置
+
 	FSMC_NORSRAMCmd(FSMC_Bank1_NORSRAM4, ENABLE);  // 使能BANK1 
-	RCC_AHB3PeriphClockCmd(RCC_AHB3Periph_FSMC, ENABLE);//使能FSMC时钟
-	delay_ms(20);
+
 }
 void LCD_TFTPin_Init(void) {
+
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_GPIOE | RCC_AHB1Periph_GPIOF | RCC_AHB1Periph_GPIOG, ENABLE);//使能PD,PE,PF,PG时钟  
+
 	GPIO_InitTypeDef LCD_Pin_InitStructure;
 
 	/******************************************/
@@ -169,6 +180,13 @@ void LCD_TFTPin_Init(void) {
 	LCD_Pin_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
 	GPIO_Init(GPIOB, &LCD_Pin_InitStructure);//初始化
 
+	LCD_Pin_InitStructure.GPIO_Pin = GPIO_Pin_15;//PB15 推挽输出,控制背光
+	LCD_Pin_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
+	LCD_Pin_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
+	LCD_Pin_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;//100MHz
+	LCD_Pin_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
+	GPIO_Init(GPIOB, &LCD_Pin_InitStructure);//初始化 //PB15 推挽输出,控制背光
+
 
 //复用部分
 	GPIO_PinAFConfig(GPIOD, GPIO_PinSource14, GPIO_AF_FSMC);//PD14——	D0
@@ -194,7 +212,7 @@ void LCD_TFTPin_Init(void) {
 	GPIO_PinAFConfig(GPIOF, GPIO_PinSource12, GPIO_AF_FSMC);//PF12——	A6 = RS
 	GPIO_PinAFConfig(GPIOG, GPIO_PinSource12, GPIO_AF_FSMC);//PG12——	NE4 = CS
 
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_GPIOE | RCC_AHB1Periph_GPIOF | RCC_AHB1Periph_GPIOG, ENABLE);//使能PD,PE,PF,PG时钟  
+	
 
 
 }
