@@ -2,9 +2,10 @@
 #include "delay.h"
 #include "usart.h"
 #include <LED_STM32F407ZET6.h>
+#include <Key_STM32F407ZET6.h>
 #include <TFT_LCD.h>
 #include <Beep.h>
-#include <Key_STM32F407ZET6.h>
+
 #include <Tim.h>
 #include <PWM.h>
 #include <wlf_I2C.h>
@@ -15,6 +16,8 @@
 /*配置外设的时候要记得先使能时钟，然后在配置，因为需要一段时间等待时钟正常运行*/
 
 int main(void) {
+	u8 x = 0;
+	u8 lcd_id[12];
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
 	
@@ -22,14 +25,43 @@ int main(void) {
 	LED_Init();
 //	Beep_Init();
 	usart1_init(57600);
-	printf("%d", LCD_BASE);
 	LCD_Init();
-	
 	Key_Init();
 	OLED_Init();
 	OLED_Clear();
 	OLED_DrawStr(0, 0, "Welcome [LiuQian].", 12, 1);
 	OLED_DrawStr(0, 12, "OLED Initialized", 12, 1);
+
+	POINT_COLOR = RED;      //画笔颜色：红色
+	sprintf((char*)lcd_id, "LCD ID:%04X", lcddev.id);//将LCD ID打印到lcd_id数组。				 	
+	while (1)
+	{
+		switch (x)
+		{
+		case 0:LCD_Clear(WHITE); break;
+		case 1:LCD_Clear(BLACK); break;
+		case 2:LCD_Clear(BLUE); break;
+		case 3:LCD_Clear(RED); break;
+		case 4:LCD_Clear(MAGENTA); break;
+		case 5:LCD_Clear(GREEN); break;
+		case 6:LCD_Clear(CYAN); break;
+		case 7:LCD_Clear(YELLOW); break;
+		case 8:LCD_Clear(BRRED); break;
+		case 9:LCD_Clear(GRAY); break;
+		case 10:LCD_Clear(LGRAY); break;
+		case 11:LCD_Clear(BROWN); break;
+		}
+		POINT_COLOR = RED;
+		LCD_ShowString(30, 40, 210, 24, 24, "Explorer STM32F4");
+		LCD_ShowString(30, 70, 200, 16, 16, "TFTLCD TEST");
+		LCD_ShowString(30, 90, 200, 16, 16, "ATOM@ALIENTEK");
+		LCD_ShowString(30, 110, 200, 16, 16, lcd_id);		//显示LCD ID	      					 
+		LCD_ShowString(30, 130, 200, 12, 12, "2014/5/4");
+		x++;
+		if (x == 12)x = 0;
+		LED1 = !LED1;
+		delay_ms(1000);
+	}
 
 
 //	ESP8266_init();	//esp8266进行初始化
