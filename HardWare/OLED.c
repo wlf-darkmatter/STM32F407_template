@@ -323,7 +323,7 @@ void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode) {
 	}
 	for (t = 0; t < csize; t++)	{
 		temp = font[t];
-		for (t1 = 0; t1 < 8; t1++) {
+		for (t1 = 0; t1 < 8; t1++) {//读取一个字节中的信息
 			if (temp & 0x80)
 				OLED_DrawPoint(x, y, mode);
 			else 

@@ -2207,13 +2207,7 @@ void LCD_TFTPin_Init(void) {
 	LCD_Pin_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
 	LCD_Pin_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
 	GPIO_Init(GPIOG, &LCD_Pin_InitStructure);//初始化
-	//PB0
-	LCD_Pin_InitStructure.GPIO_Pin = GPIO_Pin_0;
-	LCD_Pin_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
-	LCD_Pin_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
-	LCD_Pin_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
-	LCD_Pin_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
-	GPIO_Init(GPIOB, &LCD_Pin_InitStructure);//初始化
+
 
 	LCD_Pin_InitStructure.GPIO_Pin = GPIO_Pin_15;//PB15 推挽输出,控制背光
 	LCD_Pin_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
@@ -3087,20 +3081,49 @@ void LCD_Draw_Circle(u16 x0, u16 y0, u8 r)
 //num:要显示的字符:" "--->"~"
 //size:字体大小 12/16/24
 //mode:叠加方式(1)还是非叠加方式(0)
-void LCD_ShowChar(u16 x, u16 y, u8 num, u8 size, u8 mode)
-{
+void LCD_ShowChar(u16 x, u16 y, u8 chr, u8 size, u8 mode) {
+	const unsigned char* font;
 	u8 temp, t1, t;
 	u16 y0 = y;
 	u8 csize = (size / 8 + ((size % 8) ? 1 : 0)) * (size / 2);		//得到字体一个字符对应点阵集所占的字节数	
-	num = num - ' ';//得到偏移后的值（ASCII字库是从空格开始取模，所以-' '就是对应字符的字库）
-	for (t = 0; t < csize; t++)
-	{
-		if (size == 12)temp = asc2_1206[num][t]; 	 	//调用1206字体
-		else if (size == 16)temp = asc2_1608[num][t];	//调用1608字体
-		else if (size == 24)temp = asc2_2412[num][t];	//调用2412字体
-		else return;								//没有的字库
-		for (t1 = 0; t1 < 8; t1++)
-		{
+	chr -= ' ';//得到偏移后的值（ASCII字库是从空格开始取模，所以-' '就是对应字符的字库）
+	switch (size) {
+	case 12:
+		font = asc2_1206[chr];// 1206字体
+		break;
+	case 16:
+		font = asc2_1608[chr];// 1608字体
+		break;
+	case 24:
+		font = asc2_2412[chr];// 2412字体
+		break;
+	default:
+		printf("Worning: No such font!\n");
+		return;					 // 未匹配到字库-放弃
+	}
+	for (t = 0; t < csize; t++) {//t表示字体的第几个字节
+		//画点
+		temp = font[t];
+		for (t1 = 0; t1 < 8; t1++) {//t1表示该字节的第几个位
+			if (temp & 0x01)
+				LCD_Fast_DrawPoint(x, y, POINT_COLOR);
+			else
+				LCD_Fast_DrawPoint(x, y, BACK_COLOR);
+			temp >>= 1;
+			y++;
+			//判断是否画到了最底部 - 如1206,到达底部后,当前字节未画完,换新列继续画
+			if (y >= lcddev.height) return;//超【底部】区域了
+			if ((y - y0) == size) {
+				y = y0;
+				x++;
+				if (x >= lcddev.width)return;	//超【侧边】区域了
+				break;
+			}
+		}
+	}
+	/*
+	for (t = 0; t < csize; t++)	{
+		for (t1 = 0; t1 < 8; t1++) {//读取一个字节中的信息
 			if (temp & 0x80)LCD_Fast_DrawPoint(x, y, POINT_COLOR);
 			else if (mode == 0)LCD_Fast_DrawPoint(x, y, BACK_COLOR);
 			temp <<= 1;
@@ -3115,6 +3138,7 @@ void LCD_ShowChar(u16 x, u16 y, u8 num, u8 size, u8 mode)
 			}
 		}
 	}
+	*/
 }
 //m^n函数
 //返回值:m^n次方.
