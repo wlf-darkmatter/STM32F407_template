@@ -77,7 +77,7 @@
     <ClInclude Include="HardWare\LED_STM32F407ZET6.h" />
     <ClInclude Include="HardWare\OLED.h" />
     <ClInclude Include="HardWare\PWM.h" />
-    <ClInclude Include="HardWare\TFT_LCD_2.8in.h" />
+    <ClInclude Include="HardWare\TFT_LCD.h" />
     <ClInclude Include="HardWare\Tim.h" />
     <ClInclude Include="HardWare\WIFI_ESP8266.h" />
     <ClInclude Include="SYSTEM\delay.h" />
@@ -131,7 +131,7 @@
     <ClCompile Include="HardWare\LED_STM32F407ZET6.c" />
     <ClCompile Include="HardWare\OLED.c" />
     <ClCompile Include="HardWare\PWM.c" />
-    <ClCompile Include="HardWare\TFT_LCD_2.8in.c" />
+    <ClCompile Include="HardWare\TFT_LCD.c" />
     <ClCompile Include="HardWare\Tim.c" />
     <ClCompile Include="HardWare\WIFI_ESP8266.c" />
     <ClCompile Include="SYSTEM\delay.c" />
