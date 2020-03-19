@@ -1,7 +1,7 @@
 #ifndef __TFT_LCD_H
 #define __TFT_LCD_H
 #include "sys.h"
-#include "stdlib.h" 
+#include <oledfont.h>
 
 typedef struct {
 	u16 width;			//LCD 宽度
@@ -12,7 +12,6 @@ typedef struct {
 	u16  setxcmd;		//设置x坐标指令
 	u16  setycmd;		//设置y坐标指令 
 }_lcd_dev;
-
 //LCD参数
 extern _lcd_dev lcddev;	//管理LCD重要参数
 //LCD的画笔颜色和背景色	   
@@ -33,13 +32,14 @@ extern u16  BACK_COLOR; //背景颜色.默认为白色
 //使用NOR/SRAM的 Bank1.sector4,地址位HADDR[27,26]=11 A6作为数据命令区分线
 //注意设置时STM32内部会右移一位对齐! 111 1110=0X7E
 //LCD地址结构体
-#define LCD_BASE	((u32)(0x6C000000 | 0x0000007E))//0110 1100 0000 0000 0000 0000 0111 1110‬
 
 typedef struct {
 	 uint16_t LCD_REG;//0x6C00007E——
 	 uint16_t LCD_RAM;//0x6C000080——
 } LCD_TypeDef;
-#define LCD	((LCD_TypeDef *) LCD_BASE)
+#define LCD_BASE	((u32)(0x6C000000 | 0x0000007E))//0110 1100 0000 0000 0000 0000 0111 1110‬
+#define LCD	((LCD_TypeDef *) (LCD_BASE))
+
 //////////////////////////////////////////////////////////////////////////////////
 
 //扫描方向定义

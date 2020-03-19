@@ -22,7 +22,7 @@ int main(void) {
 	LED_Init();
 //	Beep_Init();
 	usart1_init(57600);
-
+	printf("%d", LCD_BASE);
 	LCD_Init();
 	
 	Key_Init();
