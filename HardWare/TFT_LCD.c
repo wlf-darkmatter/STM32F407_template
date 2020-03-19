@@ -1,9 +1,10 @@
-#include <TFT_LCD_2.8in.h>	
+#include <TFT_LCD.h>	
 #include "stm32f4xx_fsmc.h"//因为要使用到SRAM的外设来快速控制LCD（其实已经被包含）
 #include <delay.h>
 #include "usart.h"
 
 void LCD_Init(void){
+	vu32 i=0;
 	LCD_TFTPin_Init();
 	LCD_FSMC_Init();
 
@@ -14,6 +15,8 @@ void LCD_Init(void){
 	LCD_WriteReg(0x0000, 0x0001);
 	delay_ms(50); // delay 50 ms
 	printf("%d", LCD_ReadReg(0x0000));
+	delay_ms(50);
+
 }
 
 //写寄存器
@@ -30,7 +33,7 @@ void LCD_WriteReg(u16 LCD_Reg, u16 LCD_RegValue) {
 u16 LCD_ReadReg(u16 LCD_Reg) {
 	LCD->LCD_REG = LCD_Reg;	//写入要读的寄存器序号
 	delay_us(5);
-	return LCD->LCD_RAM;	//返回读到的值
+	return (LCD->LCD_RAM);	//返回读到的值
 }
 
 

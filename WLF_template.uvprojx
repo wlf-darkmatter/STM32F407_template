@@ -518,9 +518,9 @@
               <FilePath>.\HardWare\WIFI_ESP8266.c</FilePath>
             </File>
             <File>
-              <FileName>TFT_LCD_2.8in.c</FileName>
+              <FileName>TFT_LCD.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\HardWare\TFT_LCD_2.8in.c</FilePath>
+              <FilePath>.\HardWare\TFT_LCD.c</FilePath>
             </File>
           </Files>
         </Group>

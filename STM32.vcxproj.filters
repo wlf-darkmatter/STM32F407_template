@@ -180,7 +180,7 @@
     <ClInclude Include="HardWare\WIFI_ESP8266.h">
       <Filter>HardWare</Filter>
     </ClInclude>
-    <ClInclude Include="HardWare\TFT_LCD_2.8in.h">
+    <ClInclude Include="HardWare\TFT_LCD.h">
       <Filter>HardWare</Filter>
     </ClInclude>
   </ItemGroup>
@@ -335,7 +335,7 @@
     <ClCompile Include="HardWare\WIFI_ESP8266.c">
       <Filter>HardWare</Filter>
     </ClCompile>
-    <ClCompile Include="HardWare\TFT_LCD_2.8in.c">
+    <ClCompile Include="HardWare\TFT_LCD.c">
       <Filter>HardWare</Filter>
     </ClCompile>
   </ItemGroup>
