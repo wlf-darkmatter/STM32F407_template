@@ -315,13 +315,13 @@
             <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
-            <OneElfS>1</OneElfS>
+            <OneElfS>0</OneElfS>
             <Strict>0</Strict>
             <EnumInt>0</EnumInt>
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>2</wLevel>
+            <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>0</uC99>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>.\FWLIB\inc;.\CORE;.\USER;.\SYSTEM;.\HardWare;.\Font</IncludePath>
+              <IncludePath>.\FWLIB\inc;.\CORE;.\USER;.\SYSTEM;.\Font;.\HardWare</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

@@ -3,22 +3,6 @@
 #include <delay.h>
 #include "usart.h"
 
-void LCD_Init(void){
-	vu32 i=0;
-	LCD_TFTPin_Init();
-	LCD_FSMC_Init();
-
-	/*******************/
-
-	/*****************/
-	delay_ms(30);
-	LCD_WriteReg(0x0000, 0x0001);
-	delay_ms(50); // delay 50 ms
-	printf("%d", LCD_ReadReg(0x0000));
-	delay_ms(50);
-
-}
-
 //写寄存器
 //LCD_Reg:寄存器地址
 //LCD_RegValue:要写入的数据
@@ -34,6 +18,22 @@ u16 LCD_ReadReg(u16 LCD_Reg) {
 	LCD->LCD_REG = LCD_Reg;	//写入要读的寄存器序号
 	delay_us(5);
 	return (LCD->LCD_RAM);	//返回读到的值
+}
+
+void LCD_Init(void){
+	vu32 i=0;
+//	LCD_TFTPin_Init();
+//	LCD_FSMC_Init();
+
+	/*******************/
+
+	/*****************/
+	delay_ms(30);
+	LCD_WriteReg(0x0000, 0x0001);
+	delay_ms(50); // delay 50 ms
+	printf("%d", LCD_ReadReg(0x0000));
+	delay_ms(50);
+
 }
 
 

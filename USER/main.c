@@ -2,6 +2,7 @@
 #include "delay.h"
 #include "usart.h"
 #include <LED_STM32F407ZET6.h>
+#include <TFT_LCD.h>
 #include <Beep.h>
 #include <Key_STM32F407ZET6.h>
 #include <Tim.h>
@@ -9,7 +10,6 @@
 #include <wlf_I2C.h>
 #include <OLED.h>
 #include <WIFI_ESP8266.h>
-#include <TFT_LCD.h>
 
 /*不要使用PA13和PA14，它们分别对应着【SW-DIO】和【SW-CLK】，且本身一直处于AF复用模式*/
 /*配置外设的时候要记得先使能时钟，然后在配置，因为需要一段时间等待时钟正常运行*/
@@ -35,11 +35,11 @@ int main(void) {
 //	ESP8266_init();	//esp8266进行初始化
 
 //	ESP8266_WiFiEmit("WLF-Control", "00000000");
-	
+
 //	ESP8266_WiFiConnect("东南沿海王大哥", "19981213");
 
 //	ESP8266_WiFiConnect("地球暗物质", "wang123456");
-	
+
 //	ESP8266_TCP_Server();
 
 //	TFT_PinDetect(ENABLE);

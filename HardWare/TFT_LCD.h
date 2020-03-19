@@ -1,7 +1,8 @@
-﻿#ifndef __TFT_LCD_H
+#ifndef __TFT_LCD_H
 #define __TFT_LCD_H
 #include "sys.h"
 #include "stdlib.h" 
+
 typedef struct {
 	u16 width;			//LCD 宽度
 	u16 height;			//LCD 高度
@@ -22,11 +23,6 @@ extern u16  BACK_COLOR; //背景颜色.默认为白色
 //////////////////////////////////////////////////////////////////////////////////	 
 //-----------------LCD端口定义---------------- 
 #define	LCD_LED PBout(15)  		//LCD背光    		 PB15 	    
-//LCD地址结构体
-typedef struct {
-	 uint16_t LCD_REG;//0x6C00007E——
-	 uint16_t LCD_RAM;//0x6C000080——
-} LCD_TypeDef;
 
 //【FSMC_Base】	0x 6000 0000	HADDR[27:26] = 区域选择
 //【PSRAM 4】+	0x 0C00 0000	HADDR[27:26] = 11B
@@ -36,8 +32,14 @@ typedef struct {
 
 //使用NOR/SRAM的 Bank1.sector4,地址位HADDR[27,26]=11 A6作为数据命令区分线
 //注意设置时STM32内部会右移一位对齐! 111 1110=0X7E
-#define LCD_BASE        ((u32)(0x6C000000 | 0x0000007E))//0110 1100 0000 0000 0000 0000 0111 1110‬
-#define LCD				((LCD_TypeDef *) LCD_BASE)
+//LCD地址结构体
+#define LCD_BASE	((u32)(0x6C000000 | 0x0000007E))//0110 1100 0000 0000 0000 0000 0111 1110‬
+
+typedef struct {
+	 uint16_t LCD_REG;//0x6C00007E——
+	 uint16_t LCD_RAM;//0x6C000080——
+} LCD_TypeDef;
+#define LCD	((LCD_TypeDef *) LCD_BASE)
 //////////////////////////////////////////////////////////////////////////////////
 
 //扫描方向定义
