@@ -542,6 +542,11 @@
               <FileType>1</FileType>
               <FilePath>.\SYSTEM\usart.c</FilePath>
             </File>
+            <File>
+              <FileName>malloc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\malloc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
