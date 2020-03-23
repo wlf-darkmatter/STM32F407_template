@@ -2,14 +2,6 @@
 #include "usart.h"
 #include "sys.h" 
 //////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32开发板	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com 
-//版本：V3.1
-//版权所有，盗版必究。
-//Copyright(C) 正点原子 2011-2021
-//All rights reserved
 //********************************************************************************
 //升级说明
 //V1.4
@@ -78,6 +70,7 @@ u8 usmart_sys_cmd_exe(u8 *str) {
 	u8 pnum;
 	u8 rval;
 	u32 res;  
+
 	res=usmart_get_cmdname(str,sfname,&i,MAX_FNAME_LEN);//得到指令及指令长度
 	if(res)return USMART_FUNCERR;//错误的指令 
 	str+=i;	 	 			    
@@ -91,13 +84,10 @@ u8 usmart_sys_cmd_exe(u8 *str) {
 		case 1://帮助指令
 			printf("\r\n");
 #if USMART_USE_HELP
-			printf("------------------------USMART V3.1------------------------ \r\n");
-			printf("    USMART是由ALIENTEK开发的一个灵巧的串口调试互交组件,通过 \r\n");
-			printf("它,你可以通过串口助手调用程序里面的任何函数,并执行.因此,你可\r\n");
-			printf("以随意更改函数的输入参数(支持数字(10/16进制)、字符串、函数入\r\n");	  
-			printf("口地址等作为参数),单个函数最多支持10个输入参数,并支持函数返 \r\n");
-			printf("回值显示.新增参数显示进制设置功能,新增进制转换功能.\r\n");
-			printf("技术支持:www.openedv.com\r\n");
+
+			printf("(支持数字(10/16进制)、字符串、函数入口地址等作为参数),\r\n");	  
+			printf("单个函数最多支持10个输入参数,并支持函数返回值显示.\r\n");
+			printf("新增参数显示进制设置功能,新增进制转换功能.\r\n");
 			printf("USMART有7个系统命令:\r\n");
 			printf("?:      获取帮助信息\r\n");
 			printf("help:   获取帮助信息\r\n");
@@ -107,7 +97,8 @@ u8 usmart_sys_cmd_exe(u8 *str) {
 			printf("dec:    参数10进制显示,后跟空格+数字即执行进制转换\r\n\n");
 			printf("runtime:1,开启函数运行计时;0,关闭函数运行计时;\r\n\n");
 			printf("请按照程序编写格式输入函数名及参数并以回车键结束.\r\n");    
-			printf("---------------------------------------------------------- \r\n");
+			printf("------------------------W L F----------------------------- \r\n");
+
 #else
 			printf("指令失效\r\n");
 #endif

@@ -25,7 +25,7 @@ int main(void) {
 	delay_init(168);
 	LED_Init();
 //	Beep_Init();
-	usart1_init(57600);
+	usart1_init(115200);
 	LCD_Init();
 	Key_Init();
 	OLED_Init();

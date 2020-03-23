@@ -6,7 +6,7 @@
 #include "sys.h"
 #include "lcd.h"
 #include <OLED.h>
-
+#include <usart.h>
 //extern void led_set(u8 sta);
 //extern void test_fun(void(*ledset)(u8),u8 sta);
 //函数名列表初始化(用户自己添加)
@@ -18,7 +18,8 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)write_addr,"void write_addr(u32 addr,u32 val)",	 
 #endif		   
 	(void*)delay_ms,"void delay_ms(u16 nms)",
- 	(void*)delay_us,"void delay_us(u32 nus)",	 
+ 	(void*)delay_us,"void delay_us(u32 nus)",	
+
 	(void*)LCD_Clear,"void LCD_Clear(u16 color)",
 	(void*)LCD_Fill,"void LCD_Fill(u16 sx, u16 sy, u16 ex, u16 ey, u16 color)",
 	(void*)LCD_DrawLine,"void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2)",
@@ -43,7 +44,8 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)OLED_DrawChar,"void OLED_DrawChar(u8 x, u8 y, u8 chr, u8 size, u8 mode)",
 	(void*)OLED_DrawStr,"void OLED_DrawStr(u8 x, u8 y, char* str, u8 size, u8 mode)",
 	(void*)OLED_ShowGBK,"void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode)",
-	(void*)OLED_Clear,"void OLED_Clear(void);",
+	(void*)OLED_Clear,"void OLED_Clear(void)",
+
 
 
 
