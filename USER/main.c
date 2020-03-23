@@ -35,8 +35,7 @@ int main(void) {
 
 	POINT_COLOR = RED;      //画笔颜色：红色
 	sprintf((char*)lcd_id, "LCD ID:%04X", lcddev.id);//将LCD ID打印到lcd_id数组。				 	
-	while (1)
-	{
+	while (1) {
 		switch (x)
 		{
 		case 0:LCD_Clear(WHITE); break;

@@ -87,6 +87,8 @@
     <ClInclude Include="USER\stm32f4xx_conf.h" />
     <ClInclude Include="USER\stm32f4xx_it.h" />
     <ClInclude Include="USER\system_stm32f4xx.h" />
+    <ClInclude Include="USMART\usmart.h" />
+    <ClInclude Include="USMART\usmart_str.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FWLIB\src\misc.c" />
@@ -140,6 +142,9 @@
     <ClCompile Include="USER\main.c" />
     <ClCompile Include="USER\stm32f4xx_it.c" />
     <ClCompile Include="USER\system_stm32f4xx.c" />
+    <ClCompile Include="USMART\usmart.c" />
+    <ClCompile Include="USMART\usmart_config.c" />
+    <ClCompile Include="USMART\usmart_str.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CORE\startup_stm32f40_41xxx.s" />

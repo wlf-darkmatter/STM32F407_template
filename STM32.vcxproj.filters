@@ -25,6 +25,9 @@
     <Filter Include="Font">
       <UniqueIdentifier>{fde780cd-9b8b-4431-8998-f409f15a964d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="USMART">
+      <UniqueIdentifier>{5a295c0f-3664-45cb-b94f-0a1a18872946}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CORE\core_cm4.h">
@@ -183,6 +186,12 @@
     <ClInclude Include="HardWare\TFT_LCD.h">
       <Filter>HardWare</Filter>
     </ClInclude>
+    <ClInclude Include="USMART\usmart.h">
+      <Filter>USMART</Filter>
+    </ClInclude>
+    <ClInclude Include="USMART\usmart_str.h">
+      <Filter>USMART</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FWLIB\src\misc.c">
@@ -337,6 +346,15 @@
     </ClCompile>
     <ClCompile Include="HardWare\TFT_LCD.c">
       <Filter>HardWare</Filter>
+    </ClCompile>
+    <ClCompile Include="USMART\usmart.c">
+      <Filter>USMART</Filter>
+    </ClCompile>
+    <ClCompile Include="USMART\usmart_config.c">
+      <Filter>USMART</Filter>
+    </ClCompile>
+    <ClCompile Include="USMART\usmart_str.c">
+      <Filter>USMART</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
