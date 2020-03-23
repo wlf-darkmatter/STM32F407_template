@@ -253,11 +253,6 @@ void usart1_init(u32 bound){
 
 
 
-
-
-
-
-
 // ‰»Î∑¥¿°≥Ã–Ú
 void USART1_Echo(void){
 	u8 t = 0, len = 0;
