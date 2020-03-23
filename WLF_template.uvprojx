@@ -547,6 +547,26 @@
               <FileType>1</FileType>
               <FilePath>.\SYSTEM\malloc.c</FilePath>
             </File>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\FAT\diskio.c</FilePath>
+            </File>
+            <File>
+              <FileName>exfuns.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\FAT\exfuns.c</FilePath>
+            </File>
+            <File>
+              <FileName>fattester.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\FAT\fattester.c</FilePath>
+            </File>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\FAT\ff.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

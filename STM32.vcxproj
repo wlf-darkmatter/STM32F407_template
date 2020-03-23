@@ -82,6 +82,12 @@
     <ClInclude Include="HardWare\Tim.h" />
     <ClInclude Include="HardWare\WIFI_ESP8266.h" />
     <ClInclude Include="SYSTEM\delay.h" />
+    <ClInclude Include="SYSTEM\FAT\diskio.h" />
+    <ClInclude Include="SYSTEM\FAT\exfuns.h" />
+    <ClInclude Include="SYSTEM\FAT\fattester.h" />
+    <ClInclude Include="SYSTEM\FAT\ff.h" />
+    <ClInclude Include="SYSTEM\FAT\ffconf.h" />
+    <ClInclude Include="SYSTEM\FAT\integer.h" />
     <ClInclude Include="SYSTEM\malloc.h" />
     <ClInclude Include="SYSTEM\sys.h" />
     <ClInclude Include="SYSTEM\usart.h" />
@@ -140,6 +146,10 @@
     <ClCompile Include="HardWare\Tim.c" />
     <ClCompile Include="HardWare\WIFI_ESP8266.c" />
     <ClCompile Include="SYSTEM\delay.c" />
+    <ClCompile Include="SYSTEM\FAT\diskio.c" />
+    <ClCompile Include="SYSTEM\FAT\exfuns.c" />
+    <ClCompile Include="SYSTEM\FAT\fattester.c" />
+    <ClCompile Include="SYSTEM\FAT\ff.c" />
     <ClCompile Include="SYSTEM\malloc.c" />
     <ClCompile Include="SYSTEM\sys.c" />
     <ClCompile Include="SYSTEM\usart.c" />

@@ -28,6 +28,9 @@
     <Filter Include="USMART">
       <UniqueIdentifier>{5a295c0f-3664-45cb-b94f-0a1a18872946}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SYSTEM\FAT">
+      <UniqueIdentifier>{b55d9d69-a1a6-4d31-ac62-da97c89332ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CORE\core_cm4.h">
@@ -198,6 +201,24 @@
     <ClInclude Include="SYSTEM\malloc.h">
       <Filter>SYSTEM</Filter>
     </ClInclude>
+    <ClInclude Include="SYSTEM\FAT\diskio.h">
+      <Filter>SYSTEM\FAT</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEM\FAT\exfuns.h">
+      <Filter>SYSTEM\FAT</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEM\FAT\fattester.h">
+      <Filter>SYSTEM\FAT</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEM\FAT\ff.h">
+      <Filter>SYSTEM\FAT</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEM\FAT\ffconf.h">
+      <Filter>SYSTEM\FAT</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEM\FAT\integer.h">
+      <Filter>SYSTEM\FAT</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FWLIB\src\misc.c">
@@ -367,6 +388,18 @@
     </ClCompile>
     <ClCompile Include="SYSTEM\malloc.c">
       <Filter>SYSTEM</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\FAT\diskio.c">
+      <Filter>SYSTEM\FAT</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\FAT\exfuns.c">
+      <Filter>SYSTEM\FAT</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\FAT\fattester.c">
+      <Filter>SYSTEM\FAT</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\FAT\ff.c">
+      <Filter>SYSTEM\FAT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
