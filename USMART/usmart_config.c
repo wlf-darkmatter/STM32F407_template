@@ -2,10 +2,10 @@
 #include "usmart_str.h"
 ////////////////////////////用户配置区///////////////////////////////////////////////
 //这下面要包含所用到的函数所申明的头文件(用户自己添加) 
-#include "delay.h"		
-#include "sys.h"
+#include "delay.h"
 #include "lcd.h"
 #include <OLED.h>
+#include "sys.h"
 #include <usart.h>
 #include "SDIO_SDCard.h"
 
@@ -20,8 +20,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)write_addr,"void write_addr(u32 addr,u32 val)",	 
 #endif		   
 	(void*)delay_ms,"void delay_ms(u16 nms)",
- 	(void*)delay_us,"void delay_us(u32 nus)",	
-
+ 	(void*)delay_us,"void delay_us(u32 nus)",
 	(void*)LCD_Clear,"void LCD_Clear(u16 color)",
 	(void*)LCD_Fill,"void LCD_Fill(u16 sx, u16 sy, u16 ex, u16 ey, u16 color)",
 	(void*)LCD_DrawLine,"void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2)",
@@ -48,10 +47,27 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)OLED_ShowGBK,"void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode)",
 	(void*)OLED_Clear,"void OLED_Clear(void)",
 
-
-
-
-
+	(_SD*)SD_Init,"_SD SD_Init(void)",
+	(void*)SDIO_Clock_Set,"void SDIO_Clock_Set(u8 clkdiv)",
+	(_SD*)SD_PowerON,"_SD SD_PowerON(void)",
+	(_SD*)SD_PowerOFF,"_SD SD_PowerOFF(void)",
+	(_SD*)SD_InitializeCards,"_SD SD_InitializeCards(void)",
+	(_SD*)SD_GetCardInfo,"_SD SD_GetCardInfo(SD_CardInfo* cardinfo)",
+	(_SD*)SD_EnableWideBusOperation,"_SD SD_EnableWideBusOperation(u32 wmode)",
+	(_SD*)SD_SetDeviceMode,"_SD SD_SetDeviceMode(u32 mode)",
+	(_SD*)SD_SelectDeselect,"_SD SD_SelectDeselect(u32 addr)",
+	(_SD*)SD_SendStatus,"_SD SD_SendStatus(uint32_t* pcardstatus)",
+	(SDCardState*)SD_GetState,"SDCardState SD_GetState(void)",
+	(_SD*)SD_ReadBlock,"_SD SD_ReadBlock(u8* buf,long long addr,u16 blksize)",
+	(_SD*)SD_ReadMultiBlocks,"_SD SD_ReadMultiBlocks(u8* buf,long long addr,u16 blksize,u32 nblks)",
+	(_SD*)SD_WriteBlock,"_SD SD_WriteBlock(u8* buf,long long addr,u16 blksize)",
+	(_SD*)SD_WriteMultiBlocks,"_SD SD_WriteMultiBlocks(u8* buf,long long addr,u16 blksize,u32 nblks)",
+	(_SD*)SD_ProcessIRQSrc,"_SD SD_ProcessIRQSrc(void)",
+	(void*)SD_DMA_Config,"void SD_DMA_Config(u32* mbuf,u32 bufsize,u32 dir)",
+//void SD_DMA_Config(u32*mbuf,u32 bufsize,u8 dir); 
+	(u8*)SD_ReadDisk,"u8 SD_ReadDisk(u8* buf,u32 sector,u8 cnt)",
+	(u8*)SD_WriteDisk,"u8 SD_WriteDisk(u8* buf,u32 sector,u8 cnt)",
+	(void*)show_sdcard_info,"void show_sdcard_info(void)",
 
 };						  
 ///////////////////////////////////END///////////////////////////////////////////////

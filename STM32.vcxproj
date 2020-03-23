@@ -82,6 +82,7 @@
     <ClInclude Include="HardWare\Tim.h" />
     <ClInclude Include="HardWare\WIFI_ESP8266.h" />
     <ClInclude Include="SYSTEM\delay.h" />
+    <ClInclude Include="SYSTEM\malloc.h" />
     <ClInclude Include="SYSTEM\sys.h" />
     <ClInclude Include="SYSTEM\usart.h" />
     <ClInclude Include="USER\stm32f4xx.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="HardWare\Tim.c" />
     <ClCompile Include="HardWare\WIFI_ESP8266.c" />
     <ClCompile Include="SYSTEM\delay.c" />
+    <ClCompile Include="SYSTEM\malloc.c" />
     <ClCompile Include="SYSTEM\sys.c" />
     <ClCompile Include="SYSTEM\usart.c" />
     <ClCompile Include="USER\main.c" />
@@ -192,10 +194,10 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;$(MSBuildProjectDirectory)\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
+    <IncludePath>$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;E:\MCU\STM32\STM32 project\WLF_template\STM32\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;$(MSBuildProjectDirectory)\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
+    <IncludePath>$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;E:\MCU\STM32\STM32 project\WLF_template\STM32\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IncludePath>$(IncludePath)</IncludePath>

@@ -195,6 +195,9 @@
     <ClInclude Include="HardWare\lcd.h">
       <Filter>HardWare</Filter>
     </ClInclude>
+    <ClInclude Include="SYSTEM\malloc.h">
+      <Filter>SYSTEM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FWLIB\src\misc.c">
@@ -361,6 +364,9 @@
     </ClCompile>
     <ClCompile Include="HardWare\lcd.c">
       <Filter>HardWare</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\malloc.c">
+      <Filter>SYSTEM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

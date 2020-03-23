@@ -108,7 +108,7 @@ typedef enum
 	SD_UNSUPPORTED_HW,  
 	SD_ERROR,  
 	SD_OK = 0 
-} SD_Error;		  
+} _SD;		  
 
 //SD卡CSD寄存器数据		  
 typedef struct
@@ -346,30 +346,30 @@ extern SD_CardInfo SDCardInfo;//SD卡信息
 #define SDIO_SEND_IF_COND               ((u32)0x00000008)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //相关函数定义
-SD_Error SD_Init(void);
+_SD SD_Init(void);
 void SDIO_Clock_Set(u8 clkdiv);
 
-SD_Error SD_PowerON(void);    
-SD_Error SD_PowerOFF(void);
-SD_Error SD_InitializeCards(void);
-SD_Error SD_GetCardInfo(SD_CardInfo *cardinfo);		  
-SD_Error SD_EnableWideBusOperation(u32 wmode);
-SD_Error SD_SetDeviceMode(u32 mode);
-SD_Error SD_SelectDeselect(u32 addr); 
-SD_Error SD_SendStatus(uint32_t *pcardstatus);
+_SD SD_PowerON(void);    
+_SD SD_PowerOFF(void);
+_SD SD_InitializeCards(void);
+_SD SD_GetCardInfo(SD_CardInfo *cardinfo);		  
+_SD SD_EnableWideBusOperation(u32 wmode);
+_SD SD_SetDeviceMode(u32 mode);
+_SD SD_SelectDeselect(u32 addr); 
+_SD SD_SendStatus(uint32_t *pcardstatus);
 SDCardState SD_GetState(void);
-SD_Error SD_ReadBlock(u8 *buf,long long addr,u16 blksize);  
-SD_Error SD_ReadMultiBlocks(u8 *buf,long long  addr,u16 blksize,u32 nblks);  
-SD_Error SD_WriteBlock(u8 *buf,long long addr,  u16 blksize);	
-SD_Error SD_WriteMultiBlocks(u8 *buf,long long addr,u16 blksize,u32 nblks);
-SD_Error SD_ProcessIRQSrc(void);
+_SD SD_ReadBlock(u8 *buf,long long addr,u16 blksize);  
+_SD SD_ReadMultiBlocks(u8 *buf,long long  addr,u16 blksize,u32 nblks);  
+_SD SD_WriteBlock(u8 *buf,long long addr,  u16 blksize);	
+_SD SD_WriteMultiBlocks(u8 *buf,long long addr,u16 blksize,u32 nblks);
+_SD SD_ProcessIRQSrc(void);
 
 void SD_DMA_Config(u32*mbuf,u32 bufsize,u32 dir);
 //void SD_DMA_Config(u32*mbuf,u32 bufsize,u8 dir); 
 
 u8 SD_ReadDisk(u8*buf,u32 sector,u8 cnt); 	//读SD卡,fatfs/usb调用
 u8 SD_WriteDisk(u8*buf,u32 sector,u8 cnt);	//写SD卡,fatfs/usb调用
-
+void show_sdcard_info(void);
 
 #endif 
 
