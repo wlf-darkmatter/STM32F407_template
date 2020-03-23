@@ -21,7 +21,7 @@ int main(void) {
 	u8 lcd_id[12];
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
-	
+	usmart_init(168);
 	delay_init(168);
 	LED_Init();
 //	Beep_Init();

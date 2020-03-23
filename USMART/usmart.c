@@ -68,12 +68,11 @@ u8 *sys_cmd_tab[]=
 	"id",
 	"hex",
 	"dec",
-	"runtime",	   
+	"runtime",
 };	    
 //处理系统指令
 //0,成功处理;其他,错误代码;
-u8 usmart_sys_cmd_exe(u8 *str)
-{
+u8 usmart_sys_cmd_exe(u8 *str) {
 	u8 i;
 	u8 sfname[MAX_FNAME_LEN];//存放本地函数名
 	u8 pnum;
@@ -108,7 +107,7 @@ u8 usmart_sys_cmd_exe(u8 *str)
 			printf("dec:    参数10进制显示,后跟空格+数字即执行进制转换\r\n\n");
 			printf("runtime:1,开启函数运行计时;0,关闭函数运行计时;\r\n\n");
 			printf("请按照程序编写格式输入函数名及参数并以回车键结束.\r\n");    
-			printf("--------------------------ALIENTEK------------------------- \r\n");
+			printf("---------------------------------------------------------- \r\n");
 #else
 			printf("指令失效\r\n");
 #endif
@@ -391,15 +390,15 @@ void usmart_exe(void)
 void usmart_scan(void)
 {
 	u8 sta,len;  
-	if(USART_RX_STA&0x8000)//串口接收完成？
+	if(USART1_RX_STA&0x8000)//串口接收完成？
 	{					   
-		len=USART_RX_STA&0x3fff;	//得到此次接收到的数据长度
-		USART_RX_BUF[len]='\0';	//在末尾加入结束符. 
-		sta=usmart_dev.cmd_rec(USART_RX_BUF);//得到函数各个信息
+		len=USART1_RX_STA&0x3fff;	//得到此次接收到的数据长度
+		USART1_RX_BUF[len]='\0';	//在末尾加入结束符. 
+		sta=usmart_dev.cmd_rec(USART1_RX_BUF);//得到函数各个信息
 		if(sta==0)usmart_dev.exe();	//执行函数 
 		else 
 		{  
-			len=usmart_sys_cmd_exe(USART_RX_BUF);
+			len=usmart_sys_cmd_exe(USART1_RX_BUF);
 			if(len!=USMART_FUNCERR)sta=len;
 			if(sta)
 			{
@@ -420,7 +419,7 @@ void usmart_scan(void)
 				}
 			}
 		}
-		USART_RX_STA=0;//状态寄存器清空	    
+		USART1_RX_STA=0;//状态寄存器清空	    
 	}
 }
 

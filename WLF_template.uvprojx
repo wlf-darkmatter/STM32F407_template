@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\CORE;.\FWLIB\inc;.\HardWare;.\USER;.\SYSTEM;.\Font</IncludePath>
+              <IncludePath>.\CORE;.\FWLIB\inc;.\HardWare;.\USER;.\SYSTEM;.\Font;.\USMART</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -526,6 +526,26 @@
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SYSTEM\usart.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>USMART</GroupName>
+          <Files>
+            <File>
+              <FileName>usmart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USMART\usmart.c</FilePath>
+            </File>
+            <File>
+              <FileName>usmart_str.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USMART\usmart_str.c</FilePath>
+            </File>
+            <File>
+              <FileName>usmart_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USMART\usmart_config.c</FilePath>
             </File>
           </Files>
         </Group>
