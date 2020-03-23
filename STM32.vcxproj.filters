@@ -183,14 +183,17 @@
     <ClInclude Include="HardWare\WIFI_ESP8266.h">
       <Filter>HardWare</Filter>
     </ClInclude>
-    <ClInclude Include="HardWare\TFT_LCD.h">
-      <Filter>HardWare</Filter>
-    </ClInclude>
     <ClInclude Include="USMART\usmart.h">
       <Filter>USMART</Filter>
     </ClInclude>
     <ClInclude Include="USMART\usmart_str.h">
       <Filter>USMART</Filter>
+    </ClInclude>
+    <ClInclude Include="HardWare\SDIO_SDCard.h">
+      <Filter>HardWare</Filter>
+    </ClInclude>
+    <ClInclude Include="HardWare\lcd.h">
+      <Filter>HardWare</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -344,9 +347,6 @@
     <ClCompile Include="HardWare\WIFI_ESP8266.c">
       <Filter>HardWare</Filter>
     </ClCompile>
-    <ClCompile Include="HardWare\TFT_LCD.c">
-      <Filter>HardWare</Filter>
-    </ClCompile>
     <ClCompile Include="USMART\usmart.c">
       <Filter>USMART</Filter>
     </ClCompile>
@@ -355,6 +355,12 @@
     </ClCompile>
     <ClCompile Include="USMART\usmart_str.c">
       <Filter>USMART</Filter>
+    </ClCompile>
+    <ClCompile Include="HardWare\SDIO_SDCard.c">
+      <Filter>HardWare</Filter>
+    </ClCompile>
+    <ClCompile Include="HardWare\lcd.c">
+      <Filter>HardWare</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

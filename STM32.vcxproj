@@ -74,10 +74,11 @@
     <ClInclude Include="FWLIB\inc\wlf_I2C.h" />
     <ClInclude Include="HardWare\Beep.h" />
     <ClInclude Include="HardWare\Key_STM32F407ZET6.h" />
+    <ClInclude Include="HardWare\lcd.h" />
     <ClInclude Include="HardWare\LED_STM32F407ZET6.h" />
     <ClInclude Include="HardWare\OLED.h" />
     <ClInclude Include="HardWare\PWM.h" />
-    <ClInclude Include="HardWare\TFT_LCD.h" />
+    <ClInclude Include="HardWare\SDIO_SDCard.h" />
     <ClInclude Include="HardWare\Tim.h" />
     <ClInclude Include="HardWare\WIFI_ESP8266.h" />
     <ClInclude Include="SYSTEM\delay.h" />
@@ -130,10 +131,11 @@
     <ClCompile Include="FWLIB\src\wlf_I2C.c" />
     <ClCompile Include="HardWare\Beep.c" />
     <ClCompile Include="HardWare\Key_STM32F407ZET6.c" />
+    <ClCompile Include="HardWare\lcd.c" />
     <ClCompile Include="HardWare\LED_STM32F407ZET6.c" />
     <ClCompile Include="HardWare\OLED.c" />
     <ClCompile Include="HardWare\PWM.c" />
-    <ClCompile Include="HardWare\TFT_LCD.c" />
+    <ClCompile Include="HardWare\SDIO_SDCard.c" />
     <ClCompile Include="HardWare\Tim.c" />
     <ClCompile Include="HardWare\WIFI_ESP8266.c" />
     <ClCompile Include="SYSTEM\delay.c" />

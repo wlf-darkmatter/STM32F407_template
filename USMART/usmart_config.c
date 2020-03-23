@@ -7,6 +7,8 @@
 #include "lcd.h"
 #include <OLED.h>
 #include <usart.h>
+#include "SDIO_SDCard.h"
+
 //extern void led_set(u8 sta);
 //extern void test_fun(void(*ledset)(u8),u8 sta);
 //函数名列表初始化(用户自己添加)

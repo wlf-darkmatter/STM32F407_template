@@ -428,11 +428,6 @@
               <FilePath>.\HardWare\PWM.c</FilePath>
             </File>
             <File>
-              <FileName>TFT_LCD.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\HardWare\TFT_LCD.c</FilePath>
-            </File>
-            <File>
               <FileName>Tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\HardWare\Tim.c</FilePath>
@@ -441,6 +436,16 @@
               <FileName>WIFI_ESP8266.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\HardWare\WIFI_ESP8266.c</FilePath>
+            </File>
+            <File>
+              <FileName>SDIO_SDCard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\HardWare\SDIO_SDCard.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\HardWare\lcd.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -511,6 +516,11 @@
               <FileName>stm32f4xx_sdio.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FWLIB\src\stm32f4xx_sdio.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FWLIB\src\stm32f4xx_dma.c</FilePath>
             </File>
           </Files>
         </Group>

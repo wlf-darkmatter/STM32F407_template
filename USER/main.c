@@ -3,7 +3,7 @@
 #include "usart.h"
 #include <LED_STM32F407ZET6.h>
 #include <Key_STM32F407ZET6.h>
-#include <TFT_LCD.h>
+#include <lcd.h>
 #include <Beep.h>
 #include "usmart.h"
 #include <Tim.h>
@@ -11,7 +11,7 @@
 #include <wlf_I2C.h>
 #include <OLED.h>
 #include <WIFI_ESP8266.h>
-
+#include "SDIO_SDCard.h"
 /*不要使用PA13和PA14，它们分别对应着【SW-DIO】和【SW-CLK】，且本身一直处于AF复用模式*/
 /*配置外设的时候要记得先使能时钟，然后在配置，因为需要一段时间等待时钟正常运行*/
 
@@ -110,6 +110,21 @@ TIM3_INT_Init(5000 - 1, 8400 - 1);//一般情况下，Tout=(I+1)*(II+1)/84 (单位us)
 */
 
 
+//通过串口打印SD卡相关信息
+void show_sdcard_info(void)
+{
+	switch (SDCardInfo.CardType)
+	{
+	case SDIO_STD_CAPACITY_SD_CARD_V1_1:printf("Card Type:SDSC V1.1\r\n"); break;
+	case SDIO_STD_CAPACITY_SD_CARD_V2_0:printf("Card Type:SDSC V2.0\r\n"); break;
+	case SDIO_HIGH_CAPACITY_SD_CARD:printf("Card Type:SDHC V2.0\r\n"); break;
+	case SDIO_MULTIMEDIA_CARD:printf("Card Type:MMC Card\r\n"); break;
+	}
+	printf("Card ManufacturerID:%d\r\n", SDCardInfo.SD_cid.ManufacturerID);	//制造商ID
+	printf("Card RCA:%d\r\n", SDCardInfo.RCA);								//卡相对地址
+	printf("Card Capacity:%d MB\r\n", (u32)(SDCardInfo.CardCapacity >> 20));	//显示容量
+	printf("Card BlockSize:%d\r\n\r\n", SDCardInfo.CardBlockSize);			//显示块大小
+}
 
 
 
