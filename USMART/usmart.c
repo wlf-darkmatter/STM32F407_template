@@ -220,18 +220,12 @@ u32 usmart_get_runtime(void)
 	usmart_dev.runtime+=TIM_GetCounter(TIM4);
 	return usmart_dev.runtime;		//返回计数值
 }  
-//下面这两个函数,非USMART函数,放到这里,仅仅方便移植. 
-//定时器4中断服务程序	 
-void TIM4_IRQHandler(void)
-{ 		    		  			    
-	if(TIM_GetITStatus(TIM4,TIM_IT_Update)==SET)//溢出中断
-	{
-		usmart_dev.scan();	//执行usmart扫描	
-		TIM_SetCounter(TIM4,0);		//清空定时器的CNT
-		TIM_SetAutoreload(TIM4,100);//恢复原来的设置		    				   				     	    	
-	}				   
-	TIM_ClearITPendingBit(TIM4,TIM_IT_Update);  //清除中断标志位    
-}
+
+
+
+
+
+
 //使能定时器4,使能中断.
 void Timer4_Init(u16 arr,u16 psc)
 {
@@ -261,8 +255,7 @@ void Timer4_Init(u16 arr,u16 psc)
 ////////////////////////////////////////////////////////////////////////////////////////
 //初始化串口控制器
 //sysclk:系统时钟（Mhz）
-void usmart_init(u8 sysclk)
-{
+void usmart_init(u8 sysclk) {
 #if USMART_ENTIMX_SCAN==1
 	Timer4_Init(1000,(u32)sysclk*100-1);//分频,时钟为10K ,100ms中断一次,注意,计数频率必须为10Khz,以和runtime单位(0.1ms)同步.
 #endif
@@ -271,8 +264,8 @@ void usmart_init(u8 sysclk)
 //从str中获取函数名,id,及参数信息
 //*str:字符串指针.
 //返回值:0,识别成功;其他,错误代码.
-u8 usmart_cmd_rec(u8*str) 
-{
+//识别函数名及参数
+u8 usmart_cmd_rec(u8*str) {
 	u8 sta,i,rval;//状态	 
 	u8 rpnum,spnum;
 	u8 rfname[MAX_FNAME_LEN];//暂存空间,用于存放接收到的函数名  
@@ -387,12 +380,11 @@ void usmart_exe(void)
 //以及时执行从串口发过来的各个函数.
 //本函数可以在中断里面调用,从而实现自动管理.
 //如果非ALIENTEK用户,则USART_RX_STA和USART_RX_BUF[]需要用户自己实现
-void usmart_scan(void)
-{
+void usmart_scan(void) {
 	u8 sta,len;  
 	if(USART1_RX_STA&0x8000)//串口接收完成？
 	{					   
-		len=USART1_RX_STA&0x3fff;	//得到此次接收到的数据长度
+		len=USART1_RX_STA&0x3fff;	//得到此次接收到的数据长度[13:0]
 		USART1_RX_BUF[len]='\0';	//在末尾加入结束符. 
 		sta=usmart_dev.cmd_rec(USART1_RX_BUF);//得到函数各个信息
 		if(sta==0)usmart_dev.exe();	//执行函数 
@@ -438,7 +430,20 @@ void write_addr(u32 addr,u32 val)
 
 
 
-
+/***********************************************************/
+/***********************************************************/
+//下面这两个函数,非USMART函数,放到这里,仅仅方便移植. 
+//定时器4中断服务程序	 
+void TIM4_IRQHandler(void) {
+	if (TIM_GetITStatus(TIM4, TIM_IT_Update) == SET) {//溢出中断
+		usmart_dev.scan();	//执行usmart扫描
+		TIM4->CNT = 0;//清空定时器的CNT——TIM_SetCounter(TIM4, 0);
+		TIM4->ARR = 100;//恢复原来的设置——TIM_SetAutoreload
+	}
+	TIM_ClearITPendingBit(TIM4, TIM_IT_Update);  //清除中断标志位
+}
+/***********************************************************/
+/***********************************************************/
 
 
 

@@ -184,14 +184,14 @@ u8 usmart_search_nextc(u8* str)
 	while(*str==' '&&str!='\0')str++;
 	return *str;
 } 
+
 //从str中得到函数名
 //*str:源字符串指针
 //*fname:获取到的函数名字指针
 //*pnum:函数的参数个数
 //*rval:是否需要显示返回值(0,不需要;1,需要)
 //返回值:0,成功;其他,错误代码.
-u8 usmart_get_fname(u8*str,u8*fname,u8 *pnum,u8 *rval)
-{
+u8 usmart_get_fname(u8*str,u8*fname,u8 *pnum,u8 *rval) {
 	u8 res;
 	u8 fover=0;	  //括号深度
 	u8 *strtemp;
@@ -204,22 +204,29 @@ u8 usmart_get_fname(u8*str,u8*fname,u8 *pnum,u8 *rval)
 	u8 nchar;
 	//判断函数是否有返回值
 	strtemp=str;
-	while(*strtemp!='\0')//没有结束
+	while(*strtemp!='\0')//没有结束，一直读取串口给的字符串
 	{
 		if(*strtemp!=' '&&(pcnt&0X7F)<5)//最多记录5个字符
-		{	
-			if(pcnt==0)pcnt|=0X80;//置位最高位,标记开始接收返回值类型
-			if(((pcnt&0x7f)==4)&&(*strtemp!='*'))break;//最后一个字符,必须是*
+		{	//遇到空格或参数过多
+			if(pcnt==0) 
+				pcnt|=0X80;//读取的不是空格且目前没有发现参数，置位最高位,标记开始接收返回值类型
+			if(((pcnt&0x7F)==4)&&(*strtemp!='*'))
+				break;//最后一个字符,必须是*
 			fpname[pcnt&0x7f]=*strtemp;//记录函数的返回值类型
 			pcnt++;
-		}else if(pcnt==0X85)break;
+		}else if(pcnt==0X85)
+			break;
 		strtemp++; 
-	} 
+	}
+
+
 	if(pcnt)//接收完了
 	{
 		fpname[pcnt&0x7f]='\0';//加入结束符
-		if(usmart_strcmp(fpname,"void")==0)*rval=0;//不需要返回值
-		else *rval=1;							   //需要返回值
+		if(usmart_strcmp(fpname,"void")==0)
+			*rval=0;//不需要返回值
+		else 
+			*rval=1;							   //需要返回值
 		pcnt=0;
 	} 
 	res=0;
@@ -231,11 +238,13 @@ u8 usmart_get_fname(u8*str,u8*fname,u8 *pnum,u8 *rval)
 		if(*strtemp==' '||*strtemp=='*')
 		{
 			nchar=usmart_search_nextc(strtemp);		//获取下一个字符
-			if(nchar!='('&&nchar!='*')offset=res;	//跳过空格和*号
+			if(nchar!='('&&nchar!='*')
+				offset=res;	//跳过空格和*号
 		}
 	}	 
 	strtemp=str;
-	if(offset)strtemp+=offset+1;//跳到函数名开始的地方	   
+	if(offset)
+		strtemp+=offset+1;//跳到函数名开始的地方	   
 	res=0;
 	nchar=0;//是否正在字符串里面的标志,0，不在字符串;1，在字符串;
 	while(1)
@@ -244,13 +253,17 @@ u8 usmart_get_fname(u8*str,u8*fname,u8 *pnum,u8 *rval)
 		{
 			res=USMART_FUNCERR;//函数错误
 			break;
-		}else if(*strtemp=='('&&nchar==0)fover++;//括号深度增加一级	 
+		}else if(*strtemp=='('&&nchar==0)
+			fover++;//括号深度增加一级	 
 		else if(*strtemp==')'&&nchar==0)
 		{
-			if(fover)fover--;
+			if(fover)
+				fover--;
 			else res=USMART_FUNCERR;//错误结束,没收到'('
-			if(fover==0)break;//到末尾了,退出	    
-		}else if(*strtemp=='"')nchar=!nchar;
+			if(fover==0)
+				break;//到末尾了,退出	    
+		}else if(*strtemp=='"')
+			nchar=!nchar;
 
 		if(fover==0)//函数名还没接收完
 		{
@@ -410,17 +423,6 @@ u8 usmart_get_fparam(u8*str,u8 *parn)
 	*parn=n;	//记录参数的个数
 	return USMART_OK;//正确得到了参数
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
