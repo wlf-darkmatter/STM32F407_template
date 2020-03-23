@@ -132,19 +132,7 @@ void LCD_Set_Window(u16 sx, u16 sy, u16 width, u16 height);	//设置窗口
 #define SSD_VPS (SSD_VER_BACK_PORCH)
 
 
-
-
-
-
 //LCD的初始化函数
-
-
-
-
-
-
-
-void TFT_PinDetect(FunctionalState NewState);
 
 
 #endif

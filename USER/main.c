@@ -53,11 +53,11 @@ int main(void) {
 		case 11:LCD_Clear(BROWN); break;
 		}
 		POINT_COLOR = RED;
-		LCD_ShowString(30, 40, 210, 24, 24, "Explorer STM32F4");
-		LCD_ShowString(30, 70, 200, 16, 16, "TFTLCD TEST");
-		LCD_ShowString(30, 90, 200, 16, 16, "ATOM@ALIENTEK");
+		LCD_ShowString(30, 40, 210, 24, 24, "WLF- STM32F4");
+		LCD_ShowString(30, 70, 200, 16, 16, "String test");
+		LCD_ShowString(30, 90, 200, 16, 16, "LQ likes what?");
 		LCD_ShowString(30, 110, 200, 16, 16, lcd_id);		//œ‘ æLCD ID	      					 
-		LCD_ShowString(30, 130, 200, 12, 12, "2014/5/4");
+		LCD_ShowString(30, 130, 200, 12, 12, "Sleeping, of course.");
 		x++;
 		if (x == 12)x = 0;
 		LED1 = !LED1;
