@@ -9,24 +9,10 @@
 
 #include "diskio.h"		/* FatFs lower layer API */
 #include "sdio_sdcard.h"
-#include "w25qxx.h"
 #include "malloc.h"		
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32F407开发板
-//FATFS底层(diskio) 驱动代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//创建日期:2014/5/15
-//版本：V1.0
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2014-2024
-//All rights reserved									  
-////////////////////////////////////////////////////////////////////////////////// 	 
-
 
 #define SD_CARD	 0  //SD卡,卷标为0
-#define EX_FLASH 1	//外部flash,卷标为1
+//#define EX_FLASH 1	//外部flash,卷标为1
 
 #define FLASH_SECTOR_SIZE 	512			  
 //对于W25Q128
@@ -45,10 +31,10 @@ DSTATUS disk_initialize (
 		case SD_CARD://SD卡
 			res=SD_Init();//SD卡初始化 
   			break;
-		case EX_FLASH://外部flash
+/*		case EX_FLASH://外部flash
 			W25QXX_Init();
 			FLASH_SECTOR_COUNT=2048*12;//W25Q1218,前12M字节给FATFS占用 
- 			break;
+ 			break;*/
 		default:
 			res=1; 
 	}		 
@@ -89,7 +75,7 @@ DRESULT disk_read (
 				//printf("sd rd error:%d\r\n",res);
 			}
 			break;
-		case EX_FLASH://外部flash
+/*		case EX_FLASH://外部flash
 			for(;count>0;count--)
 			{
 				W25QXX_Read(buff,sector*FLASH_SECTOR_SIZE,FLASH_SECTOR_SIZE);
@@ -97,7 +83,7 @@ DRESULT disk_read (
 				buff+=FLASH_SECTOR_SIZE;
 			}
 			res=0;
-			break;
+			break;*/
 		default:
 			res=1; 
 	}
@@ -132,7 +118,7 @@ DRESULT disk_write (
 				//printf("sd wr error:%d\r\n",res);
 			}
 			break;
-		case EX_FLASH://外部flash
+/*		case EX_FLASH://外部flash
 			for(;count>0;count--)
 			{										    
 				W25QXX_Write((u8*)buff,sector*FLASH_SECTOR_SIZE,FLASH_SECTOR_SIZE);
@@ -140,7 +126,7 @@ DRESULT disk_write (
 				buff+=FLASH_SECTOR_SIZE;
 			}
 			res=0;
-			break;
+			break;*/
 		default:
 			res=1; 
 	}
@@ -186,7 +172,7 @@ DRESULT disk_ioctl (
 		        res = RES_PARERR;
 		        break;
 	    }
-	}else if(pdrv==EX_FLASH)	//外部FLASH  
+	}/*else if(pdrv==EX_FLASH)	//外部FLASH  
 	{
 	    switch(cmd)
 	    {
@@ -209,7 +195,7 @@ DRESULT disk_ioctl (
 		        res = RES_PARERR;
 		        break;
 	    }
-	}else res=RES_ERROR;//其他的不支持
+	}*/else res=RES_ERROR;//其他的不支持
     return res;
 }
 #endif

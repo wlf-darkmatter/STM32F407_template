@@ -180,9 +180,6 @@
     <ClInclude Include="FWLIB\inc\wlf_I2C.h">
       <Filter>FWLIB\inc</Filter>
     </ClInclude>
-    <ClInclude Include="Font\oledfont.h">
-      <Filter>Font</Filter>
-    </ClInclude>
     <ClInclude Include="HardWare\WIFI_ESP8266.h">
       <Filter>HardWare</Filter>
     </ClInclude>
@@ -218,6 +215,9 @@
     </ClInclude>
     <ClInclude Include="SYSTEM\FAT\integer.h">
       <Filter>SYSTEM\FAT</Filter>
+    </ClInclude>
+    <ClInclude Include="Font\WLF_font.h">
+      <Filter>Font</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -401,10 +401,16 @@
     <ClCompile Include="SYSTEM\FAT\ff.c">
       <Filter>SYSTEM\FAT</Filter>
     </ClCompile>
+    <ClCompile Include="Font\wlf_cc936.c">
+      <Filter>SYSTEM\FAT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CORE\startup_stm32f40_41xxx.s">
       <Filter>CORE</Filter>
     </None>
+    <None Include="Font\GBK12.FON" />
+    <None Include="Font\GBK16.FON" />
+    <None Include="Font\GBK24.FON" />
   </ItemGroup>
 </Project>

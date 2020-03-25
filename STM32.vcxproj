@@ -39,7 +39,7 @@
     <ClInclude Include="CORE\core_cm4_simd.h" />
     <ClInclude Include="CORE\core_cmFunc.h" />
     <ClInclude Include="CORE\core_cmInstr.h" />
-    <ClInclude Include="Font\oledfont.h" />
+    <ClInclude Include="Font\WLF_font.h" />
     <ClInclude Include="FWLIB\inc\misc.h" />
     <ClInclude Include="FWLIB\inc\stm32f4xx_adc.h" />
     <ClInclude Include="FWLIB\inc\stm32f4xx_can.h" />
@@ -146,6 +146,7 @@
     <ClCompile Include="HardWare\Tim.c" />
     <ClCompile Include="HardWare\WIFI_ESP8266.c" />
     <ClCompile Include="SYSTEM\delay.c" />
+    <ClCompile Include="Font\wlf_cc936.c" />
     <ClCompile Include="SYSTEM\FAT\diskio.c" />
     <ClCompile Include="SYSTEM\FAT\exfuns.c" />
     <ClCompile Include="SYSTEM\FAT\fattester.c" />
@@ -162,6 +163,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CORE\startup_stm32f40_41xxx.s" />
+    <None Include="Font\GBK12.FON" />
+    <None Include="Font\GBK16.FON" />
+    <None Include="Font\GBK24.FON" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1f7b8084-80eb-47d5-9897-fc3f4437b8b4}</ProjectGuid>
@@ -204,10 +208,10 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;E:\MCU\STM32\STM32 project\WLF_template\STM32\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
+    <IncludePath>$(MSBuildProjectDirectory)\SYSTEM\FAT;$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;E:\MCU\STM32\STM32 project\WLF_template\STM32\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;E:\MCU\STM32\STM32 project\WLF_template\STM32\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
+    <IncludePath>$(MSBuildProjectDirectory)\SYSTEM\FAT;$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;E:\MCU\STM32\STM32 project\WLF_template\STM32\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IncludePath>$(IncludePath)</IncludePath>

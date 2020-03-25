@@ -6,37 +6,27 @@
 #include "malloc.h"		  
 #include "ff.h"
 #include "string.h"
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32F407开发板
-//FATFS 测试代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//创建日期:2014/5/15
-//版本：V1.0
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2014-2024
-//All rights reserved									  
-////////////////////////////////////////////////////////////////////////////////// 	
-    
+
 //为磁盘注册工作区	 
 //path:磁盘路径，比如"0:"、"1:"
 //mt:0，不立即注册（稍后注册）；1，立即注册
 //返回值:执行结果
 u8 mf_mount(u8* path,u8 mt)
-{		   
+{
 	return f_mount(fs[2],(const TCHAR*)path,mt); 
 }
+
 //打开路径下的文件
 //path:路径+文件名
-//mode:打开模式
+//mode:打开模式 => FA_READ , FA_WRITE , FA_CREATE_ALWAYS , FA_OPEN_ALWAYS , FA_CREATE_NEW
 //返回值:执行结果
 u8 mf_open(u8*path,u8 mode)
 {
-	u8 res;	 
+	u8 res;
 	res=f_open(file,(const TCHAR*)path,mode);//打开文件夹
 	return res;
-} 
+}
+
 //关闭文件
 //返回值:执行结果
 u8 mf_close(void)

@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\CORE;.\FWLIB\inc;.\HardWare;.\USER;.\SYSTEM;.\Font;.\USMART</IncludePath>
+              <IncludePath>.\CORE;.\FWLIB\inc;.\HardWare;.\USER;.\SYSTEM;.\Font;.\USMART;.\SYSTEM\FAT</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -586,6 +586,16 @@
               <FileName>usmart_config.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\USMART\usmart_config.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>FONT</GroupName>
+          <Files>
+            <File>
+              <FileName>wlf_cc936.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Font\wlf_cc936.c</FilePath>
             </File>
           </Files>
         </Group>
