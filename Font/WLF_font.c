@@ -119,7 +119,7 @@ u8 font_init(void)
 			//strcpy(x_contion, fn);
 			strncpy(x_contion, fn + strlen(fn) - 6, 2);//GBK16.FON为例 [p+9-6]=>16.FON=>16
 			sizeinfo = (u8)atoi(x_contion);//将字符串转换为整型值。
-			strncpy(x_contion, fn, strlen(x_contion)-6);//把真正的名字放入x_contion，重复利用嘛~
+			strncpy(x_contion, fn, strlen(fn)-6);//把真正的名字放入x_contion，重复利用嘛~
 		}
 	}
 
