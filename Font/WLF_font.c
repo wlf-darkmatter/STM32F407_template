@@ -5,8 +5,8 @@
 
 
 
-_font_info ftinfo;
-
+_font_info wlf_ftinfo;
+_wlf_font_dir* wlf_total_fon_dir[16][3];
 
 //code 字符指针开始
 //从字库中查找出字模
@@ -51,34 +51,41 @@ void Get_HzMat(unsigned char* code, unsigned char* mat, u8 size)
 //		 其他,字库丢失
 u8 font_init(void)
 {
+	u8 font_num = 0;
 	u8 res = 0;
 	u8 t = 0;
+	u8 lcd_text[32]; lcd_text[0] = 0;
 	FIL* fftemp;
 	u8 rval = 0;
 	char* fn;//文件名
-
+	u8 x_contion[32];//超级名字temp
+	u8 sizeinfo = 0;
 	fftemp = (FIL*)mymalloc(SRAMIN, sizeof(FIL));	//分配内存
 	if (fftemp == NULL)
 		rval = 1;
 	
 	while (t++ < 10)//连续读取10次,都是错误,说明确实是有问题,得更新字库了
 	{
-		printf("读取SD卡中的字库");
+		printf("读取SD卡中的字库\n");
 		POINT_COLOR = BLACK;
-		LCD_ShowString(30, 210, 200, 12, 12, "GBK Initializing.");
+		LCD_ShowString(30, 210, 200, 12, 12, "GBK Initializing...");
+
+		fileinfo.lfsize = _MAX_LFN * 2 + 1;
+		fileinfo.lfname = mymalloc(SRAMIN, fileinfo.lfsize);
 		res = f_opendir(&dir, (const TCHAR*)"FONT"); //打开FONT目录
 		if (res == 0) {
 			POINT_COLOR = BLACK;
-			printf("\n找到FONT字库文件夹.\n");
+			printf("找到FONT字库文件夹.\n");
 		}
 		else {
-			printf("\n没有找到FONT字库文件夹.\n");
+			printf("没有找到FONT字库文件夹.\n");
 			POINT_COLOR = RED;
 			LCD_ShowString(30, 210, 200, 12, 12, "GBK Initializd failed.");
+			myfree(SRAMIN, fftemp);
 			return res;
 		}
 
-		printf("找到了以下字库文件 ");
+		printf("找到了以下字库文件 : ");
 		while (1)
 		{
 			res = f_readdir(&dir, &fileinfo);                   //读取目录下的一个文件
@@ -86,17 +93,37 @@ u8 font_init(void)
 			//if (fileinfo.fname[0] == '.') continue;             //忽略上级目录
 			fn = *fileinfo.lfname ? fileinfo.lfname : fileinfo.fname;
 			//strlen()记录最后一个非'0'的地址-初始地址，"0123456789"对应10
-			if(strcmp(fn+strlen(fn)-2,"FON")==0)
-			 printf("%s, ", fn);
+			if (strcmp(fn + strlen(fn) - 3, "FON") == 0) {
+			 printf(" %s, ", fn);
+			 wlf_ftinfo.fontok = 0xAA;
+			 font_num++;
+			}
 		}
 		printf("\n");
-
-
-
+		printf("有效字库数：%d\n",font_num);
+		if (font_num > sizeof(wlf_total_fon_dir)) printf("过多字库，只读取前%d个.", sizeof(wlf_total_fon_dir));
+		sprintf(lcd_text, "vaild font : %02d  .", font_num);
+		LCD_ShowString(30, 225, 200, 12, 12, lcd_text);
 		//W25QXX_Read((u8*)&ftinfo, FONTINFOADDR, sizeof(ftinfo));//读出ftinfo结构体数据
-		if (ftinfo.fontok == 0XAA)break;
+		if (wlf_ftinfo.fontok == 0XAA) break;
 		delay_ms(20);
 	}
-	if (ftinfo.fontok != 0XAA)return 1;
+	
+	/*读取字库地址部分*/
+	f_opendir(&dir, (const TCHAR*)"FONT"); //再一次打开FONT目录，不优化什么了
+	for (int i = 0; i < font_num&&i<sizeof(wlf_total_fon_dir); i++) {
+		for (int j = 0; j < 3; j++) {
+			f_readdir(&dir, &fileinfo);//读取目录下的一个文件
+			fn = *fileinfo.lfname ? fileinfo.lfname : fileinfo.fname;//读取文件名字
+			printf("正在记录【%s】的dir位置。\n", fn);
+			//strcpy(x_contion, fn);
+			strncpy(x_contion, fn + strlen(fn) - 6, 2);//GBK16.FON为例 [p+9-6]=>16.FON=>16
+			sizeinfo = (u8)atoi(x_contion);//将字符串转换为整型值。
+			strncpy(x_contion, fn, strlen(x_contion)-6);//把真正的名字放入x_contion，重复利用嘛~
+		}
+	}
+
+	myfree(SRAMIN, fftemp);
+	if (wlf_ftinfo.fontok != 0XAA)return 1;
 	return 0;
 }

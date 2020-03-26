@@ -22,6 +22,7 @@
 /*不要使用PA13和PA14，它们分别对应着【SW-DIO】和【SW-CLK】，且本身一直处于AF复用模式*/
 /*配置外设的时候要记得先使能时钟，然后在配置，因为需要一段时间等待时钟正常运行*/
 void STM32_init(void) {
+//	u8* buf;
 	u32 total, free;
 	u8 t = 0;
 	u8 res = 0;
@@ -101,9 +102,9 @@ void STM32_init(void) {
 
 int main(void) {
 
-	u32 sd_size;
 
-	u8* buf;
+
+
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
 	

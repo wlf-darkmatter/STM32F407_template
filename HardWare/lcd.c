@@ -411,8 +411,8 @@ void LCD_Display_Dir(u8 dir)
 //¥∞ÃÂ¥Û–°:width*height. 
 void LCD_Set_Window(u16 sx,u16 sy,u16 width,u16 height)
 {    
-	u8 hsareg,heareg,vsareg,veareg;
-	u16 hsaval,heaval,vsaval,veaval; 
+//	u8 hsareg,heareg,vsareg,veareg;
+//	u16 hsaval,heaval,vsaval,veaval; 
 	u16 twidth,theight;
 	twidth=sx+width-1;
 	theight=sy+height-1;
@@ -736,7 +736,6 @@ void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color)
 {          
 	u16 i,j;
 	u16 xlen=0;
-	u16 temp;
 
 	xlen=ex-sx+1;
 	for(i=sy;i<=ey;i++)

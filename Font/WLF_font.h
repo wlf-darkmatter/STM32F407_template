@@ -7,6 +7,9 @@
 #include "lcd.h"
 #include "exfuns.h"
 #include "string.h"
+#include "fattester.h"	
+#include "malloc.h"
+#include "usart.h"
 //字体信息保存地址,占33个字节,第1个字节用于标记字库是否存在.后续每8个字节一组,分别保存起始地址和文件大小														   
 extern u32 FONTINFOADDR;
 //字库信息结构体定义
@@ -23,8 +26,27 @@ typedef struct
 	u32 f24addr;			//gbk24地址
 	u32 gkb24size;			//gbk24的大小 
 }_font_info;
+extern _font_info wlf_ftinfo;	//字库信息结构体
 
-extern _font_info ftinfo;	//字库信息结构体
+//表示某个字库的信息和目录,方便之后打印汉字时的引用
+typedef struct {
+	u8 fontname[32];//字库的名字
+	u8 fontscale;	//字库字体大小
+	DIR fontdir;
+	/*	fontdir!
+	FATFS*	fs;				 Pointer to the owner file system object (**do not change order**) 
+	WORD	id;				 Owner file system mount ID (**do not change order**) 
+	WORD	index;			 Current read/write index number 
+	DWORD	sclust;			 Table start cluster (0:Root dir) 
+	DWORD	clust;			 Current cluster 
+	DWORD	sect;			 Current sector 
+	BYTE* dir;				 Pointer to the current SFN entry in the win[] 
+	BYTE* fn;				 Pointer to the SFN (in/out) {file[8],ext[3],status[1]} 
+	WCHAR* lfn;				Pointer to the LFN working buffer 
+	WORD	lfn_idx;		 Last matched LFN index number (0xFFFF:No LFN) */
+}_wlf_font_dir;
+extern _wlf_font_dir* wlf_total_fon_dir[16][3];//能够支持16个不同字体地址的指针数组
+
 
 /*用于提取SD卡里的中文字符*/
 static u8* const GBK24_PATH = "/FONT/GBK24.FON";		//GBK24的存放位置
