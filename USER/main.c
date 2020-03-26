@@ -10,6 +10,8 @@
 #include <PWM.h>
 #include <wlf_I2C.h>
 #include <OLED.h>
+#include <WLF_font.h>
+
 #include <WIFI_ESP8266.h>
 #include "SDIO_SDCard.h"
 #include "malloc.h"
@@ -79,7 +81,7 @@ void STM32_init(void) {
 	}
 	t = 0;
 	POINT_COLOR = BLACK;//设置字体   
-	LCD_ShowString(30, 150, 200, 16, 16, "FATFS OK!");
+	LCD_ShowString(30, 150, 200, 16, 16, "FATFS OK!   ");
 	LCD_ShowString(30, 170, 200, 16, 16, "SD Total Size:     MB");
 	LCD_ShowString(30, 190, 200, 16, 16, "SD  Free Size:     MB");
 	LCD_ShowNum(30 + 8 * 14, 170, total >> 10, 5, 16);//显示SD卡总容量 MB
@@ -87,8 +89,8 @@ void STM32_init(void) {
 	LCD_ShowNum(30 + 8 * 14, 190, free >> 10, 5, 16);//显示SD卡剩余容量 MB	
 
 
-
-
+	//初始化字库
+	font_init();/*******************************************************************/	
 
 
 
@@ -111,8 +113,9 @@ int main(void) {
 
 
 
-
-
+//读取SD卡示例
+/*
+	
 	buf = mymalloc(0, 512);		//申请内存
 	if (SD_ReadDisk(buf, 0, 1) == 0)	//读取0扇区的内容
 	{
@@ -124,18 +127,9 @@ int main(void) {
 		LCD_ShowString(30, 230, 200, 16, 16, "USART1 Send Data Over!");
 	}
 	myfree(0, buf);//释放内存	   
-	
+	*/
 
 	
-
-
-
-
-
-
-
-
-
 
 
 

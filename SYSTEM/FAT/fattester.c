@@ -167,11 +167,11 @@ u8 mf_scan_files(u8 * path)
 	        //if (fileinfo.fname[0] == '.') continue;             //忽略上级目录
 #if _USE_LFN
         	fn = *fileinfo.lfname ? fileinfo.lfname : fileinfo.fname;
-#else							   
+#else
         	fn = fileinfo.fname;
 #endif	                                              /* It is a file. */
 			printf("%s/", path);//打印路径	
-			printf("%s\r\n",  fn);//打印文件名	  
+			printf("%s\r\n",fn);//打印文件名	  
 		} 
     }	  
 	myfree(SRAMIN,fileinfo.lfname);

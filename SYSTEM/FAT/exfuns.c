@@ -15,7 +15,7 @@
 //Copyright(C) 广州市星翼电子科技有限公司 2014-2024
 //All rights reserved									  
 ////////////////////////////////////////////////////////////////////////////////// 	
-#define FILE_MAX_TYPE_NUM		7	//最多FILE_MAX_TYPE_NUM个大类
+#define FILE_MAX_TYPE_NUM		8	//最多FILE_MAX_TYPE_NUM个大类
 #define FILE_MAX_SUBT_NUM		4	//最多FILE_MAX_SUBT_NUM个小类
 
  //文件类型列表
@@ -28,6 +28,7 @@ u8*const FILE_TYPE_TBL[FILE_MAX_TYPE_NUM][FILE_MAX_SUBT_NUM]=
 {"WAV","MP3","APE","FLAC"},//支持的音乐文件
 {"BMP","JPG","JPEG","GIF"},//图片文件
 {"AVI"},			//视频文件
+{"FON"},			//字体文件
 };
 ///////////////////////////////公共文件区,使用malloc的时候////////////////////////////////////////////
 FATFS *fs[_VOLUMES];//逻辑磁盘工作区.	 

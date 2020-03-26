@@ -404,6 +404,7 @@
     <ClCompile Include="Font\wlf_cc936.c">
       <Filter>SYSTEM\FAT</Filter>
     </ClCompile>
+    <ClCompile Include="Font\WLF_font.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CORE\startup_stm32f40_41xxx.s">
@@ -412,5 +413,8 @@
     <None Include="Font\GBK12.FON" />
     <None Include="Font\GBK16.FON" />
     <None Include="Font\GBK24.FON" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
 </Project>

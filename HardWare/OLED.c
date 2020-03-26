@@ -309,13 +309,13 @@ void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode) {
 	u8 csize = (size / 8 + ((size % 8) ? 1 : 0)) * size;     //得到字体一个字符对应点阵集所占的字节数
 	switch (size) {
 	case 12:
-		font = gbk_1212[num];//调用1212字体
+//		font = gbk_1212[num];//调用1212字体
 		break;
 	case 16:
-		font = gbk_1616[num];//调用1616字体
+//		font = gbk_1616[num];//调用1616字体
 		break;
 	case 24:
-		font = gbk_2424[num];//调用2424字体
+//		font = gbk_2424[num];//调用2424字体
 		break;
 	default:
 		printf("警告：没有该中文字！\n");

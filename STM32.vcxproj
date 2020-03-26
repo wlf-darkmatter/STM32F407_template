@@ -99,6 +99,7 @@
     <ClInclude Include="USMART\usmart_str.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Font\WLF_font.c" />
     <ClCompile Include="FWLIB\src\misc.c" />
     <ClCompile Include="FWLIB\src\stm32f4xx_adc.c" />
     <ClCompile Include="FWLIB\src\stm32f4xx_can.c" />
@@ -166,6 +167,9 @@
     <None Include="Font\GBK12.FON" />
     <None Include="Font\GBK16.FON" />
     <None Include="Font\GBK24.FON" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1f7b8084-80eb-47d5-9897-fc3f4437b8b4}</ProjectGuid>
