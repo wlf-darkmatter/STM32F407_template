@@ -350,9 +350,18 @@ _SD SD_WriteMultiBlocks(u8 *buf,long long addr,u16 blksize,u32 nblks);
 _SD SD_ProcessIRQSrc(void);
 
 void SD_DMA_Config(u32*mbuf,u32 bufsize,u32 dir);
-//void SD_DMA_Config(u32*mbuf,u32 bufsize,u8 dir); 
 
-u8 SD_ReadDisk(u8*buf,u32 sector,u8 cnt); 	//读SD卡,fatfs/usb调用
+u8 SD_ReadDisk(u8*buf,u32 sector,u8 cnt);
+//读SD卡的字节
+//Bbuf:读数据缓存区
+//sector:扇区地址
+//startBtye_offset:该扇区需要读的字节的起始地址（相对于扇区开始地址，0~512）
+//length 读取的长度(几个字节)，
+//返回值:错误状态;0,正常;其他,错误代码;	
+//注意，需要提前声明Bbuf的 大小，函数把SD卡的内容放进Bbug指向的地址里
+//不能跨扇区读，不能超过512个字节
+u8 SD_ReakBytes(u8* Bbuf, u32 sector, u16 startBtye_offset, u16 length);
+//读SD卡,fatfs/usb调用
 u8 SD_WriteDisk(u8*buf,u32 sector,u8 cnt);	//写SD卡,fatfs/usb调用
 void show_sdcard_info(void);
 

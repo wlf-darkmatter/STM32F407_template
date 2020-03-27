@@ -28,7 +28,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)LCD_DrawRectangle,"void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2)",
 	(void*)LCD_Draw_Circle,"void Draw_Circle(u16 x0,u16 y0,u8 r)",
 	(void*)LCD_ShowNum,"void LCD_ShowNum(u16 x,u16 y,u32 num,u8 len,u8 size)",
-	(void*)LCD_ShowString,"void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p)",
+	(void*)LCD_ShowString,"void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p)",/*已检验，可以识别*/
 	(void*)LCD_Fast_DrawPoint,"void LCD_Fast_DrawPoint(u16 x,u16 y,u16 color)",
 	(void*)LCD_ReadPoint,"u16 LCD_ReadPoint(u16 x,u16 y)",							 
 	(void*)LCD_Display_Dir,"void LCD_Display_Dir(u8 dir)",
@@ -48,7 +48,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)OLED_ShowGBK,"void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode)",
 	(void*)OLED_Clear,"void OLED_Clear(void)",
 
-	(void*)SDIO_Clock_Set,"void SDIO_Clock_Set(u8 clkdiv)",
+/*	(void*)SDIO_Clock_Set,"void SDIO_Clock_Set(u8 clkdiv)",
 	(_SD*)SD_Init,"_SD SD_Init(void)",
 	(_SD*)SD_PowerON,"_SD SD_PowerON(void)",
 	(_SD*)SD_PowerOFF,"_SD SD_PowerOFF(void)",
@@ -68,6 +68,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(u8*)SD_ReadDisk,"u8 SD_ReadDisk(u8* buf,u32 sector,u8 cnt)",
 	(u8*)SD_WriteDisk,"u8 SD_WriteDisk(u8* buf,u32 sector,u8 cnt)",
 	(void*)show_sdcard_info,"void show_sdcard_info(void)",
+	*/
 
 	(void*)mf_mount,"u8 mf_mount(u8* path,u8 mt)",
 	(void*)mf_open,"u8 mf_open(u8*path,u8 mode)",

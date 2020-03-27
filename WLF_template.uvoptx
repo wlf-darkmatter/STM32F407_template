@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>159</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134254854</Address>
+          <Address>134254938</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -168,9 +168,9 @@
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>113</LineNumber>
+          <LineNumber>115</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134252256</Address>
+          <Address>134252262</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -179,14 +179,14 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\Font\WLF_font.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\WLF_template\Font/WLF_font.c\113</Expression>
+          <Expression>\\WLF_template\Font/WLF_font.c\115</Expression>
         </Bp>
         <Bp>
           <Number>2</Number>
           <Type>0</Type>
-          <LineNumber>116</LineNumber>
+          <LineNumber>118</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134252274</Address>
+          <Address>134252272</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -195,23 +195,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\Font\WLF_font.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\WLF_template\Font/WLF_font.c\116</Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
-          <LineNumber>95</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>.\Font\WLF_font.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\WLF_template\Font/WLF_font.c\118</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -228,7 +212,7 @@
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>sizeinfo</ItemText>
+          <ItemText>sizeinfo,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>3</count>

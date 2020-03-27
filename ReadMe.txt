@@ -52,3 +52,14 @@ version = 1.11.4
 version = 1.11.5
 2020/03/26/12:26
 修改了名字识别BUG
+
+version = 1.11.6
+2020/03/27/02:41
+在ff中添加了clust2sect
+在lcd.c中修改了LCD_ShowString
+在lcd.c中添加了LCD_GetBGKMat
+
+version = 1.11.7
+2020/03/28/01:23
+可以显示中文了，但是存在读取SD卡时的4字节对齐问题
+中文显示存在不匹配的问题
