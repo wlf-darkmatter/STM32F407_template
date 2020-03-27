@@ -30,7 +30,7 @@ SD_CardInfo SDCardInfo;									//SD卡信息
 
 //SD_ReadDisk/SD_WriteDisk函数专用buf,当这两个函数的数据缓存区地址不是4字节对齐的时候,
 //需要用到该数组,确保数据缓存区地址是4字节对齐的.
-/*__align(4)*/ u8 SDIO_DATA_BUFFER[512];						  
+__align(4) u8 SDIO_DATA_BUFFER[512];						  
  
  
 void SDIO_Register_Deinit()
@@ -538,24 +538,24 @@ _SD SD_ReadBlock(u8 *buf,long long addr,u16 blksize)
 {	  
 	_SD errorstatus=SD_OK;
 	u8 power;
-  u32 count=0,*tempbuff=(u32*)buf;//转换为u32指针 
+	u32 count=0,*tempbuff=(u32*)buf;//转换为u32指针 
 	u32 timeout=SDIO_DATATIMEOUT;   
-  if(NULL==buf)
+	if(NULL==buf)
 		return SD_INVALID_PARAMETER; 
-  SDIO->DCTRL=0x0;	//数据控制寄存器清零(关DMA) 
+	SDIO->DCTRL=0x0;	//数据控制寄存器清零(关DMA) 
   
 	if(CardType==SDIO_HIGH_CAPACITY_SD_CARD)//大容量卡
 	{
 		blksize=512;
 		addr>>=9;
 	}   
-  	SDIO_DataInitStructure.SDIO_DataBlockSize= SDIO_DataBlockSize_1b ;//清除DPSM状态机配置
-	  SDIO_DataInitStructure.SDIO_DataLength= 0 ;
-	  SDIO_DataInitStructure.SDIO_DataTimeOut=SD_DATATIMEOUT ;
-	  SDIO_DataInitStructure.SDIO_DPSM=SDIO_DPSM_Enable;
-	  SDIO_DataInitStructure.SDIO_TransferDir=SDIO_TransferDir_ToCard;
-	  SDIO_DataInitStructure.SDIO_TransferMode=SDIO_TransferMode_Block;
-    SDIO_DataConfig(&SDIO_DataInitStructure);
+	SDIO_DataInitStructure.SDIO_DataBlockSize= SDIO_DataBlockSize_1b ;//清除DPSM状态机配置
+	SDIO_DataInitStructure.SDIO_DataLength= 0 ;
+	SDIO_DataInitStructure.SDIO_DataTimeOut=SD_DATATIMEOUT ;
+	SDIO_DataInitStructure.SDIO_DPSM=SDIO_DPSM_Enable;
+	SDIO_DataInitStructure.SDIO_TransferDir=SDIO_TransferDir_ToCard;
+	SDIO_DataInitStructure.SDIO_TransferMode=SDIO_TransferMode_Block;
+	SDIO_DataConfig(&SDIO_DataInitStructure);
 	
 	
 	if(SDIO->RESP1&SD_CARD_LOCKED)return SD_LOCK_UNLOCK_FAILED;//卡锁了
@@ -565,36 +565,36 @@ _SD SD_ReadBlock(u8 *buf,long long addr,u16 blksize)
 		
    
 		SDIO_CmdInitStructure.SDIO_Argument =  blksize;
-    SDIO_CmdInitStructure.SDIO_CmdIndex = SD_CMD_SET_BLOCKLEN;
-    SDIO_CmdInitStructure.SDIO_Response = SDIO_Response_Short;
-    SDIO_CmdInitStructure.SDIO_Wait = SDIO_Wait_No;
-    SDIO_CmdInitStructure.SDIO_CPSM = SDIO_CPSM_Enable;
-    SDIO_SendCommand(&SDIO_CmdInitStructure);//发送CMD16+设置数据长度为blksize,短响应
+		SDIO_CmdInitStructure.SDIO_CmdIndex = SD_CMD_SET_BLOCKLEN;
+		SDIO_CmdInitStructure.SDIO_Response = SDIO_Response_Short;
+		SDIO_CmdInitStructure.SDIO_Wait = SDIO_Wait_No;
+		SDIO_CmdInitStructure.SDIO_CPSM = SDIO_CPSM_Enable;
+		SDIO_SendCommand(&SDIO_CmdInitStructure);//发送CMD16+设置数据长度为blksize,短响应
 		
-		
+
 		errorstatus=CmdResp1Error(SD_CMD_SET_BLOCKLEN);	//等待R1响应 
 		
-		if(errorstatus!=SD_OK)return errorstatus;   	//响应错误	
+		if(errorstatus!=SD_OK) return errorstatus;   	//响应错误	
 		
 	}else return SD_INVALID_PARAMETER;	  	 
 	
-	  SDIO_DataInitStructure.SDIO_DataBlockSize= power<<4 ;//清除DPSM状态机配置
-	  SDIO_DataInitStructure.SDIO_DataLength= blksize ;
-	  SDIO_DataInitStructure.SDIO_DataTimeOut=SD_DATATIMEOUT ;
-	  SDIO_DataInitStructure.SDIO_DPSM=SDIO_DPSM_Enable;
-	  SDIO_DataInitStructure.SDIO_TransferDir=SDIO_TransferDir_ToSDIO;
-	  SDIO_DataInitStructure.SDIO_TransferMode=SDIO_TransferMode_Block;
-    SDIO_DataConfig(&SDIO_DataInitStructure);
+	SDIO_DataInitStructure.SDIO_DataBlockSize= power<<4 ;//清除DPSM状态机配置
+	SDIO_DataInitStructure.SDIO_DataLength= blksize ;
+	SDIO_DataInitStructure.SDIO_DataTimeOut=SD_DATATIMEOUT ;
+	SDIO_DataInitStructure.SDIO_DPSM=SDIO_DPSM_Enable;
+	SDIO_DataInitStructure.SDIO_TransferDir=SDIO_TransferDir_ToSDIO;
+	SDIO_DataInitStructure.SDIO_TransferMode=SDIO_TransferMode_Block;
+	SDIO_DataConfig(&SDIO_DataInitStructure);
 	
-	  SDIO_CmdInitStructure.SDIO_Argument =  addr;
-    SDIO_CmdInitStructure.SDIO_CmdIndex = SD_CMD_READ_SINGLE_BLOCK;
-    SDIO_CmdInitStructure.SDIO_Response = SDIO_Response_Short;
-    SDIO_CmdInitStructure.SDIO_Wait = SDIO_Wait_No;
-    SDIO_CmdInitStructure.SDIO_CPSM = SDIO_CPSM_Enable;
-    SDIO_SendCommand(&SDIO_CmdInitStructure);//发送CMD17+从addr地址出读取数据,短响应 
+	SDIO_CmdInitStructure.SDIO_Argument =  addr;
+	SDIO_CmdInitStructure.SDIO_CmdIndex = SD_CMD_READ_SINGLE_BLOCK;
+	SDIO_CmdInitStructure.SDIO_Response = SDIO_Response_Short;
+	SDIO_CmdInitStructure.SDIO_Wait = SDIO_Wait_No;
+	SDIO_CmdInitStructure.SDIO_CPSM = SDIO_CPSM_Enable;
+	SDIO_SendCommand(&SDIO_CmdInitStructure);//发送CMD17+从addr地址出读取数据,短响应 
 	
 	errorstatus=CmdResp1Error(SD_CMD_READ_SINGLE_BLOCK);//等待R1响应   
-	if(errorstatus!=SD_OK)return errorstatus;   		//响应错误	 
+	if(errorstatus!=SD_OK) return errorstatus;   		//响应错误	 
  	if(DeviceMode==SD_POLLING_MODE)						//查询模式,轮询数据	 
 	{
  		INTX_DISABLE();//关闭总中断(POLLING模式,严禁中断打断SDIO读写操作!!!)
@@ -639,7 +639,8 @@ _SD SD_ReadBlock(u8 *buf,long long addr,u16 blksize)
 		INTX_ENABLE();//开启总中断
 		SDIO_ClearFlag(SDIO_STATIC_FLAGS);//清除所有标记
 	 
-	}else if(DeviceMode==SD_DMA_MODE)
+	}
+	else if(DeviceMode==SD_DMA_MODE)
 	{
  		TransferError=SD_OK;
 		StopCondition=0;			//单块读,不需要发送停止传输指令
@@ -1646,9 +1647,11 @@ void SD_DMA_Config(u32*mbuf,u32 bufsize,u32 dir)
 //buf:读数据缓存区
 //sector:扇区地址
 //cnt:扇区个数	
-//返回值:错误状态;0,正常;其他,错误代码;				  				 
+//返回值:错误状态;0,正常;其他,错误代码;
 u8 SD_ReadDisk(u8*buf,u32 sector,u8 cnt)
 {
+	// buf = mymalloc(0, 512);		//申请内存
+	// SD_ReadDisk(buf, 0, 1)	//读取0扇区的内容
 	u8 sta=SD_OK;
 	long long lsector=sector;
 	u8 n;
@@ -1668,6 +1671,35 @@ u8 SD_ReadDisk(u8*buf,u32 sector,u8 cnt)
 	}
 	return sta;
 }
+
+//读SD卡的字节
+//Bbuf:读数据缓存区
+//sector:扇区地址（其实是簇的起始扇区地址）
+//startBtye_offset:该扇区需要读的字节的起始地址（相对于扇区开始地址，0~512）****最好是4的倍数，如果出错了，就找这里
+//length 读取的长度(几个字节)，
+//返回值:错误状态;0,正常;其他,错误代码;	
+//注意，需要提前声明Bbuf的 大小，函数把SD卡的内容放进Bbug指向的地址里
+u8 SD_ReakBytes(u8*Bbuf,u32 sector,u16 startBtye_offset ,u16 length) {
+	u8 sta = SD_OK;
+	long long lsector = sector;
+	u8 n = 0;
+	u8 cnt = 1;
+	if (CardType != SDIO_STD_CAPACITY_SD_CARD_V1_1) lsector <<= 9;
+
+	if ((u32)Bbuf % 4 != 0)//四字节对齐吗
+	{
+		sta = SD_ReadBlock(SDIO_DATA_BUFFER, lsector + startBtye_offset, length);//单个sector的读操作
+		memcpy(Bbuf, SDIO_DATA_BUFFER, length);
+	}
+	else
+	{
+		sta = SD_ReadBlock(Bbuf, lsector + startBtye_offset, length);    	//单个sector的读操作
+		 
+	}
+
+	return sta;
+}
+
 
 //写SD卡
 //buf:写数据缓存区
