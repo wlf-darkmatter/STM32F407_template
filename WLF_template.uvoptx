@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>159</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134254938</Address>
+          <Address>134254442</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -168,9 +168,9 @@
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>115</LineNumber>
+          <LineNumber>12</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134252262</Address>
+          <Address>134222264</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -179,23 +179,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\Font\WLF_font.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\WLF_template\Font/WLF_font.c\115</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>118</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134252272</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\Font\WLF_font.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\WLF_template\Font/WLF_font.c\118</Expression>
+          <Expression>\\WLF_template\Font/WLF_font.c\12</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>

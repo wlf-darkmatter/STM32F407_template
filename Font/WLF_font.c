@@ -2,7 +2,7 @@
 #include "usart.h"
 #include "malloc.h"
 #include "delay.h"
-
+#include <SDIO_SDCard.h>
 
 
 _font_info wlf_ftinfo;
@@ -16,36 +16,49 @@ void Font_GetGBKMat(u8* char_1, u8* mat, u8 size) {
 	u32 offset = 0;
 	unsigned int  total_sector, total_cluster, secoff;
 	u8 csize = (size / 8 + ((size % 8) ? 1 : 0)) * (size);//得到字体一个字符对应点阵集所占的字节数
-	qh = *char_1; ql = *(++char_1);
+	qh = *char_1; ql = *(char_1+1);
 	if (qh < 0x81 || ql < 0x40 || ql == 0xff || qh == 0xff)//非 常用汉字
 	{
 		for (i = 0; i < csize; i++) *mat++ = 0x00;//填充满格
 		return; //结束访问
 	}
-
+	/*
+	当GBKL<0X7F时 Hp=((GBKH-0x81)×190+GBKL-0X40)×(sizex2)
+	当GBKL>0X80时 Hp=((GBKH-0x81)×190+GBKL-0X41)×(sizex2)
+	一 = D2BB——显示为【耀】D2AB
+	二 = B6FE——显示为【额】B6EE
+	*/
+	AC = qh - 0x81;
+	if (ql < 0x7F)
+		BC = ql - 0x40;//注意!
+	else
+		BC = ql - 0x41;
+	offset = ((unsigned long)AC * 190 + BC) * csize;	//得到字库中的字节偏移量  		
 	//内码和区位码的转换；高字节=160+区码；低字节=160+位码
 	//字库是从第1区第1位开始的，每个区94个文字，那么第j区第k位的文字，它就相当于第(j-1)*94+k个文字
 	//1~15区没有汉字，而是全角的标点符号,
 	//共94个区，94个位
-
-
-	AC = qh - 160; BC = ql - 160;
-	offset = ((AC - 1) * 94 + BC - 1) * csize;//要的点阵的起始地址
+	//每个GBK 码由2 个字节组成，第一个字节为0X81～0XFE，第二个字节分为两部分，一是0X40～0X7E，二是0X80～0XFE。
+	//其中与GB2312相同的区域，字完全相同。
+	/*********************************************/
+//	AC = qh - 0x80; BC = ql - 0x80;
+//	offset = ((AC - 1) * 94 + BC - 1) * csize;//要的点阵的起始地址
+/*****************************************************/
 
 	total_sector = offset / (512);                       //得到总的完整的扇区数
-	secoff = (unsigned int)offset % (512);           //扇区内的字节数偏移
+	secoff = (unsigned int)(offset % (512));           //扇区内的字节数偏移
 	offset = 0;
 	total_cluster = (unsigned int)total_sector / (fs[0]->csize);   //得到总的簇数 //fs[0]->csize是每个簇拥有的扇区数
-	BC = (unsigned char)total_sector % (fs[0]->csize);
+	BC = (unsigned char)total_sector % (fs[0]->csize);//簇内扇区偏移，重复利用BC
 
-	offset = clust2sect(fs[0], FontStartClust + total_cluster); //取汉字库的簇数的扇区地址,
+	offset = clust2sect(fs[0], FontStartClust + total_cluster); //取汉字库的簇数的首扇区地址,
 																//之所以要这样绕一圈，是因为簇不是连续的,跨了一个扇区，就有可能跨簇
 
 	if (secoff + csize <= 512) {
-		SD_ReakBytes(mat, offset, secoff, csize);
+		SD_ReakBytes(mat, offset+BC, secoff, csize);//这里的BC没有加上去，一直都是错误，【已修复！】
 	}
 	else {//跨扇区了
-		SD_ReakBytes(mat, offset, secoff, 512 - secoff);
+		SD_ReakBytes(mat, offset+BC, secoff, 512 - secoff);
 		//如果同时真的也跨簇了
 		if (++BC > (fs[0]->csize))
 		{
@@ -67,8 +80,7 @@ u8 font_init(void)
 {
 	u8 res = 0;
 	u8 t = 0;
-	char* fn;//文件名
-	u8 sizeinfo = 0;
+//	char* fn;//文件名
 	while (t++ < 10)//连续读取10次,都是错误,说明确实是有问题,得更新字库了
 	{
 		printf("读取SD卡中的字库\n");
@@ -82,6 +94,7 @@ u8 font_init(void)
 			POINT_COLOR = BLACK;
 			printf("找到FONT字库文件夹.\n");
 			wlf_ftinfo.fontok = 0xAA;
+			return res;
 		}
 		else {
 			printf("没有找到FONT字库文件夹.\n");
