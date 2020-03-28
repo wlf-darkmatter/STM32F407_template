@@ -82,4 +82,5 @@ SD_ReadBlock(u8 *buf,long long 【addr】,u16 blksize)
 12号的csize为 24B
 16号的csize为 32B
 24号的csize为 72B
+直接读取512字节了，他妈的，不优化了
 
