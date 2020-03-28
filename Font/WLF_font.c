@@ -5,9 +5,10 @@
 #include <SDIO_SDCard.h>
 
 
-_font_info wlf_ftinfo;
+
 FIL fs_hz;
 DWORD FontStartClust;
+u8 fontok;
 
 void Font_GetGBKMat(u8* char_1, u8* mat, u8 size) {
 	u16 i = 0;
@@ -25,8 +26,6 @@ void Font_GetGBKMat(u8* char_1, u8* mat, u8 size) {
 	/*
 	当GBKL<0X7F时 Hp=((GBKH-0x81)×190+GBKL-0X40)×(sizex2)
 	当GBKL>0X80时 Hp=((GBKH-0x81)×190+GBKL-0X41)×(sizex2)
-	一 = D2BB——显示为【耀】D2AB
-	二 = B6FE——显示为【额】B6EE
 	*/
 	AC = qh - 0x81;
 	if (ql < 0x7F)
@@ -34,10 +33,7 @@ void Font_GetGBKMat(u8* char_1, u8* mat, u8 size) {
 	else
 		BC = ql - 0x41;
 	offset = ((unsigned long)AC * 190 + BC) * csize;	//得到字库中的字节偏移量  		
-	//内码和区位码的转换；高字节=160+区码；低字节=160+位码
-	//字库是从第1区第1位开始的，每个区94个文字，那么第j区第k位的文字，它就相当于第(j-1)*94+k个文字
-	//1~15区没有汉字，而是全角的标点符号,
-	//共94个区，94个位
+	
 	//每个GBK 码由2 个字节组成，第一个字节为0X81～0XFE，第二个字节分为两部分，一是0X40～0X7E，二是0X80～0XFE。
 	//其中与GB2312相同的区域，字完全相同。
 	/*********************************************/
@@ -93,7 +89,7 @@ u8 font_init(void)
 		if (res == 0) {
 			POINT_COLOR = BLACK;
 			printf("找到FONT字库文件夹.\n");
-			wlf_ftinfo.fontok = 0xAA;
+			fontok = 0xAA;
 			return res;
 		}
 		else {
@@ -103,6 +99,6 @@ u8 font_init(void)
 			return res;
 		}
 	}
-	if (wlf_ftinfo.fontok != 0XAA)return 1;
+	if (fontok != 0XAA)return 1;
 	return 0;
 }

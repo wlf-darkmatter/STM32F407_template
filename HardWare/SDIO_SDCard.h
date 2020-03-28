@@ -3,8 +3,21 @@
 #include "stm32f4xx.h"
 #include "ff.h"  
 #include "exfuns.h" 
+#include "malloc.h"
 //////////////////////////////////////////////////// 	 
 
+//extern u8* const UNIGBK_PATH = "/FONT/cc936.bin";				//cc936.bin的存放位置
+
+typedef struct 
+{
+	DWORD* Sclust;
+	u32 Size;
+	u8* fp;
+}SD_FileInfo;
+
+extern FIL cc936_bin;
+
+//extern SD_FileInfo FileInfo;
 
 //SDIO相关标志位,拷贝自:stm32f4xx_sdio.h
 #define SDIO_FLAG_CCRCFAIL                  ((uint32_t)0x00000001)
@@ -365,6 +378,10 @@ u8 SD_ReakBytes(u8* Bbuf, u32 sector, u16 startBtye_offset, u16 length);
 //读SD卡,fatfs/usb调用
 u8 SD_WriteDisk(u8*buf,u32 sector,u8 cnt);	//写SD卡,fatfs/usb调用
 void show_sdcard_info(void);
+
+FRESULT cc936_Init(void);
+
+
 
 #endif 
 

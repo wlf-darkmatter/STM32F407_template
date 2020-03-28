@@ -13,7 +13,7 @@
 //返回值:执行结果
 u8 mf_mount(u8* path,u8 mt)
 {
-	return f_mount(fs[2],(const TCHAR*)path,mt); 
+	return f_mount(fs[1],(const TCHAR*)path,mt); 
 }
 
 //打开路径下的文件

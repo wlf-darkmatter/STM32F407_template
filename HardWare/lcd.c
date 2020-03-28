@@ -9,7 +9,7 @@
 //LCD的画笔颜色和背景色	   
 u16 POINT_COLOR=0x0000;	//画笔颜色
 u16 BACK_COLOR=0xFFFF;  //背景色 
-
+u8 FontBold = 0;
 
 //管理LCD重要参数
 //默认为竖屏
@@ -992,16 +992,18 @@ void LCD_ShowxNum(u16 x, u16 y, u32 num, u8 len, u8 size, u8 mode)
 //*p:字符串起始地址		  
 void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p)
 {
-	/*u8 res=0;*/
+	
 	u8 x0=x;
 	char fontpath[32]; fontpath[0] = 0;
 	char* name = fontpath+5;
 	u8* GBKmat = mymalloc(SRAMIN, (size / 8 + ((size % 8) ? 1 : 0)) * (size));
 	width+=x;//相对坐标变换绝对坐标
 	height+=y;
-	strcat(fontpath, "FONT/"); *name = 0; sprintf(name, "GBK%d.FON", size);
+	strcat(fontpath, "FONT/"); *name = 0; 
+	if (FontBold != 0) sprintf(name, "%d黑白阈值/", FontBold);
+	sprintf(name, "GBK%d.FON", size);
 
-	/*res=*/f_open(&fs_hz, fontpath, FA_OPEN_EXISTING | FA_READ);
+	f_open(&fs_hz, fontpath, FA_OPEN_EXISTING | FA_READ);
 	/*if(res!=0) {printf("字库文件打开失败\n");return;}*/
 	FontStartClust = fs_hz.sclust;
 	f_close(&fs_hz);
@@ -1034,6 +1036,13 @@ void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p)
 	myfree(SRAMIN,GBKmat);
 }
 
+//设置颜色和字体粗细
+//color为颜色
+//bold为粗细，有0，16，32，64，128 其中0为默认
+void LCD_Font_setting(u16 color, u8 bold) {
+	POINT_COLOR = color;
+	FontBold = bold;
+}
 
 //m^n函数
 //返回值:m^n次方.

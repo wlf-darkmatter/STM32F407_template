@@ -264,7 +264,10 @@ DWORD get_fattime (void);
 #endif
 
 /* Unicode support functions */
-#if _USE_LFN							/* Unicode - OEM code conversion */
+#if _USE_LFN
+FRESULT cc936_Init(void);
+FRESULT cc936_Deinit(void);
+/* Unicode - OEM code conversion */
 WCHAR ff_convert (WCHAR chr, UINT dir);	/* OEM-Unicode bidirectional conversion */
 WCHAR ff_wtoupper (WCHAR chr);			/* Unicode upper-case conversion */
 #if _USE_LFN == 3						/* Memory functions */
