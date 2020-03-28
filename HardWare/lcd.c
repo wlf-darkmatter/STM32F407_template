@@ -992,6 +992,7 @@ void LCD_ShowxNum(u16 x, u16 y, u32 num, u8 len, u8 size, u8 mode)
 //*p:字符串起始地址		  
 void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p)
 {
+	/*u8 res=0;*/
 	u8 x0=x;
 	char fontpath[32]; fontpath[0] = 0;
 	char* name = fontpath+5;
@@ -1000,7 +1001,8 @@ void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p)
 	height+=y;
 	strcat(fontpath, "FONT/"); *name = 0; sprintf(name, "GBK%d.FON", size);
 
-	f_open(&fs_hz, fontpath, FA_OPEN_EXISTING | FA_READ);
+	/*res=*/f_open(&fs_hz, fontpath, FA_OPEN_EXISTING | FA_READ);
+	/*if(res!=0) {printf("字库文件打开失败\n");return;}*/
 	FontStartClust = fs_hz.sclust;
 	f_close(&fs_hz);
 

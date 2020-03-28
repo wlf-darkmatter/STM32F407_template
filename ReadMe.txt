@@ -71,3 +71,15 @@ version = 1.11.8
 可以显示中文了，
 SD_ReakBytes(mat, offset+BC, secoff, csize);//这里的BC没有加上去，一直都是错误，【已修复！】
 
+version = 1.11.9
+2020/03/28/12:04
+secoff = (unsigned int)(offset % (512));
+【secoff】 => 【startBtye_offset】其实也要求被4整除，否则在函数
+u8 SD_ReakBytes(u8*Bbuf,u32 sector,u16 【startBtye_offset】 ,u16 length)中的
+SD_ReadBlock(u8 *buf,long long 【addr】,u16 blksize)
+会发生读取错误。
+修复12号，24号不是2的幂级数，SD_ReadBlock无法正常使用的BUG
+12号的csize为 24B
+16号的csize为 32B
+24号的csize为 72B
+

@@ -1675,26 +1675,41 @@ u8 SD_ReadDisk(u8*buf,u32 sector,u8 cnt)
 //读SD卡的字节
 //Bbuf:读数据缓存区
 //sector:扇区地址（其实是簇的起始扇区地址）
-//startBtye_offset:该扇区需要读的字节的起始地址（相对于扇区开始地址，0~512）****最好是4的倍数，如果出错了，就找这里
+//startBtye_offset:该扇区需要读的字节的起始地址（相对于扇区开始地址，0~512）
+//【↑】****最好是4的倍数，如果出错了，就找这里
 //length 读取的长度(几个字节)，
 //返回值:错误状态;0,正常;其他,错误代码;	
-//注意，需要提前声明Bbuf的 大小，函数把SD卡的内容放进Bbug指向的地址里
+//注意，需要提前声明Bbuf的 大小，函数把SD卡的内容放进Bbuf指向的地址里
 u8 SD_ReakBytes(u8*Bbuf,u32 sector,u16 startBtye_offset ,u16 length) {
 	u8 sta = SD_OK;
 	long long lsector = sector;
-	u8 n = 0;
-	u8 cnt = 1;
+	u16 n = 1;
 	if (CardType != SDIO_STD_CAPACITY_SD_CARD_V1_1) lsector <<= 9;
-
-	if ((u32)Bbuf % 4 != 0)//四字节对齐吗
+//startBtye_offset其实也要求被4整除
+//SD_ReadBlock读取的length必须是2的幂级数
+	if ((u32)Bbuf % 4 != 0 || (length & length - 1) != 0)//四字节对齐吗，如果四字节对齐，但是读取的不是2幂级数，也同样
 	{
-		sta = SD_ReadBlock(SDIO_DATA_BUFFER, lsector + startBtye_offset, length);//单个sector的读操作
-		memcpy(Bbuf, SDIO_DATA_BUFFER, length);
+//		n = startBtye_offset % 4 ;
+		//既非4倍数地址又读取>=512字节，懒得弄了，直接用别的函数吧
+		if ((n != 0 && length >= 512)||length==0) return SD_ERROR;
+			//取最接近的length的2幂级数
+//		n = length;
+/*		for (t = 1; t <9 ; t++) {
+			if (n == 1) {
+				n = 1 << t;//n取最接近length，且比length大的数，最大是512
+				break;
+			}
+				n >>= 1;
+		}*/
+		
+		sta = SD_ReadBlock(SDIO_DATA_BUFFER, lsector , 512);//读取512字节，全部读！妈的
+		memcpy(Bbuf, SDIO_DATA_BUFFER + startBtye_offset , length);
+		
+
 	}
 	else
-	{
+	{//四字节对齐的情况下
 		sta = SD_ReadBlock(Bbuf, lsector + startBtye_offset, length);    	//单个sector的读操作
-		 
 	}
 
 	return sta;
