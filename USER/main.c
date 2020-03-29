@@ -22,7 +22,8 @@
 #define FORMAT_IF_ERROR 0
 
 
-char* lcd_string;//指向需要打印的字符串的指针
+char lcd_string[128];//指向需要打印的字符串的指针
+
 DIR picdir;
 u16* picindextbl; //用于存放图片索引
 int mytemp;//只局限于一个函数向外部传递信息
@@ -39,8 +40,6 @@ void STM32_init(void) {
 	u32 total, free;
 	u8 t = 0;
 	u8 res = 0;
-	lcd_string = mymalloc(SRAMIN, 32);
-
 	delay_init(168);/*******************************************************************/
 	LED_Init();/*******************************************************************/
 	Key_Init();/*******************************************************************/
@@ -115,14 +114,26 @@ void STM32_init(void) {
 	else {
 		POINT_COLOR = RED;
 		LCD_ShowString(20, 210, 200, 16, 16, "Chinese font failed!"); 
-		POINT_COLOR = BLACK;
+		
 	}
-
+	POINT_COLOR = BLACK;
 	res=PictureFile_Init();/*******************************************************************/
 	sprintf(lcd_string, "图片读取完毕，共%d个", mytemp);
+	printf("%s",lcd_string);
 	if(res==0) LCD_ShowString(20, 230, 200, 16, 16, lcd_string);
 	
-
+	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面."); 
+	delay_ms(800);
+	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面.."); 
+	delay_ms(800);
+	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面..."); 
+	delay_ms(800);
+	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面...."); 
+	delay_ms(800);
+	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面....."); 
+	delay_ms(800);
+	LCD_Clear(GREEN);
+	ai_load_picfile("/PICTURE/WLF(丙卯)[头像乙].jpg", 0, 0, lcddev.width, lcddev.height, 0);//显示图片  
 
 
 
@@ -188,6 +199,9 @@ u8 PictureFile_Init(void) {
 		}
 	}
 	mytemp = curindex;
+	myfree(SRAMIN, picfileinfo.lfname);	//释放内存			    
+	myfree(SRAMIN, pname);				//释放内存			    
+	myfree(SRAMIN, picindextbl);		//释放内存		
 	return 0;
 }
 
