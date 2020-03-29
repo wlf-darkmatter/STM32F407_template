@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\CORE;.\FWLIB\inc;.\HardWare;.\USER;.\SYSTEM;.\Font;.\USMART;.\SYSTEM\FAT</IncludePath>
+              <IncludePath>.\CORE;.\FWLIB\inc;.\HardWare;.\USER;.\SYSTEM;.\Font;.\USMART;.\SYSTEM\FAT;.\PICTURE</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -601,6 +601,51 @@
               <FileName>WLF_font.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Font\WLF_font.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Picture</GroupName>
+          <Files>
+            <File>
+              <FileName>bmp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PICTURE\bmp.c</FilePath>
+            </File>
+            <File>
+              <FileName>gif.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PICTURE\gif.c</FilePath>
+            </File>
+            <File>
+              <FileName>piclib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PICTURE\piclib.c</FilePath>
+            </File>
+            <File>
+              <FileName>tjpgd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PICTURE\tjpgd.c</FilePath>
+            </File>
+            <File>
+              <FileName>bmp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PICTURE\bmp.c</FilePath>
+            </File>
+            <File>
+              <FileName>gif.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PICTURE\gif.c</FilePath>
+            </File>
+            <File>
+              <FileName>piclib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PICTURE\piclib.c</FilePath>
+            </File>
+            <File>
+              <FileName>tjpgd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PICTURE\tjpgd.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -31,6 +31,9 @@
     <Filter Include="SYSTEM\FAT">
       <UniqueIdentifier>{b55d9d69-a1a6-4d31-ac62-da97c89332ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Picture">
+      <UniqueIdentifier>{eb49a099-eea5-48b9-9661-f8e9f0f643a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CORE\core_cm4.h">
@@ -219,6 +222,19 @@
     <ClInclude Include="Font\WLF_font.h">
       <Filter>Font</Filter>
     </ClInclude>
+    <ClInclude Include="PICTURE\bmp.h" />
+    <ClInclude Include="PICTURE\tjpgd.h">
+      <Filter>Picture</Filter>
+    </ClInclude>
+    <ClInclude Include="PICTURE\gif.h">
+      <Filter>Picture</Filter>
+    </ClInclude>
+    <ClInclude Include="PICTURE\integer.h">
+      <Filter>Picture</Filter>
+    </ClInclude>
+    <ClInclude Include="PICTURE\piclib.h">
+      <Filter>Picture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FWLIB\src\misc.c">
@@ -405,6 +421,16 @@
       <Filter>SYSTEM\FAT</Filter>
     </ClCompile>
     <ClCompile Include="Font\WLF_font.c" />
+    <ClCompile Include="PICTURE\bmp.c" />
+    <ClCompile Include="PICTURE\gif.c">
+      <Filter>Picture</Filter>
+    </ClCompile>
+    <ClCompile Include="PICTURE\piclib.c">
+      <Filter>Picture</Filter>
+    </ClCompile>
+    <ClCompile Include="PICTURE\tjpgd.c">
+      <Filter>Picture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CORE\startup_stm32f40_41xxx.s">

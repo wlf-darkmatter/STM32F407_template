@@ -104,3 +104,9 @@ version = 1.12.2
 //color为颜色
 //bold为粗细，有0，16，32，64，128 其中0为默认
 void LCD_Font_setting(u16 color, u8 bold)
+
+version = 1.12.2
+2020/03/30/00:01
+文件准备
+
+

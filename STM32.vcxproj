@@ -81,6 +81,11 @@
     <ClInclude Include="HardWare\SDIO_SDCard.h" />
     <ClInclude Include="HardWare\Tim.h" />
     <ClInclude Include="HardWare\WIFI_ESP8266.h" />
+    <ClInclude Include="PICTURE\bmp.h" />
+    <ClInclude Include="PICTURE\gif.h" />
+    <ClInclude Include="PICTURE\integer.h" />
+    <ClInclude Include="PICTURE\piclib.h" />
+    <ClInclude Include="PICTURE\tjpgd.h" />
     <ClInclude Include="SYSTEM\delay.h" />
     <ClInclude Include="SYSTEM\FAT\diskio.h" />
     <ClInclude Include="SYSTEM\FAT\exfuns.h" />
@@ -146,6 +151,10 @@
     <ClCompile Include="HardWare\SDIO_SDCard.c" />
     <ClCompile Include="HardWare\Tim.c" />
     <ClCompile Include="HardWare\WIFI_ESP8266.c" />
+    <ClCompile Include="PICTURE\bmp.c" />
+    <ClCompile Include="PICTURE\gif.c" />
+    <ClCompile Include="PICTURE\piclib.c" />
+    <ClCompile Include="PICTURE\tjpgd.c" />
     <ClCompile Include="SYSTEM\delay.c" />
     <ClCompile Include="Font\wlf_cc936.c" />
     <ClCompile Include="SYSTEM\FAT\diskio.c" />
