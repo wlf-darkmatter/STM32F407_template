@@ -990,9 +990,9 @@ void LCD_ShowxNum(u16 x, u16 y, u32 num, u8 len, u8 size, u8 mode)
 //width,height:区域大小  
 //size:字体大小
 //*p:字符串起始地址		  
-void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p)
+void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,char *p)
 {
-	
+	u8* str = (u8*)p;
 	u8 x0=x;
 	char fontpath[32]; fontpath[0] = 0;
 	char* name = fontpath+5;
@@ -1008,29 +1008,29 @@ void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p)
 	FontStartClust = fs_hz.sclust;
 	f_close(&fs_hz);
 
-    while( *p!=0 )//判断是不是结尾
+    while( *str !=0 )//判断是不是结尾
     {
 		
-		if ((*p<='~')&&(*p>=' ')) //是ASCII码
+		if ((*str <='~')&&(*str >=' ')) //是ASCII码
 		{
 			if (x >= width) { x = x0; y += size; }
 			if (y >= height)break;//退出
-			LCD_ShowChar(x, y, *p, size, 0);
+			LCD_ShowChar(x, y, *str, size, 0);
 			x += size / 2;
-			p++;
+			str++;
 		}else
 		if (*p > 0x80) //是中文字符
 		{
 			if (x + size >= width) { x = x0; y += size; }
 			if (y >= height) break;
-			Font_GetGBKMat(p, GBKmat, size);
+			Font_GetGBKMat(str, GBKmat, size);
 			LCD_ShowGBK(x, y, GBKmat, size, 0);
 			x += size;
-			p += 2;
+			str += 2;
 		}else
-		if (*p == '\n'|| *p == '\r') {
+		if (*str == '\n'|| *str == '\r') {
 			y += size; x = x0;
-			p++;
+			str++;
 		}
     }
 	myfree(SRAMIN,GBKmat);

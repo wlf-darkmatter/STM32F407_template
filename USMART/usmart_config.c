@@ -34,6 +34,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)LCD_Display_Dir,"void LCD_Display_Dir(u8 dir)",
 	(void*)LCD_ShowxNum,"void LCD_ShowxNum(u16 x, u16 y, u32 num, u8 len, u8 size, u8 mode)",
 	(void*)LCD_Font_setting,"LCD_Font_setting(u16 color, u8 bold)",
+	(void*)LCD_ShowString,"LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,char* p)",
 //	(void*)led_set,"void led_set(u8 sta)",
 //	(void*)test_fun,"void test_fun(void(*ledset)(u8),u8 sta)",
 	(void*)OLED_Cmd,"void OLED_Cmd(u8 command)",

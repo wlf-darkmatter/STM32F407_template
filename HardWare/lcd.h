@@ -172,7 +172,7 @@ void LCD_ShowGBK(u16 x, u16 y, u8* mat, u8 size, u8 mode);
 void LCD_ShowNum(u16 x,u16 y,u32 num,u8 len,u8 size);  						//显示一个数字
 					//显示一个汉字
 void LCD_ShowxNum(u16 x,u16 y,u32 num,u8 len,u8 size,u8 mode);				//显示 数字
-void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p);		//显示一个字符串,12/16字体
+void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,char *p);		//显示一个字符串,12/16字体
 
 void LCD_WriteReg(u16 LCD_Reg, u16 LCD_RegValue);
 u16 LCD_ReadReg(u16 LCD_Reg);

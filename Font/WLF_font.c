@@ -81,7 +81,7 @@ u8 font_init(void)
 	{
 		printf("读取SD卡中的字库\n");
 		POINT_COLOR = BLACK;
-		LCD_ShowString(30, 210, 200, 12, 12, "GBK Initializing...");
+		LCD_ShowString(20, 210, 200, 12, 12, "GBK Initializing...");
 
 		fileinfo.lfsize = _MAX_LFN * 2 + 1;
 		fileinfo.lfname = mymalloc(SRAMIN, fileinfo.lfsize);
@@ -95,7 +95,7 @@ u8 font_init(void)
 		else {
 			printf("没有找到FONT字库文件夹.\n");
 			POINT_COLOR = RED;
-			LCD_ShowString(30, 210, 200, 12, 12, "GBK Initializd failed.");
+			LCD_ShowString(20, 210, 200, 12, 12, "GBK Initializd failed.");
 			return res;
 		}
 	}
