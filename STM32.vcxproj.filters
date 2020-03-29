@@ -222,7 +222,6 @@
     <ClInclude Include="Font\WLF_font.h">
       <Filter>Font</Filter>
     </ClInclude>
-    <ClInclude Include="PICTURE\bmp.h" />
     <ClInclude Include="PICTURE\tjpgd.h">
       <Filter>Picture</Filter>
     </ClInclude>
@@ -233,6 +232,9 @@
       <Filter>Picture</Filter>
     </ClInclude>
     <ClInclude Include="PICTURE\piclib.h">
+      <Filter>Picture</Filter>
+    </ClInclude>
+    <ClInclude Include="PICTURE\bmp.h">
       <Filter>Picture</Filter>
     </ClInclude>
   </ItemGroup>
@@ -421,7 +423,6 @@
       <Filter>SYSTEM\FAT</Filter>
     </ClCompile>
     <ClCompile Include="Font\WLF_font.c" />
-    <ClCompile Include="PICTURE\bmp.c" />
     <ClCompile Include="PICTURE\gif.c">
       <Filter>Picture</Filter>
     </ClCompile>
@@ -429,6 +430,9 @@
       <Filter>Picture</Filter>
     </ClCompile>
     <ClCompile Include="PICTURE\tjpgd.c">
+      <Filter>Picture</Filter>
+    </ClCompile>
+    <ClCompile Include="PICTURE\bmp.c">
       <Filter>Picture</Filter>
     </ClCompile>
   </ItemGroup>
