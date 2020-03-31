@@ -62,6 +62,7 @@ void piclib_init(void);								//初始化画图
 u16 piclib_alpha_blend(u16 src,u16 dst,u8 alpha);	//alphablend处理
 void ai_draw_init(void);							//初始化智能画图
 u8 is_element_ok(u16 x,u16 y,u8 chg);				//判断像素是否有效
+
 u8 ai_load_picfile(const u8 *filename,u16 x,u16 y,u16 width,u16 height,u8 fast);//智能画图
 void *pic_memalloc (u32 size);	//pic申请内存
 void pic_memfree (void* mf);	//pic释放内存

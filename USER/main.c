@@ -119,21 +119,23 @@ void STM32_init(void) {
 	POINT_COLOR = BLACK;
 	res=PictureFile_Init();/*******************************************************************/
 	sprintf(lcd_string, "图片读取完毕，共%d个", mytemp);
-	printf("%s",lcd_string);
+	printf("%s\n",lcd_string);
 	if(res==0) LCD_ShowString(20, 230, 200, 16, 16, lcd_string);
+	piclib_init();/*******************************************************************/
 	
 	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面."); 
 	delay_ms(800);
 	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面.."); 
 	delay_ms(800);
-	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面..."); 
+/*	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面..."); 
 	delay_ms(800);
 	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面...."); 
 	delay_ms(800);
 	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面....."); 
 	delay_ms(800);
+	*/
 	LCD_Clear(GREEN);
-	ai_load_picfile("/PICTURE/WLF(丙卯)[头像乙].jpg", 0, 0, lcddev.width, lcddev.height, 0);//显示图片  
+	show_picture("0:/PICTURE/爱.bmp", 1);//显示图片 
 
 
 

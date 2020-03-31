@@ -94,6 +94,10 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)mf_gets,"void mf_gets(u16 size)",
 	(void*)mf_putc,"u8 mf_putc(u8 c)",
 	(void*)mf_puts,"u8 mf_puts(u8*c)",
+
+
+	(void*)show_picture,"u8 show_picture(const u8* filename, u8 fast)",
+
 };						  
 ///////////////////////////////////END///////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////

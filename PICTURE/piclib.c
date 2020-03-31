@@ -109,6 +109,9 @@ u8 is_element_ok(u16 x,u16 y,u8 chg)
 		return 1;
 	}else return 0;
 }
+
+
+
 //智能画图
 //FileName:要显示的图片文件  BMP/JPG/JPEG/GIF
 //x,y,width,height:坐标及显示区域尺寸
@@ -118,10 +121,13 @@ u8 ai_load_picfile(const u8 *filename,u16 x,u16 y,u16 width,u16 height,u8 fast)
 {	
 	u8	res;//返回值
 	u8 temp;	
-	if((x+width)>picinfo.lcdwidth)return PIC_WINDOW_ERR;		//x坐标超范围了.
-	if((y+height)>picinfo.lcdheight)return PIC_WINDOW_ERR;		//y坐标超范围了.  
+	if((x+width)>picinfo.lcdwidth)
+		return PIC_WINDOW_ERR;		//x坐标超范围了.
+	if((y+height)>picinfo.lcdheight)
+		return PIC_WINDOW_ERR;		//y坐标超范围了.  
 	//得到显示方框大小	  	 
-	if(width==0||height==0)return PIC_WINDOW_ERR;	//窗口设定错误
+	if(width==0||height==0)
+		return PIC_WINDOW_ERR;	//窗口设定错误
 	picinfo.S_Height=height;
 	picinfo.S_Width=width;
 	//显示区域无效

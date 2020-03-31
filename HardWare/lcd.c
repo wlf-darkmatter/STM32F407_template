@@ -5,7 +5,7 @@
 #include "usart.h"	 
 #include "delay.h"	 
 #include <SDIO_SDCard.h>
-
+#include "piclib.h"
 //LCD的画笔颜色和背景色	   
 u16 POINT_COLOR=0x0000;	//画笔颜色
 u16 BACK_COLOR=0xFFFF;  //背景色 
@@ -1034,6 +1034,29 @@ void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,char *p)
 		}
     }
 	myfree(SRAMIN,GBKmat);
+}
+
+u8 show_picture(const u8* filename, u8 fast) {
+	u8 res = 0;
+	res = ai_load_picfile(filename, 0, 0, 240, 320, fast);
+	if (res != 0) {
+		printf("图片显示错误代码：%d", res);
+		switch (res)
+		{
+		case 0x27:
+			printf("=格式错误"); break;
+		case 0x28:
+			printf("图片尺寸错误"); break;
+		case 0x29:
+			printf("窗口设定错误"); break;
+		case 0x11:
+			printf("内存错误"); break;
+		default:
+			break;
+		}
+		printf("\n");
+	}
+	return res;
 }
 
 //设置颜色和字体粗细
