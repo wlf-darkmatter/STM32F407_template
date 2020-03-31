@@ -23,38 +23,27 @@
 //设置任务优先级
 #define START_TASK_PRIO      			10 //开始任务的优先级设置为最低
 //设置任务堆栈大小
-#define START_STK_SIZE  				64
+#define START_STK_SIZE  				128
 //任务堆栈	
 OS_STK START_TASK_STK[START_STK_SIZE];
 //任务函数
 void start_task(void* pdata);
 
-//LED0任务
-//设置任务优先级
-#define LED0_TASK_PRIO       			7 
+
+//浮点测试任务
+#define FLOLAT_TASK_PRIO				5
 //设置任务堆栈大小
-#define LED0_STK_SIZE  		    		64
-//任务堆栈	
-OS_STK LED0_TASK_STK[LED0_STK_SIZE];
+#define FLOAT_STK_SIZE					128
+//如果人物中使用printf函数打印浮点数的话一定要8字节对齐
+/*__align(8)*/ OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
 //任务函数
-void led0_task(void* pdata);
+void float_task(void* pdata);
 
-
-//LED1任务
-//设置任务优先级
-#define LED1_TASK_PRIO       			6 
-//设置任务堆栈大小
-#define LED1_STK_SIZE  					64
-//任务堆栈
-OS_STK LED1_TASK_STK[LED1_STK_SIZE];
-//任务函数
-void led1_task(void* pdata);
-
-
-
+/*******************************        SD      ****************************************/
 //如果SD卡错误，是否自动格式化，1=是，0=否
 #define FORMAT_IF_ERROR 0
-
+OS_EVENT* message_SD;			//SD卡读写邮箱事件块指针
+/***************************************************************************************/
 
 char lcd_string[128];//指向需要打印的字符串的指针
 
@@ -180,7 +169,6 @@ void STM32_init(void) {
 	//myfree(SRAMIN, lcd_string);
 }
 
-
 u8 PictureFile_Init(void) {
 	FILINFO picfileinfo;//记录图片的文件信息
 	u16 totpicnum;
@@ -270,47 +258,22 @@ u16 pic_get_tnum(u8* path)
 
 
 
-int main(void) {
 
 
-
-
-
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
-	
-	
-	STM32_init();
-
-
-
-
-//读取SD卡示例
-/*
-	
-	buf = mymalloc(0, 512);		//申请内存
-	if (SD_ReadDisk(buf, 0, 1) == 0)	//读取0扇区的内容
-	{
-		POINT_COLOR = BROWN;
-		LCD_ShowString(20, 230, 200, 16, 16, "USART1 Sending Data...");
-		printf("SECTOR 0 DATA:\r\n");
-		for (sd_size = 0; sd_size < 512; sd_size++)printf("%x ", buf[sd_size]);//打印0扇区数据    	   
-		printf("\r\nDATA ENDED\r\n");
-		LCD_ShowString(20, 230, 200, 16, 16, "USART1 Send Data Over!");
-	}
-	myfree(0, buf);//释放内存	   
-	*/
-
-	
-
-
-
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);//降低系统中断优先级分组4
-	while (1) {
-		
-	}
-
+//开始任务
+void start_task(void* pdata)
+{
+	OS_CPU_SR cpu_sr = 0;
+	message_SD = OSMboxCreate((void*)0);
+	OSStatInit();					//初始化统计任务.这里会延时1秒钟左右
+	pdata = pdata;
+	OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
+//	OSTaskCreate(led0_task, (void*)0, (OS_STK*)&LED0_TASK_STK[LED0_STK_SIZE - 1], LED0_TASK_PRIO);
+//	OSTaskCreate(led1_task, (void*)0, (OS_STK*)&LED1_TASK_STK[LED1_STK_SIZE - 1], LED1_TASK_PRIO);
+	OSTaskCreate(float_task, (void*)0, (OS_STK*)&FLOAT_TASK_STK[FLOAT_STK_SIZE - 1], FLOLAT_TASK_PRIO);
+	OSTaskSuspend(START_TASK_PRIO);	//挂起起始任务.
+	OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
 }
-
 
 /*【PWM】部分
 
@@ -326,5 +289,30 @@ TIM3_INT_Init(5000 - 1, 8400 - 1);//一般情况下，Tout=(I+1)*(II+1)/84 (单位us)
 //通过串口打印SD卡相关信息
 
 
+//浮点测试任务
+void float_task(void* pdata) {
+	OS_CPU_SR cpu_sr = 0;
+	static float float_num = 0.01;
+	while (1) {
+		float_num += 0.01f;
+		OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
+		OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
+		printf("float_num的值为：%.4f\n", float_num);
+		delay_ms(500);
+	}
+}
 
 
+int main(void) {
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
+
+	//基本程序初始化
+	STM32_init();
+	//系统初始化
+	OSInit();
+	//创建开始任务
+	OSTaskCreate(start_task, (void*)0, (OS_STK*)&START_TASK_STK[START_STK_SIZE - 1], START_TASK_PRIO);
+	//开始任务
+	OSStart();
+
+}

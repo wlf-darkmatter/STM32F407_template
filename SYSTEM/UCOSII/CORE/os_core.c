@@ -54,7 +54,7 @@ INT8U  const  OSUnMapTbl[256] = {
     4u, 0u, 1u, 0u, 2u, 0u, 1u, 0u, 3u, 0u, 1u, 0u, 2u, 0u, 1u, 0u  /* 0xF0 to 0xFF                   */
 };
 
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                       FUNCTION PROTOTYPES
@@ -77,7 +77,7 @@ static  void  OS_InitTCBList(void);
 
 static  void  OS_SchedNew(void);
 
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                         GET THE NAME OF A SEMAPHORE, MUTEX, MAILBOX or QUEUE
@@ -156,7 +156,7 @@ INT8U  OSEventNameGet (OS_EVENT   *pevent,
 }
 #endif
 
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                         ASSIGN A NAME TO A SEMAPHORE, MUTEX, MAILBOX or QUEUE
@@ -232,7 +232,7 @@ void  OSEventNameSet (OS_EVENT  *pevent,
 }
 #endif
 
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                      PEND ON MULTIPLE EVENTS
@@ -303,7 +303,7 @@ void  OSEventNameSet (OS_EVENT  *pevent,
 *                 case of any error(s).
 *********************************************************************************************************
 */
-/*$PAGE*/
+/*$PAGE*/
 #if ((OS_EVENT_EN) && (OS_EVENT_MULTI_EN > 0u))
 INT16U  OSEventPendMulti (OS_EVENT  **pevents_pend,
                           OS_EVENT  **pevents_rdy,
@@ -553,7 +553,7 @@ INT16U  OSEventPendMulti (OS_EVENT  **pevents_pend,
 }
 #endif
 
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                             INITIALIZATION
@@ -606,7 +606,7 @@ void  OSInit (void)
     OSDebugInit();
 #endif
 }
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                              ENTER ISR
@@ -640,7 +640,7 @@ void  OSIntEnter (void)
         }
     }
 }
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                               EXIT ISR
@@ -689,7 +689,7 @@ void  OSIntExit (void)
         OS_EXIT_CRITICAL();
     }
 }
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                            INDICATE THAT IT'S NO LONGER SAFE TO CREATE OBJECTS
@@ -715,7 +715,7 @@ void  OSSafetyCriticalStart (void)
 
 #endif
 
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                          PREVENT SCHEDULING
@@ -753,7 +753,7 @@ void  OSSchedLock (void)
 }
 #endif
 
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                          ENABLE SCHEDULING
@@ -799,7 +799,7 @@ void  OSSchedUnlock (void)
 }
 #endif
 
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                          START MULTITASKING
@@ -830,7 +830,7 @@ void  OSStart (void)
         OSStartHighRdy();                            /* Execute target specific code to start task     */
     }
 }
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                        STATISTICS INITIALIZATION
@@ -860,7 +860,7 @@ void  OSStatInit (void)
 
 
 
-    OSTimeDly(2u);                               /* Synchronize with clock tick                        */
+    OSTimeDly(2u);                               /* 为了同步时钟滴答                                   */
     OS_ENTER_CRITICAL();
     OSIdleCtr    = 0uL;                          /* Clear idle counter                                 */
     OS_EXIT_CRITICAL();
@@ -871,7 +871,7 @@ void  OSStatInit (void)
     OS_EXIT_CRITICAL();
 }
 #endif
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                         PROCESS SYSTEM TICK
@@ -957,7 +957,7 @@ void  OSTimeTick (void)
     }
 }
 
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                             GET VERSION
@@ -977,7 +977,7 @@ INT16U  OSVersion (void)
     return (OS_VERSION);
 }
 
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                            DUMMY FUNCTION
@@ -996,7 +996,7 @@ void  OS_Dummy (void)
 }
 #endif
 
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                             MAKE TASK READY TO RUN BASED ON EVENT OCCURING
@@ -1084,7 +1084,7 @@ INT8U  OS_EventTaskRdy (OS_EVENT  *pevent,
     return (prio);
 }
 #endif
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                   MAKE TASK WAIT FOR EVENT TO OCCUR
@@ -1727,7 +1727,7 @@ INT8U  OS_StrLen (INT8U *psrc)
     return (len);
 }
 #endif
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                              IDLE TASK
@@ -1748,7 +1748,6 @@ INT8U  OS_StrLen (INT8U *psrc)
 *                 power.
 *********************************************************************************************************
 */
-
 void  OS_TaskIdle (void *p_arg)
 {
 #if OS_CRITICAL_METHOD == 3u                     /* Allocate storage for CPU status register           */
@@ -1765,7 +1764,7 @@ void  OS_TaskIdle (void *p_arg)
         OSTaskIdleHook();                        /* Call user definable HOOK                           */
     }
 }
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                            STATISTICS TASK
@@ -1828,7 +1827,7 @@ void  OS_TaskStat (void *p_arg)
     }
 }
 #endif
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                      CHECK ALL TASK STACKS
@@ -1870,7 +1869,7 @@ void  OS_TaskStatStkChk (void)
     }
 }
 #endif
-/*$PAGE*/
+/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                            INITIALIZE TCB

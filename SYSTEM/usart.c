@@ -54,7 +54,7 @@ USART_ClearITPendingBit：	清除中断标志位
 //1,修正了启用TCIE中断后程序进入TCIE中断无限循环的BUG
 //2,添加了程序的USART_Echo等待响应函数
 //3,添加了中断执行程序中的【TC中断】判断
-//4，修改了重定义fputc函数中的TC标志位的判断方法，采用了自己设计的USART_TX_STA来判断，以便之后能够利用TCIE
+//4,修改了重定义fputc函数中的TC标志位的判断方法，采用了自己设计的USART_TX_STA来判断，以便之后能够利用TCIE
 
 //V1.7修改说明
 //1，添加了WIFI串口——USART2
@@ -221,7 +221,6 @@ void usart1_init(u32 bound){
 	LED2=1;
 	delay_ms(50);
 	
-	
 	//Usart1 NVIC 初始化配置
 	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;		//串配置USART1为中断信号源
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = NVIC_USART1_PreemptionPriority;	//设置抢占优先级
@@ -229,13 +228,8 @@ void usart1_init(u32 bound){
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ中断通道使能
 	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数配置NVIC
 	/************************************************************/
-	
-
-	
 
 	//USART_ClearITPendingBit(USART1,USART_IT_RXNE);
-	
-
 
 	/********************************************************/
 	/*注意，开启了NVIC中断后，需要设置系统本身的中断的优先级*/
@@ -246,35 +240,10 @@ void usart1_init(u32 bound){
 	delay_ms(50);
 	LED2=1;
 	
-
-
 	
 }//uart_init初始化函数结束
 
 
-
-//输入反馈程序
-void USART1_Echo(void){
-	u8 t = 0, len = 0;
-
-	while (1) {
-		if (USART1_RX_STA & 0x8000) {//取USART_RX_STA[15]（接收状态标志位）
-			len = USART1_RX_STA & 0x3FFF;// 取接收数据量[13:0]
-			printf("发送的信息为：");
-			for (t = 0; t < len; t++) {
-				USART1->DR = USART1_RX_BUF[t];
-				while ((USART1_TX_STA & 0x80) == 0);//不断采样，等待USART_TX_STA的[7]发送完成状态
-				USART1_TX_STA = 0;//清零
-			}
-			printf("\r\n");
-			USART1_RX_STA = 0;
-		}
-		else {
-			LED1 = !LED1;
-			delay_ms(300);
-		}
-	}
-}
 
 //⑦	编写中断处理函数——函数格式应该为 USARTxIRQHandler（x为串口号）
 void USART1_IRQHandler(void) //串口1中断服务程序，【*】该函数的调用位置在启动文件startup_stm32f40_41xxx.s中

@@ -50,7 +50,8 @@ void TIM3_INT_Init(u32 Period,u16 Prescaler) {
 //返回溢出时间（us）
 u32 Get_TIMx_OutputTime(TIM_TypeDef* TIMx) {
 	u32 Ft = 0; //（单位:MHz）
-	uint32_t SysClk = 0/*168000000*/, HClk = 0/*168000000*/,PClk1 = 0/*168000000 / 4*/, PClk2 = 0 /*168000000 / 2*/;
+	uint32_t SysClk = 0/*168000000*/, HClk = 0/*168000000*/;
+	uint32_t PClk1 = 0/*168000000 / 4*/, PClk2 = 0 /*168000000 / 2*/;
 	uint32_t pll_vco = 0, pll_p = 2, pll_m = 8, pll_n = 336, AHB_Presc = 1, APB1_Presc = 4, APB2_Presc = 2;
 	uint32_t PLL_source = 8000000;
 	uint32_t temp = 0;
@@ -177,6 +178,7 @@ u32 Get_TIMx_OutputTime(TIM_TypeDef* TIMx) {
 	TIMx_Period=TIMx->ARR;//u32_t TIM auto-reload register
 	TIMx_Prescaler = TIMx->PSC;//u16_t TIM prescaler
 
+	temp = PClk2;//暂时不用，防止报错
 	temp = ((TIMx_Period + 1) * (TIMx_Prescaler + 1)) / Ft;
 	return temp;
 }
