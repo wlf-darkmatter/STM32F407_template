@@ -34,6 +34,21 @@
     <Filter Include="Picture">
       <UniqueIdentifier>{eb49a099-eea5-48b9-9661-f8e9f0f643a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SYSTEM\FAT\UCOSII">
+      <UniqueIdentifier>{1a64408e-0f15-4d28-a05c-f1086dda1497}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SYSTEM\USCII">
+      <UniqueIdentifier>{a2bb493e-41e1-4959-8b6e-48bff535cf2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SYSTEM\USCII\CORE">
+      <UniqueIdentifier>{360bd960-6de3-42a1-aad1-40c6156691f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SYSTEM\USCII\PORT">
+      <UniqueIdentifier>{2071cf17-41ad-41f4-8ab3-9ff6a7edd107}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SYSTEM\USCII\CONFIG">
+      <UniqueIdentifier>{724e890b-4bad-4730-98d7-579e1a8d8417}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CORE\core_cm4.h">
@@ -237,6 +252,18 @@
     <ClInclude Include="PICTURE\bmp.h">
       <Filter>Picture</Filter>
     </ClInclude>
+    <ClInclude Include="SYSTEM\UCOSII\CORE\ucos_ii.h">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEM\UCOSII\PORT\os_cpu.h">
+      <Filter>SYSTEM\USCII\PORT</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEM\UCOSII\CONFIG\includes.h">
+      <Filter>SYSTEM\USCII\CONFIG</Filter>
+    </ClInclude>
+    <ClInclude Include="SYSTEM\UCOSII\CONFIG\os_cfg.h">
+      <Filter>SYSTEM\USCII\CONFIG</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FWLIB\src\misc.c">
@@ -422,7 +449,6 @@
     <ClCompile Include="Font\wlf_cc936.c">
       <Filter>SYSTEM\FAT</Filter>
     </ClCompile>
-    <ClCompile Include="Font\WLF_font.c" />
     <ClCompile Include="PICTURE\gif.c">
       <Filter>Picture</Filter>
     </ClCompile>
@@ -435,6 +461,51 @@
     <ClCompile Include="PICTURE\bmp.c">
       <Filter>Picture</Filter>
     </ClCompile>
+    <ClCompile Include="Font\WLF_font.c">
+      <Filter>Font</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_core.c">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_flag.c">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_mem.c">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_mbox.c">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_mutex.c">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_q.c">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\CORE\ucos_ii.c">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_sem.c">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_tmr.c">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\PORT\os_cpu_c.c">
+      <Filter>SYSTEM\USCII\PORT</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\PORT\os_dbg.c">
+      <Filter>SYSTEM\USCII\PORT</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\PORT\os_dbg_r.c">
+      <Filter>SYSTEM\USCII\PORT</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_task.c">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_time.c">
+      <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CORE\startup_stm32f40_41xxx.s">
@@ -443,6 +514,9 @@
     <None Include="Font\GBK12.FON" />
     <None Include="Font\GBK16.FON" />
     <None Include="Font\GBK24.FON" />
+    <None Include="SYSTEM\UCOSII\PORT\os_cpu_a.asm">
+      <Filter>SYSTEM\USCII\PORT</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

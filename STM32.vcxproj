@@ -95,6 +95,10 @@
     <ClInclude Include="SYSTEM\FAT\integer.h" />
     <ClInclude Include="SYSTEM\malloc.h" />
     <ClInclude Include="SYSTEM\sys.h" />
+    <ClInclude Include="SYSTEM\UCOSII\CONFIG\includes.h" />
+    <ClInclude Include="SYSTEM\UCOSII\CONFIG\os_cfg.h" />
+    <ClInclude Include="SYSTEM\UCOSII\CORE\ucos_ii.h" />
+    <ClInclude Include="SYSTEM\UCOSII\PORT\os_cpu.h" />
     <ClInclude Include="SYSTEM\usart.h" />
     <ClInclude Include="USER\stm32f4xx.h" />
     <ClInclude Include="USER\stm32f4xx_conf.h" />
@@ -163,6 +167,20 @@
     <ClCompile Include="SYSTEM\FAT\ff.c" />
     <ClCompile Include="SYSTEM\malloc.c" />
     <ClCompile Include="SYSTEM\sys.c" />
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_core.c" />
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_flag.c" />
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_mbox.c" />
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_mem.c" />
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_mutex.c" />
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_q.c" />
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_sem.c" />
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_task.c" />
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_time.c" />
+    <ClCompile Include="SYSTEM\UCOSII\CORE\os_tmr.c" />
+    <ClCompile Include="SYSTEM\UCOSII\CORE\ucos_ii.c" />
+    <ClCompile Include="SYSTEM\UCOSII\PORT\os_cpu_c.c" />
+    <ClCompile Include="SYSTEM\UCOSII\PORT\os_dbg.c" />
+    <ClCompile Include="SYSTEM\UCOSII\PORT\os_dbg_r.c" />
     <ClCompile Include="SYSTEM\usart.c" />
     <ClCompile Include="USER\main.c" />
     <ClCompile Include="USER\stm32f4xx_it.c" />
@@ -176,6 +194,7 @@
     <None Include="Font\GBK12.FON" />
     <None Include="Font\GBK16.FON" />
     <None Include="Font\GBK24.FON" />
+    <None Include="SYSTEM\UCOSII\PORT\os_cpu_a.asm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
