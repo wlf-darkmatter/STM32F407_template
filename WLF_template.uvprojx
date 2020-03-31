@@ -336,9 +336,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER</Define>
+              <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_USED=1</Define>
               <Undefine></Undefine>
-              <IncludePath>.\CORE;.\FWLIB\inc;.\HardWare;.\USER;.\SYSTEM;.\Font;.\USMART;.\SYSTEM\FAT;.\PICTURE</IncludePath>
+              <IncludePath>.\CORE;.\FWLIB\inc;.\HardWare;.\USER;.\SYSTEM;.\Font;.\USMART;.\SYSTEM\FAT;.\PICTURE;.\SYSTEM\UCOSII\CONFIG;.\SYSTEM\UCOSII\CORE;.\SYSTEM\UCOSII\PORT</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -626,6 +626,71 @@
               <FileName>tjpgd.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\PICTURE\tjpgd.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>UCOSII</GroupName>
+          <Files>
+            <File>
+              <FileName>os_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\UCOSII\CORE\os_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>os_flag.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\UCOSII\CORE\os_flag.c</FilePath>
+            </File>
+            <File>
+              <FileName>os_mbox.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\UCOSII\CORE\os_mbox.c</FilePath>
+            </File>
+            <File>
+              <FileName>os_mem.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\UCOSII\CORE\os_mem.c</FilePath>
+            </File>
+            <File>
+              <FileName>os_mutex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\UCOSII\CORE\os_mutex.c</FilePath>
+            </File>
+            <File>
+              <FileName>os_q.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\UCOSII\CORE\os_q.c</FilePath>
+            </File>
+            <File>
+              <FileName>os_sem.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\UCOSII\CORE\os_sem.c</FilePath>
+            </File>
+            <File>
+              <FileName>os_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\UCOSII\CORE\os_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>os_time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\UCOSII\CORE\os_time.c</FilePath>
+            </File>
+            <File>
+              <FileName>os_tmr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\UCOSII\CORE\os_tmr.c</FilePath>
+            </File>
+            <File>
+              <FileName>os_cpu_a.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\SYSTEM\UCOSII\PORT\os_cpu_a.asm</FilePath>
+            </File>
+            <File>
+              <FileName>os_cpu_c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SYSTEM\UCOSII\PORT\os_cpu_c.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -137,7 +137,7 @@ u8 ai_load_picfile(const u8 *filename,u16 x,u16 y,u16 width,u16 height,u8 fast)
 		picinfo.S_Width=lcddev.width;
 		return FALSE;   
 	}
-	if(pic_phy.fillcolor==NULL)fast=0;//颜色填充函数未实现,不能快速显示
+	if(pic_phy.fillcolor==NULL)fast=0;//颜色填充函数未实现,不能快速显示        
 	//显示的开始坐标点
 	picinfo.S_YOFF=y;
 	picinfo.S_XOFF=x;

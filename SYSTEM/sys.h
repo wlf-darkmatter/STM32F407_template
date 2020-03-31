@@ -16,7 +16,7 @@ typedef enum {
 
 //0,不支持ucos
 //1,支持ucos
-#define SYSTEM_SUPPORT_UCOS		0		//定义系统文件夹是否支持
+#define SYSTEM_SUPPORT_UCOS		1		//定义系统文件夹是否支持
 
 
 //位带操作,实现51类似的GPIO控制功能

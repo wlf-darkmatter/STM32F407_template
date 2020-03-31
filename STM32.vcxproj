@@ -240,10 +240,10 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(MSBuildProjectDirectory)\Picture;$(MSBuildProjectDirectory)\SYSTEM\FAT;$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;E:\MCU\STM32\STM32 project\WLF_template\STM32\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
+    <IncludePath>$(MSBuildProjectDirectory)\SYSTEM\UCOSII\PORT;$(MSBuildProjectDirectory)\SYSTEM\UCOSII\CORE;$(MSBuildProjectDirectory)\SYSTEM\UCOSII\CONFIG;$(MSBuildProjectDirectory)\Picture;$(MSBuildProjectDirectory)\SYSTEM\FAT;$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;E:\MCU\STM32\STM32 project\WLF_template\STM32\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(MSBuildProjectDirectory)\Picture;$(MSBuildProjectDirectory)\SYSTEM\FAT;$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;E:\MCU\STM32\STM32 project\WLF_template\STM32\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
+    <IncludePath>$(MSBuildProjectDirectory)\SYSTEM\UCOSII\PORT;$(MSBuildProjectDirectory)\SYSTEM\UCOSII\CORE;$(MSBuildProjectDirectory)\SYSTEM\UCOSII\CONFIG;$(MSBuildProjectDirectory)\Picture;$(MSBuildProjectDirectory)\SYSTEM\FAT;$(MSBuildProjectDirectory)\Font;$(MSBuildProjectDirectory)\USER;$(MSBuildProjectDirectory)\SYSTEM;E:\MCU\STM32\STM32 project\WLF_template\STM32\HardWare;$(MSBuildProjectDirectory)\FWLIB\inc;$(MSBuildProjectDirectory)\CORE;$(MSBuildProjectDirectory)\USMART;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IncludePath>$(IncludePath)</IncludePath>
