@@ -212,8 +212,8 @@ void float_task(void* pdata) {
 	while (1) {
 		float_num += 0.01f;
 		OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
-		OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
 		printf("float_num的值为：%.4f\n", float_num);
+		OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
 		delay_ms(500);
 	}
 }

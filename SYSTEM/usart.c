@@ -78,9 +78,10 @@ void _sys_exit(int x){
 
 //ÖØ¶¨Òåfputcº¯Êý 
 int fputc(int ch, FILE *f){ 	
-	USART_SendData(USART1, (u8)ch);//USART1->DR = (u8) ch;
-	while((USART1_TX_STA&0x80)==0);//ÅÐ¶Ï[7],Ñ­»··¢ËÍ,Ö±µ½·¢ËÍÍê±Ï
-	USART1_TX_STA &= ~(0x80);//[7]ÇåÁã
+	USART1->DR = (u8)ch;
+	while ((USART1->SR & 0X40) == 0);//Ñ­»··¢ËÍ,Ö±µ½·¢ËÍÍê±Ï   
+	return ch;
+	
 	/*
 	##×¢Òâ
 	Èç¹û´ò¿ªÁËTCIEµÄ»°£¬ÄÇÃ´ÔÚ
@@ -90,7 +91,7 @@ int fputc(int ch, FILE *f){
 	Òª×¢ÒâÕâ¸öµØ·½Ò»¶¨ÒªÓÐÖÐ¶Ï´¦Àí
 	*/
 	 
-	return ch;
+
 }
 #endif
 
@@ -176,7 +177,7 @@ void usart1_init(u32 bound){
 	USART_Init(USART1, &USART_InitStructure); //³õÊ¼»¯´®¿Ú1
 
 
-
+#if EN_USART1_TX
 	//¿ªÆô¡¾·¢ËÍÍê³ÉTCÖÐ¶Ï¡¿
 	//#define EN_USART1_TX = ENABLE´®¿Ú1¡¾·¢ËÍÍê³ÉÖÐ¶ÏTCIE¡¿ÊÇ·ñ´ò¿ª
 	USART_ITConfig(USART1, USART_IT_TC, EN_USART1_TX);
@@ -191,7 +192,7 @@ void usart1_init(u32 bound){
 	£¤£¤²¢ÇÒÕâ¸öbugÁ¬¡¾µ÷ÊÔ¡¿¶¼ÎÞ·¨·¢ÏÖ
 	******************************************************************
 	*/
-
+#endif
 
 
 	//¢Ý	£¨¿ªÆôÖÐ¶Ï£©¿ªÆôÖÐ¶Ï²¢ÇÒ³õÊ¼»¯ <NVIC>£¬Ê¹ÄÜ<ÖÐ¶Ï>
@@ -266,23 +267,21 @@ void USART1_IRQHandler(void) //´®¿Ú1ÖÐ¶Ï·þÎñ³ÌÐò£¬¡¾*¡¿¸Ãº¯ÊýµÄµ÷ÓÃÎ»ÖÃÔÚÆô¶¯ÎÄ¼
 		//ResÊÇ8Î»µÄ£¬DRÊÇ16Î»µÄ£¬ÕâÀïÓÐÁËÀàÐÍ×ª»»
 		//ÕâÀïResµÃµ½ÁË·¢ËÍ¹ýÀ´µÄÊý¾Ý
 
-		if ((USART1_RX_STA & 0x8000) == 0) {//USART_RX_STA[15]==0  ½ÓÊÕÎ´Íê³É
-			if (USART1_RX_STA & 0x4000) {//USART_RX_STA[14]Î»ÊÇ1£¬ËµÃ÷ÉÏ´ÎÒÑ¾­½ÓÊÕµ½ÁË0x0D	
-				if (Res != 0x0a)//²é¿´Õâ´ÎÊÇ²»ÊÇ½ÓÊÕµ½ÁË0x0A
-					USART1_RX_STA = 0;//½ÓÊÕ´íÎó,ÖØÐÂ¿ªÊ¼
-				else
-					USART1_RX_STA |= 0x8000;	//Õâ´Î½ÓÊÕµ½ÁË0x0A£¬È«²¿µÄ½ÓÊÕÍê³ÉÁË£¬USART_RX_STA[15]Î»ÖÃ1 
+		if ((USART1_RX_STA & 0x8000) == 0)//½ÓÊÕÎ´Íê³É
+		{
+			if (USART1_RX_STA & 0x4000)//½ÓÊÕµ½ÁË0x0d
+			{
+				if (Res != 0x0a)USART1_RX_STA = 0;//½ÓÊÕ´íÎó,ÖØÐÂ¿ªÊ¼
+				else USART1_RX_STA |= 0x8000;	//½ÓÊÕÍê³ÉÁË 
 			}
-			else { //ÉÏ´Î»¹Ã»ÊÕµ½0x0D
-
-				if (Res == 0x0d)//ÄÇ¾Í¿´¿´Õâ´ÎÊÇ²»ÊÇ0x0D
-					USART1_RX_STA |= 0x4000;//[14]Î»ÖÃÎ»£¬Õâ´ÎÈ·Êµ½ÓÊÕµ½ÁË0x0D
-				else {//Õâ´Î²»ÊÇ0x0D£¬ËµÃ÷Õâ´Î½ÓÊÕµ½µÄÊÇÒ»°ãµÄÐÅÏ¢£¬Òª×ö¼ÇÂ¼
-					USART1_RX_BUF[USART1_RX_STA & 0X3FFF] = Res;//0x3FFF - [13:0]£¬È¡ºó14Î»£¬±íÊ¾ÒÑ´æÊý¾ÝµÄÊýÁ¿
-					USART1_RX_STA++;//Êý¾ÝÁ¿¼ÓÒ»
-					if (USART1_RX_STA > (USART1_REC_LEN - 1))
-						USART1_RX_STA = 0;//½ÓÊÕÊý¾Ý´íÎó£¨³¬¹ý200×Ö½Ú£©ÖØÐÂ¿ªÊ¼½ÓÊÕ
-
+			else //»¹Ã»ÊÕµ½0X0D
+			{
+				if (Res == 0x0d)USART1_RX_STA |= 0x4000;
+				else
+				{
+					USART1_RX_BUF[USART1_RX_STA & 0X3FFF] = Res;
+					USART1_RX_STA++;
+					if (USART1_RX_STA > (USART1_REC_LEN - 1))USART1_RX_STA = 0;//½ÓÊÕÊý¾Ý´íÎó,ÖØÐÂ¿ªÊ¼½ÓÊÕ	  
 				}
 			}
 		}
@@ -298,11 +297,7 @@ void USART1_IRQHandler(void) //´®¿Ú1ÖÐ¶Ï·þÎñ³ÌÐò£¬¡¾*¡¿¸Ãº¯ÊýµÄµ÷ÓÃÎ»ÖÃÔÚÆô¶¯ÎÄ¼
 
 	}
 
-	//ÔÙÅÐ¶ÏÊÇ²»ÊÇ·¢ËÍÖÐ¶Ï
-	if (USART_GetITStatus(USART1, USART_IT_TC) != RESET) {
-		USART_ClearITPendingBit(USART1, USART_IT_TC);//ÀûÓÃÖØ¶¨ÒåµÄprintf()Ê±£¬²»ÏëÖØ¸´½øÈëTCÖÐ¶ÏËÀÑ­»·
-		USART1_TX_STA |= 0x80;//ÖÃÎ»[7]£¬ËµÃ÷½øÈëÁËÖÐ¶Ï£¬²¢ÇÒÊÇTCÖÐ¶Ï¡£
-	}
+
 
 #ifdef OS_TICKS_PER_SEC	 	//Èç¹ûÊ±ÖÓ½ÚÅÄÊý¶¨ÒåÁË,ËµÃ÷ÒªÊ¹ÓÃucosIIÁË.
 	OSIntExit();

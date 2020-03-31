@@ -27,7 +27,7 @@
 
 
 #define EN_USART1_RX 			1		//使能（1）/禁止（0）串口1接收
-#define EN_USART1_TX			ENABLE		//串口1【发送完成中断TCIE】是否打开
+#define EN_USART1_TX			DISABLE		//串口1【发送完成中断TCIE】是否打开
 
 extern u8  USART1_RX_BUF[USART1_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.末字节为换行符 
 extern u16 USART1_RX_STA;         		//接收状态标记
