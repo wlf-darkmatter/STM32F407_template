@@ -300,7 +300,7 @@ void OLED_DrawStr(u8 x, u8 y,  char *str, u8 size, u8 mode) {
 	}
 	OLED_Refresh();
 }
-//写中文字符函数
+//写中文字符函数,不可用，懒得写了
 void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode) {
 	const unsigned char* font;
 	u8 temp, t, t1;
@@ -352,8 +352,21 @@ void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode) {
 
 //【清屏】
 void OLED_Clear(void) {
-	OLED_Fill(0x00);
+	for (u8 p = 0; p < 8; p++) 
+		for (u8 x = 0; x < 128; x++) 
+			OLED_GRAM[x][p] = 0;
+	OLED_Refresh();
 }
 
+void OLED_GUI_Init(void) {
+	OLED_Clear();
+	OLED_DrawStr(0, 0, "CPU: 00 %", 16, 1);//利用率
+	OLED_DrawStr(72, 0, " |03/31", 16, 1);
+	OLED_DrawStr(0, 22, "User QianQian", 12, 1);
+	OLED_DrawStr(80, 16, "|12:13", 16, 1);//时间
+}
 
+void OLED_CPUstate(void) {
+
+}
 

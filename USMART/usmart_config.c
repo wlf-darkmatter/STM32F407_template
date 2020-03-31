@@ -49,7 +49,8 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)OLED_DrawStr,"void OLED_DrawStr(u8 x, u8 y, char* str, u8 size, u8 mode)",
 	(void*)OLED_ShowGBK,"void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode)",
 	(void*)OLED_Clear,"void OLED_Clear(void)",
-
+	(void*)OLED_GUI_Init,"void OLED_GUI_Init(void)",
+	
 /*	(void*)SDIO_Clock_Set,"void SDIO_Clock_Set(u8 clkdiv)",
 	(_SD*)SD_Init,"_SD SD_Init(void)",
 	(_SD*)SD_PowerON,"_SD SD_PowerON(void)",

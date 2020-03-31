@@ -93,8 +93,8 @@ void OLED_DrawString(u8 x, u8 y, char* str, u8 size, u8 mode);
 */
 //【清屏】
 void OLED_Clear(void);
-
-
+void OLED_GUI_Init(void);
+void OLED_CPUstate(void);//输出CPU信息
 #endif // OLED_TX_TYPE != 0x00
 
 #endif // !__OLED_H

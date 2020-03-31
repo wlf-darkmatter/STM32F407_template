@@ -54,8 +54,8 @@ int mytemp;//自定义的一个只局限于一个函数向外部传递信息的变量
 void STM32_init(void);
 u16 pic_get_tnum(u8* path);//获取图片数量
 u8 PictureFile_Init(void);//记录所有图片信息
-u8 OLED_GUI_Init(void);
-void OLED_CPUstate(void);//输出CPU信息
+
+
 
 /*不要使用PA13和PA14，它们分别对应着【SW-DIO】和【SW-CLK】，且本身一直处于AF复用模式*/
 /*配置外设的时候要记得先使能时钟，然后在配置，因为需要一段时间等待时钟正常运行*/
@@ -152,17 +152,11 @@ void STM32_init(void) {
 	delay_ms(800);
 	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面.."); 
 	delay_ms(800);
-/*	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面..."); 
-	delay_ms(800);
-	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面...."); 
-	delay_ms(800);
-	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面....."); 
-	delay_ms(800);
-	*/
+
 	LCD_Clear(GREEN);
-	show_picture("0:/PICTURE/爱.bmp", 1);//显示图片 
+	show_picture("0:/PICTURE/头像.bmp", 1);//显示图片 
 
-
+	OLED_GUI_Init();/*******************************************************************/
 
 
 
@@ -208,7 +202,7 @@ TIM3_INT_Init(5000 - 1, 8400 - 1);//一般情况下，Tout=(I+1)*(II+1)/84 (单位us)
 //浮点测试任务
 void float_task(void* pdata) {
 	OS_CPU_SR cpu_sr = 0;
-	static float float_num = 0.01;
+	static float float_num = 0.01f;
 	while (1) {
 		float_num += 0.01f;
 		OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
@@ -232,11 +226,15 @@ int main(void) {
 	OSStart();
 
 }
-
-u8 OLED_GUI_Init(void) {
+//在OLED.c中实现
+/*u8 OLED_GUI_Init(void) {
 	OLED_Clear();
+	OLED_DrawStr(0, 0, "CPU: 00 %", 16, 1);//利用率
+	OLED_DrawStr(72, 0, " |12:13", 16, 1);//时间
+	OLED_DrawStr(0, 22, "User: QianQian", 12, 1);
+	OLED_DrawStr(80, 16, "|03/31", 16, 1);
+}*/
 
-}
 u8 PictureFile_Init(void) {
 	FILINFO picfileinfo;//记录图片的文件信息
 	u16 totpicnum;

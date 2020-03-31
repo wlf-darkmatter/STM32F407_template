@@ -38,7 +38,7 @@ extern u8  USART1_TX_STA;				//自己写的一个关于发送状态的标记变量
 //如果想串口中断接收，请不要注释以下宏定义
 void usart1_init(u32 bound);
 
-void USART1_Echo(void);
+
 
 
 #endif
