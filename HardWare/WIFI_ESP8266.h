@@ -42,7 +42,7 @@ u8* ESP8266_check_cmd(u8* str);
 u8 ESP8266_quit_trans(void);
 
 
-void ESP8266_init(void);
+u8 ESP8266_init(void);
 
 //向ESP8266发送数据
 u8* ESP8266_send_data(char* cmd, u16 waittime);

@@ -1,6 +1,6 @@
 #include <WIFI_ESP8266.h>
 #include <LED_STM32F407ZET6.h>
-#include <OLED.h>
+
 /*
 1、ESP8266的RXD（数据的接收端）需要连接USB转TTL模块的TXD，TXD（数据的发送端）需要连接USB转TTL模块的RXD，这是基本的；
 2、关于VCC的选取，在USB转TTL模块上有3.3V和5V两个引脚可以作为VCC，但是一般选取5V作为VCC。如果选取3.3V，可能会因为供电不足而引起不断的重启，从而不停的复位。
@@ -60,12 +60,12 @@ void ESP8266_restart(void) {
 	printf("进入重启程序\n");
 	for (int i = 0; i < 10; i++) {//重复次数不大于10*3次
 		if (ESP8266_send_cmd("AT+RST", "OK", 4000) == 0) {//等待4秒
-			printf("重启完毕\n");
+			printf("WiFi重启完毕\n");
 //			OLED_DrawStr(0, 24, "WiFi Activated.         ", 12, 1);
 			return;
 		}
 	}
-	printf("重启失败！\n");
+	printf("WiFi重启失败！\n");
 //	printf("3s 等待结束\n");
 	
 	
@@ -74,7 +74,8 @@ void ESP8266_restart(void) {
 
 //占用OLED一小部分用于显示
 //设置工作模式 1：station模式   2：AP模式  3：兼容 AP+station模式	
-void ESP8266_init(void) {
+u8 ESP8266_init(void) {
+	u8 res;
 	printf("-----------------ESP8266_init-----------------\n");
 	TIM7_INT_Init(1000 - 1, 840 - 1);		//10ms中断
 	usart2_init(115200);
@@ -89,7 +90,7 @@ void ESP8266_init(void) {
 		printf("AT 测试失败\n");
 	//设置工作模式 1：station模式   2：AP模式  3：兼容 AP+station模式
 	
-	ESP8266_send_cmd("AT+CWMODE_DEF=3", "OK", 500);
+	res = ESP8266_send_cmd("AT+CWMODE_DEF=3", "OK", 500);
 
 
 	/*
@@ -108,29 +109,31 @@ AT+CIPMODE=<mode>		OK					是否进入透传模式
 */
 //让模块连接上自己的路由
 	ESP8266_restart();
+	return res;
 }
 
 void ESP8266_WiFiConnect(char* SSID, char* passward) {
 
 	printf("-----------------ESP8266_WiFiConnect-----------------\n");
 	char CWJAP_str[60];//用于存放控制命令
-	memset(CWJAP_str, '\0', 60 * sizeof(char));//清零
-
-	strcat(CWJAP_str,"AT+CWJAP=\"");//AT+CWJAP="
-	strcat(CWJAP_str, SSID);//AT+CWJAP="SSID
-	strcat(CWJAP_str, "\",\"");//AT+CWJAP="SSID","
-	strcat(CWJAP_str, passward);//AT+CWJAP="SSID","passward
-	strcat(CWJAP_str, "\"");//AT+CWJAP="SSID","passward"
-
+//	memset(CWJAP_str, '\0', 60 * sizeof(char));//清零
+	CWJAP_str[0] = 0;
+//	strcat(CWJAP_str,"AT+CWJAP=\"");//AT+CWJAP="
+//	strcat(CWJAP_str, SSID);//AT+CWJAP="SSID
+//	strcat(CWJAP_str, "\",\"");//AT+CWJAP="SSID","
+//	strcat(CWJAP_str, passward);//AT+CWJAP="SSID","passward
+//	strcat(CWJAP_str, "\"");
+	sprintf(CWJAP_str, "AT+CWJAP=\"%s\",\"%s\"", SSID, passward);//AT+CWJAP="SSID","passward"
 //"AT+CWJAP=\"东南沿海王大哥\",\"19981213\""
 	if (ESP8266_send_cmd(CWJAP_str, "WIFI GOT IP", 20000) == 0) {
 
 	}
 	else {
 		printf("20秒没有连接上指定的WiFi。\n%s", USART2_RX_BUF);
-		OLED_DrawStr(0, 24, "WiFi connection failed.", 12, 0);
+/*		OLED_DrawStr(0, 24, "WiFi connection failed.", 12, 0);
 		OLED_DrawStr(0, 36, "I'm so Sorry.          ", 12, 0);
 		OLED_DrawStr(0, 48, "Please contact WLF.   ", 12, 0);
+		*/
 		return;
 	}
 
@@ -140,7 +143,7 @@ void ESP8266_WiFiConnect(char* SSID, char* passward) {
 //	printf("***********************\n%s\n***********************", USART2_RX_BUF);
 
 	
-	OLED_DrawStr(0, 12, "WiFi connected.      ", 12, 0);
+//	OLED_DrawStr(0, 12, "WiFi connected.      ", 12, 0);
 
 }
 //AT+ CWSAP= <ssid>,<pwd>,<chl>,<ecn>
@@ -163,14 +166,16 @@ void ESP8266_WiFiEmit(char* SSID, char* passward) {
 	if (ESP8266_send_cmd(CWSAP_str, "OK", 40000) == 0) {
 		printf("已创建WLAN\nWiFi名：%s\n密码：%s\n", SSID, passward);
 
-		OLED_DrawStr(0, 24, "WiFi:", 12, 0);
+/*		OLED_DrawStr(0, 24, "WiFi:", 12, 0);
 		OLED_DrawStr(30, 24, SSID, 12, 0);
+		*/
 	}
 	else {
 		printf("20秒没有创建指定的WiFi。\n%s", USART2_RX_BUF);//返回错误信息
-		OLED_DrawStr(0, 24, "WiFi create failed.   ", 12, 0);
+/*		OLED_DrawStr(0, 24, "WiFi create failed.   ", 12, 0);
 		OLED_DrawStr(0, 36, "I'm so Sorry.          ", 12, 0);
 		OLED_DrawStr(0, 48, "Please contact WLF.   ", 12, 0);
+		*/
 		return;
 	}
 	ESP8266_restart();
@@ -212,7 +217,7 @@ void ESP8266_TCP_Server(void) {
 	*************************************************************************
 	*/
 	if (ESP8266_send_cmd("AT+CIPSERVER=1,525", "OK", 200) == 0) {//创建服务器
-		OLED_DrawStr(0, 48, "TCP Established.        ", 12, 1);
+//		OLED_DrawStr(0, 48, "TCP Established.        ", 12, 1);
 
 
 		/*例如：
@@ -226,17 +231,17 @@ void ESP8266_TCP_Server(void) {
 			printf("STA IP: %s\n", info);
 			strcat(TCP_info, "STA IP:");
 			strcat(TCP_info, info);
-		OLED_DrawStr(0, 36, TCP_info, 12, 1);
+//		OLED_DrawStr(0, 36, TCP_info, 12, 1);
 		}
 		else {
 			printf("查询失败\n");
-			OLED_DrawStr(0, 36, "TCP IP error       ", 12, 1);
+//			OLED_DrawStr(0, 36, "TCP IP error       ", 12, 1);
 		}
 
-		OLED_DrawStr(0, 48, "TCP port: 525        ", 12, 1);
+//		OLED_DrawStr(0, 48, "TCP port: 525        ", 12, 1);
 	}
 	else {
-		OLED_DrawStr(0, 48, "TCP server error.    ", 12, 1);
+//		OLED_DrawStr(0, 48, "TCP server error.    ", 12, 1);
 	}
 
 

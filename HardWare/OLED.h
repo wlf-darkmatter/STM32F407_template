@@ -69,6 +69,7 @@ void OLED_SetPos(unsigned char x, unsigned char y);
 
 //【刷新显存】刷新整个屏幕
 void OLED_Refresh(void);
+/*void OLED_LocalRefresh(u8 x, u8 y, u8 dx, u8 dy);*/
 //【打点函数】（在显存中打点）
 void OLED_DrawPoint(u8 x, u8 y, unsigned char mode);
 
@@ -85,6 +86,7 @@ void OLED_DrawChar(u8 x, u8 y, u8 chr, u8 size, u8 mode);
  * x:0~127
  * y:0~63*/
 void OLED_DrawStr(u8 x, u8 y, char* str, u8 size, u8 mode);
+void OLED_DrawStr_manual(u8 x, u8 y, char* str, u8 size, u8 mode);
 
 //写中文字符函数
 void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode);
@@ -94,7 +96,6 @@ void OLED_DrawString(u8 x, u8 y, char* str, u8 size, u8 mode);
 //【清屏】
 void OLED_Clear(void);
 void OLED_GUI_Init(void);
-void OLED_CPUstate(void);//输出CPU信息
 #endif // OLED_TX_TYPE != 0x00
 
 #endif // !__OLED_H

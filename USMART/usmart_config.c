@@ -9,6 +9,7 @@
 #include <usart.h>
 #include "SDIO_SDCard.h"
 #include "fattester.h" 
+#include <WIFI_ESP8266.h>
 
 //extern void led_set(u8 sta);
 //extern void test_fun(void(*ledset)(u8),u8 sta);
@@ -50,7 +51,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)OLED_ShowGBK,"void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode)",
 	(void*)OLED_Clear,"void OLED_Clear(void)",
 	(void*)OLED_GUI_Init,"void OLED_GUI_Init(void)",
-	
+//	(void*)OLED_LocalRefresh,"void OLED_LocalRefresh(u8 x,u8 y,u8 dx,u8 dy)",
 /*	(void*)SDIO_Clock_Set,"void SDIO_Clock_Set(u8 clkdiv)",
 	(_SD*)SD_Init,"_SD SD_Init(void)",
 	(_SD*)SD_PowerON,"_SD SD_PowerON(void)",
@@ -72,7 +73,17 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(u8*)SD_WriteDisk,"u8 SD_WriteDisk(u8* buf,u32 sector,u8 cnt)",
 	(void*)show_sdcard_info,"void show_sdcard_info(void)",
 	*/
+	/******************   WIFI **********************/
+	(void*)ESP8266_init,"u8 ESP8266_init(void)",
+	(void*)ESP8266_restart,"void ESP8266_restart(void)",
+	(void*)ESP8266_send_cmd,"u8 ESP8266_send_cmd(char* cmd, char* ack, int waittime)",
+	(void*)ESP8266_check_cmd,"u8* ESP8266_check_cmd(u8* str)",
+	(void*)ESP8266_quit_trans,"u8 ESP8266_quit_trans(void)",
+	(void*)usart2_init,"void usart2_init(u32 bound)",
+	(void*)ESP8266_send_data,"u8* ESP8266_send_data(char* cmd, u16 waittime)",
+	(void*)usart2_printf,"void usart2_printf(char* fmt, ...)",
 
+	
 	(void*)mf_mount,"u8 mf_mount(u8* path,u8 mt)",
 	(void*)mf_open,"u8 mf_open(u8*path,u8 mode)",
 	(void*)mf_close,"u8 mf_close(void)",

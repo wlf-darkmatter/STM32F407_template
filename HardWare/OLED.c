@@ -214,13 +214,26 @@ void OLED_SetPos(unsigned char x, /*页*/unsigned char p) {//设置起始点坐�
 	OLED_Cmd((x & 0x0F) /* | 0x01*/);	//取低字节，= 0 0 0 0 X3 X2 X1 X0
 }
 
+/*void OLED_LocalRefresh(u8 x,u8 y,u8 dx,u8 dy) {
+	u8 x_end = x+dx-1;
+	u8 temp_p = (dy+y-1)/8;
+	for (u8 p = y/8; p <=temp_p; p++) {
+//			OLED_SetPos(j,i);		
+		OLED_Cmd(OLED_CTR_ADDPageBase + p);
+		OLED_Cmd(OLED_CTR_AddColBeginLow + (x&0x0F));
+		OLED_Cmd(OLED_CTR_AddColBeginHigh + ((x&0xF0)>>4) );
+		for (u8 j = 0; j < 128; j++) {
+			OLED_Data(OLED_GRAM[j][p]);
+		}
+	}
+}*/
 //【刷新显存】刷新整个屏幕
 void OLED_Refresh(void) {
-	for (int i = 0; i < 8; i++) {
+	for (u8 i = 0; i < 8; i++) {
 		OLED_Cmd(OLED_CTR_ADDPageBase + i);
 		OLED_Cmd(OLED_CTR_AddColBeginLow + 0);
 		OLED_Cmd(OLED_CTR_AddColBeginHigh + 0);
-		for (int j = 0; j < 128; j++) {
+		for (u8 j = 0; j < 128; j++) {
 			OLED_Data(OLED_GRAM[j][i]);
 		}
 	}
@@ -288,6 +301,7 @@ void OLED_DrawChar(u8 x, u8 y, u8 chr, u8 size, u8 mode) {
 			
 		}
 	}
+//	OLED_LocalRefresh(x, y,  size / 2, size);
 //	OLED_Refresh();
 }
 
@@ -300,6 +314,15 @@ void OLED_DrawStr(u8 x, u8 y,  char *str, u8 size, u8 mode) {
 	}
 	OLED_Refresh();
 }
+
+void OLED_DrawStr_manual(u8 x, u8 y, char* str, u8 size, u8 mode) {
+	while (*str != '\0') {
+		OLED_DrawChar(x, y, *str, size, mode);
+		x += size / 2;
+		str++;
+	}
+}
+
 //写中文字符函数,不可用，懒得写了
 void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode) {
 	const unsigned char* font;
@@ -366,7 +389,4 @@ void OLED_GUI_Init(void) {
 	OLED_DrawStr(80, 16, "|12:13", 16, 1);//时间
 }
 
-void OLED_CPUstate(void) {
-
-}
 

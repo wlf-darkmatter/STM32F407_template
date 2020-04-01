@@ -35,14 +35,33 @@ void start_task(void* pdata);
 //设置任务堆栈大小
 #define FLOAT_STK_SIZE					128
 //如果人物中使用printf函数打印浮点数的话一定要8字节对齐
-/*__align(8)*/ OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
+
+#if __FPU_USED
+__align(8) OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
+#else
+OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
+#endif
 //任务函数
 void float_task(void* pdata);
 
-/*******************************        SD      ****************************************/
+/*******************************       SD       ****************************************/
 //如果SD卡错误，是否自动格式化，1=是，0=否
 #define FORMAT_IF_ERROR 0
 OS_EVENT* message_SD;			//SD卡读写邮箱事件块指针
+/***************************************************************************************/
+
+/*******************************      OLED      ****************************************/
+#define OLED_TASK_PRIO				6
+#define OLED_STK_SIZE					128
+OS_STK OLED_TASK_STK[OLED_STK_SIZE];
+OS_EVENT* message_OLED;			//OLED卡读写邮箱事件块指针
+void OLED_GUI_update(void* pdata);
+/***************************************************************************************/
+
+/*******************************      WiFi      ****************************************/
+#define WIFI_TASK_PRIO			8
+#define WIFI_STK_SIZE			128
+OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
 /***************************************************************************************/
 
 char lcd_string[128];//指向需要打印的字符串的指针
@@ -156,6 +175,7 @@ void STM32_init(void) {
 	LCD_Clear(GREEN);
 	show_picture("0:/PICTURE/头像.bmp", 1);//显示图片 
 
+	ESP8266_init();/*******************************************************************/
 	OLED_GUI_Init();/*******************************************************************/
 
 
@@ -181,6 +201,7 @@ void start_task(void* pdata)
 //	OSTaskCreate(led0_task, (void*)0, (OS_STK*)&LED0_TASK_STK[LED0_STK_SIZE - 1], LED0_TASK_PRIO);
 //	OSTaskCreate(led1_task, (void*)0, (OS_STK*)&LED1_TASK_STK[LED1_STK_SIZE - 1], LED1_TASK_PRIO);
 	OSTaskCreate(float_task, (void*)0, (OS_STK*)&FLOAT_TASK_STK[FLOAT_STK_SIZE - 1], FLOLAT_TASK_PRIO);
+	OSTaskCreate(OLED_GUI_update, (void*)0, (OS_STK*)&OLED_TASK_STK[OLED_STK_SIZE - 1], OLED_TASK_PRIO);
 	OSTaskSuspend(START_TASK_PRIO);	//挂起起始任务.
 	OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
 }
@@ -199,7 +220,7 @@ TIM3_INT_Init(5000 - 1, 8400 - 1);//一般情况下，Tout=(I+1)*(II+1)/84 (单位us)
 //通过串口打印SD卡相关信息
 
 
-//浮点测试任务
+/**********************************浮点测试任务****************************************/
 void float_task(void* pdata) {
 	OS_CPU_SR cpu_sr = 0;
 	static float float_num = 0.01f;
@@ -211,7 +232,28 @@ void float_task(void* pdata) {
 		delay_ms(500);
 	}
 }
+/**************************************************************************************/
 
+
+void OLED_GUI_update(void* pdata) {
+	OS_CPU_SR cpu_sr = 0;
+	char strtemp[8];
+//OLED_GUI_Init();
+	while (1) {
+//		OLED_DrawStr(0, 0, "CPU:    %", 16, 1);//利用率
+		sprintf(strtemp, "%02d", OSCPUUsage);
+		OLED_DrawStr_manual(40, 0, strtemp, 16, 1);//利用率
+
+		OLED_DrawStr_manual(72, 0, " |03/31", 16, 1);
+	//	OLED_DrawStr(0, 22, "User QianQian", 12, 1);
+		OLED_DrawStr_manual(80, 16, "|12:13", 16, 1);//时间
+		OS_ENTER_CRITICAL();
+		OLED_Refresh();
+		OS_EXIT_CRITICAL();
+		delay_ms(1000);
+
+	}
+}
 
 int main(void) {
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
@@ -226,6 +268,7 @@ int main(void) {
 	OSStart();
 
 }
+
 //在OLED.c中实现
 /*u8 OLED_GUI_Init(void) {
 	OLED_Clear();
