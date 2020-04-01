@@ -264,6 +264,9 @@
     <ClInclude Include="SYSTEM\UCOSII\CONFIG\os_cfg.h">
       <Filter>SYSTEM\USCII\CONFIG</Filter>
     </ClInclude>
+    <ClInclude Include="USER\function_wlf.h">
+      <Filter>USER</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FWLIB\src\misc.c">
@@ -505,6 +508,9 @@
     </ClCompile>
     <ClCompile Include="SYSTEM\UCOSII\CORE\os_time.c">
       <Filter>SYSTEM\USCII\CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="USER\function_wlf.c">
+      <Filter>USER</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

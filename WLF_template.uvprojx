@@ -397,6 +397,11 @@
               <FileType>1</FileType>
               <FilePath>.\USER\system_stm32f4xx.c</FilePath>
             </File>
+            <File>
+              <FileName>function_wlf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USER\function_wlf.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

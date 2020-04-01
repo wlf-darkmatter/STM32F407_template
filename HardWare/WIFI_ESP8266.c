@@ -1,6 +1,5 @@
 #include <WIFI_ESP8266.h>
 #include <LED_STM32F407ZET6.h>
-
 /*
 1、ESP8266的RXD（数据的接收端）需要连接USB转TTL模块的TXD，TXD（数据的发送端）需要连接USB转TTL模块的RXD，这是基本的；
 2、关于VCC的选取，在USB转TTL模块上有3.3V和5V两个引脚可以作为VCC，但是一般选取5V作为VCC。如果选取3.3V，可能会因为供电不足而引起不断的重启，从而不停的复位。
@@ -68,7 +67,6 @@ void ESP8266_restart(void) {
 	printf("WiFi重启失败！\n");
 //	printf("3s 等待结束\n");
 	
-	
 }
 
 
@@ -91,8 +89,6 @@ u8 ESP8266_init(void) {
 	//设置工作模式 1：station模式   2：AP模式  3：兼容 AP+station模式
 	
 	res = ESP8266_send_cmd("AT+CWMODE_DEF=3", "OK", 500);
-
-
 	/*
 指令名					响应				含义
 AT						OK					测试指令
@@ -416,8 +412,6 @@ void usart2_init(u32 bound) {
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	//收发模式，激活RE与TE
 	USART_Init(USART2, &USART_InitStructure); //初始化串口1
 
-
-
 	//开启【发送完成TC中断】
 	//#define EN_USART2_TX = ENABLE串口1【发送完成中断TCIE】是否打开
 	USART_ITConfig(USART2, USART_IT_TC, ENABLE);
@@ -432,8 +426,6 @@ void usart2_init(u32 bound) {
 	￥￥并且这个bug连【调试】都无法发现
 	******************************************************************
 	*/
-
-
 
 	//⑤	（开启中断）开启中断并且初始化 <NVIC>，使能<中断>
 	//只有当接收RX打开的时候才有可能出现中断	
@@ -463,9 +455,6 @@ void usart2_init(u32 bound) {
 	/************************************************************/
 
 
-
-
-
 }//uart_init初始化函数结束
 
 
@@ -474,7 +463,6 @@ void usart2_init(u32 bound) {
 //【Ft】=定时器工作频率,单位:(MHz)
 //定时器溢出时间计算方法:Tout=((Period+1)*(Prescaler+1))/Ft （us）,返回溢出时间（us）
 void TIM7_INT_Init(u16 arr, u16 psc) {
-
 
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);//TIM7时钟使能    
 
@@ -492,7 +480,6 @@ void TIM7_INT_Init(u16 arr, u16 psc) {
 	
 	USART2_RX_STA = 0;		//清零
 
-
 	NVIC_InitTypeDef NVIC_InitStructure;
 	NVIC_InitStructure.NVIC_IRQChannel = TIM7_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = NVIC_TIM7_PreemptionPriority;//抢占优先级1
@@ -500,8 +487,6 @@ void TIM7_INT_Init(u16 arr, u16 psc) {
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
 	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
 
-	
-	
 }
 
 
@@ -544,16 +529,12 @@ void usart2_printf(char* fmt, ...) {
 	va_end(ap);
 	len = strlen((const char*)USART2_TX_BUF);		//此次发送数据的长度
 	for (j = 0; j < len; j++)	{						//循环发送数据
-	
 		USART_SendData(USART2, USART2_TX_BUF[j]);
-
 		//printf("%c",USART2_TX_BUF[j]);//*******************这个地方很重要，不过不知道为什么，没有这里就会一直错误*********
 		//delay_ms(10);//等待后才发现USART2_TX_STA[7]被置位
-
 		while ((USART2_TX_STA & 0x80) == RESET); //循环发送,直到发送完毕
 		USART2_TX_STA &= ~(0x80);
 	}
-
 }
 
 
