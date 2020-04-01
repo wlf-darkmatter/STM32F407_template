@@ -2,14 +2,12 @@
 #include "usmart_str.h"
 ////////////////////////////用户配置区///////////////////////////////////////////////
 //这下面要包含所用到的函数所申明的头文件(用户自己添加) 
-#include "delay.h"
-#include "lcd.h"
-#include <OLED.h>
-#include "sys.h"
-#include <usart.h>
+
 #include "SDIO_SDCard.h"
 #include "fattester.h" 
-#include <WIFI_ESP8266.h>
+
+
+#include <function_wlf.h>
 
 //extern void led_set(u8 sta);
 //extern void test_fun(void(*ledset)(u8),u8 sta);

@@ -1,3 +1,6 @@
+#ifndef __FUNCTION_WLF_H
+#define __FUNCTION_WLF_H
+
 #include "sys.h"
 #include "delay.h"
 #include "usart.h"
@@ -29,8 +32,10 @@ extern struct _app_LCD App_LCD;
 
 u16 pic_get_tnum(u8* path);//获取图片数量
 u8 PictureFile_Init(void);//记录所有图片信息
+void OLED_GUI_Init(void);
 
 
 
 
 
+#endif // __FUNCTION_WLF_H

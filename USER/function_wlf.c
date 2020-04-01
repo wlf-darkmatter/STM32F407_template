@@ -87,6 +87,7 @@ u8 PictureFile_Init(void) {
 	myfree(SRAMIN, picindextbl);		//释放内存		
 	return 0;
 }
+
 u16 pic_get_tnum(u8* path)
 {
 	u8 res;
@@ -115,3 +116,10 @@ u16 pic_get_tnum(u8* path)
 }
 
 
+void OLED_GUI_Init(void) {
+	OLED_Clear();
+	OLED_DrawStr(0, 0, "CPU: 00 %", 16, 1);//利用率
+	OLED_DrawStr(72, 0, " |03/31", 16, 1);
+	OLED_DrawStr(0, 22, "User QianQian", 12, 1);
+	OLED_DrawStr(80, 16, "|12:13", 16, 1);//时间
+}

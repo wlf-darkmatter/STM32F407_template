@@ -381,12 +381,5 @@ void OLED_Clear(void) {
 	OLED_Refresh();
 }
 
-void OLED_GUI_Init(void) {
-	OLED_Clear();
-	OLED_DrawStr(0, 0, "CPU: 00 %", 16, 1);//利用率
-	OLED_DrawStr(72, 0, " |03/31", 16, 1);
-	OLED_DrawStr(0, 22, "User QianQian", 12, 1);
-	OLED_DrawStr(80, 16, "|12:13", 16, 1);//时间
-}
 
 
