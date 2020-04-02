@@ -22,7 +22,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)delay_ms,"void delay_ms(u16 nms)",
  	(void*)delay_us,"void delay_us(u32 nus)",
 	/******************  LCD **********************/
-	(void*)LCD_Init,"void LCD_Clear(u16 color)",
+	(void*)LCD_Init,"void LCD_Init(void)",
 	(void*)LCD_Clear,"void LCD_Clear(u16 color)",
 	(void*)LCD_Fill,"void LCD_Fill(u16 sx, u16 sy, u16 ex, u16 ey, u16 color)",
 	(void*)LCD_DrawLine,"void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2)",
