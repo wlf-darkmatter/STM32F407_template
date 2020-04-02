@@ -537,6 +537,11 @@
               <FileType>1</FileType>
               <FilePath>.\FWLIB\src\stm32f4xx_rtc.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f4xx_pwr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FWLIB\src\stm32f4xx_pwr.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

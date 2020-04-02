@@ -84,8 +84,11 @@ void STM32_init(void) {
 	delay_init(168);/*******************************************************************/
 	LED_Init();/*******************************************************************/
 	Key_Init();/*******************************************************************/
+	My_RTC_Init();/*******************************************************************/
+	RTC_Set_WakeUp(RTC_WakeUpClock_CK_SPRE_16bits, 0);
 	usart1_init(115200);/*******************************************************************/
-	usmart_init(168);/*******************************************************************/
+	usmart_init(84);/*******************************************************************/
+	delay_ms(200);//LCD复位比较慢
 	LCD_Init();/*******************************************************************/
 	POINT_COLOR = BLACK;	//设置字体为黑色 									    
 	LCD_ShowString(20, 20, 200, 16, 16, "Welcome [LiuQian].");
@@ -164,6 +167,9 @@ void STM32_init(void) {
 	if(res==0) LCD_ShowString(20, 230, 200, 16, 16, lcd_string);
 	piclib_init();/*******************************************************************/
 	
+	OLED_GUIGRAM_Init();/*******************************************************************/
+	OLED_Refresh();
+
 	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面."); 
 	delay_ms(800);
 	LCD_ShowString(20, 246, 200, 24, 24, "即将显示桌面.."); 
@@ -173,8 +179,6 @@ void STM32_init(void) {
 	show_picture("0:/PICTURE/头像.bmp", 1);//显示图片 
 
 	ESP8266_init();/*******************************************************************/
-	OLED_GUI_Init();/*******************************************************************/
-
 
 
 
@@ -197,7 +201,7 @@ void start_task(void* pdata)
 	OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
 //	OSTaskCreate(led0_task, (void*)0, (OS_STK*)&LED0_TASK_STK[LED0_STK_SIZE - 1], LED0_TASK_PRIO);
 //	OSTaskCreate(led1_task, (void*)0, (OS_STK*)&LED1_TASK_STK[LED1_STK_SIZE - 1], LED1_TASK_PRIO);
-	OSTaskCreate(float_task, (void*)0, (OS_STK*)&FLOAT_TASK_STK[FLOAT_STK_SIZE - 1], FLOLAT_TASK_PRIO);
+//	OSTaskCreate(float_task, (void*)0, (OS_STK*)&FLOAT_TASK_STK[FLOAT_STK_SIZE - 1], FLOLAT_TASK_PRIO);
 	OSTaskCreate(OLED_GUI_update, (void*)0, (OS_STK*)&OLED_TASK_STK[OLED_STK_SIZE - 1], OLED_TASK_PRIO);
 	OSTaskSuspend(START_TASK_PRIO);	//挂起起始任务.
 	OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
@@ -218,7 +222,7 @@ TIM3_INT_Init(5000 - 1, 8400 - 1);//一般情况下，Tout=(I+1)*(II+1)/84 (单位us)
 
 
 /**********************************浮点测试任务****************************************/
-void float_task(void* pdata) {
+/*void float_task(void* pdata) {
 	OS_CPU_SR cpu_sr = 0;
 	static float float_num = 0.01f;
 	while (1) {
@@ -228,7 +232,7 @@ void float_task(void* pdata) {
 		OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
 		delay_ms(500);
 	}
-}
+}*/
 /**************************************************************************************/
 
 
@@ -236,7 +240,7 @@ void float_task(void* pdata) {
 
 int main(void) {
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
-
+	
 	//基本程序初始化
 	STM32_init();
 	//系统初始化

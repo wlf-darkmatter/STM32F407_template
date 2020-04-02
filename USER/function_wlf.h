@@ -44,10 +44,12 @@ u16 pic_get_tnum(u8* path);
 
 
 /*******************************OLED GUI²¿·Ö********************************/
-void OLED_GUI_Init(void);
+void OLED_GUIGRAM_Init(void);
 void OLED_GUI_update(void* pdata);
 
 
+/*******************************RTC**********************************/
+extern RTC_TimeTypeDef RTC_TimeStruct;
+extern RTC_DateTypeDef RTC_DateStruct;
 
-
-#endif // __FUNCTION_WLF_H
+#endif 

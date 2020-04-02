@@ -21,6 +21,8 @@ struct _m_usmart_nametab usmart_nametab[]=
 #endif		   
 	(void*)delay_ms,"void delay_ms(u16 nms)",
  	(void*)delay_us,"void delay_us(u32 nus)",
+	/******************  LCD **********************/
+	(void*)LCD_Init,"void LCD_Clear(u16 color)",
 	(void*)LCD_Clear,"void LCD_Clear(u16 color)",
 	(void*)LCD_Fill,"void LCD_Fill(u16 sx, u16 sy, u16 ex, u16 ey, u16 color)",
 	(void*)LCD_DrawLine,"void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2)",
@@ -48,7 +50,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)OLED_DrawStr,"void OLED_DrawStr(u8 x, u8 y, char* str, u8 size, u8 mode)",
 	(void*)OLED_ShowGBK,"void OLED_ShowGBK(u8 x, u8 y, u8 num, u8 size, u8 mode)",
 	(void*)OLED_Clear,"void OLED_Clear(void)",
-	(void*)OLED_GUI_Init,"void OLED_GUI_Init(void)",
+	(void*)OLED_GUIGRAM_Init,"void OLED_GUIGRAM_Init(void)",
 //	(void*)OLED_LocalRefresh,"void OLED_LocalRefresh(u8 x,u8 y,u8 dx,u8 dy)",
 /*	(void*)SDIO_Clock_Set,"void SDIO_Clock_Set(u8 clkdiv)",
 	(_SD*)SD_Init,"_SD SD_Init(void)",
@@ -81,8 +83,12 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)ESP8266_send_data,"u8* ESP8266_send_data(char* cmd, u16 waittime)",
 	(void*)usart2_printf,"void usart2_printf(char* fmt, ...)",
 	(void*)WiFi_Debug,"void WiFi_Debug(void)",
-
-	
+	/******************  RTC **********************/
+	(void*)RTC_Set_Time,"u8 RTC_Set_Time(u8 hour,u8 min,u8 sec,u8 ampm)",
+	(void*)RTC_Set_Date,"u8 RTC_Set_Date(u8 year,u8 month,u8 date,u8 week)",
+	(void*)RTC_Set_AlarmA,"void RTC_Set_AlarmA(u8 week,u8 hour,u8 min,u8 sec)",
+	(void*)RTC_Set_WakeUp,"void RTC_Set_WakeUp(u8 wksel,u16 cnt)",
+	/******************   SD **********************/
 	(void*)mf_mount,"u8 mf_mount(u8* path,u8 mt)",
 	(void*)mf_open,"u8 mf_open(u8*path,u8 mode)",
 	(void*)mf_close,"u8 mf_close(void)",

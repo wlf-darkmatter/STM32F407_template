@@ -169,30 +169,92 @@ u16 pic_get_tnum(u8* path)
 }
 
 /*******************************OLED GUI部分********************************/
-void OLED_GUI_Init(void) {
+void OLED_GUIGRAM_Init(void) {
+	//安放整体布局
 	OLED_Clear();
-	OLED_DrawStr(0, 0, "CPU: 00 %", 16, 1);//利用率
-	OLED_DrawStr(72, 0, " |03/31", 16, 1);
-	OLED_DrawStr(0, 22, "User QianQian", 12, 1);
-	OLED_DrawStr(80, 16, "|12:13", 16, 1);//时间
+	OLED_DrawStr_manual(0, 0, "CPU: 00 %", 16, 1);//利用率
+	OLED_DrawStr_manual(80, 0, "|18:58", 16, 1);//时间
+	OLED_DrawStr_manual(80, 16, "|06/14", 16, 1);//时期
+	OLED_DrawStr_manual(80, 32, "|20_19", 16, 1);//年份
+	OLED_DrawStr_manual(0, 22, "User QianQian", 12, 1);
 }
 
 void OLED_GUI_update(void* pdata) {
 	OS_CPU_SR cpu_sr = 0;
 	char strtemp[8];
+	u8 Year = RTC_DateStruct.RTC_Year, Month = RTC_DateStruct.RTC_Month, Date = RTC_DateStruct.RTC_Date;
+	u8 Hour=RTC_TimeStruct.RTC_Hours, Minute= RTC_TimeStruct.RTC_Minutes, Second= RTC_TimeStruct.RTC_Seconds;
+	sprintf(strtemp, "%02d", Minute);
+	OLED_DrawStr_manual(112, 0, strtemp, 16, 1);//23:00
+	sprintf(strtemp, "%02d", Hour);
+	OLED_DrawStr_manual(88, 0, strtemp, 16, 1);//00:00
+	sprintf(strtemp, "%02d", Date);
+	OLED_DrawStr_manual(112, 16, strtemp, 16, 1);//12/01
+	sprintf(strtemp, "%02d", Month);
+	OLED_DrawStr_manual(88, 16, strtemp, 16, 1);//01/01
+	sprintf(strtemp, "%02d", Year);
+	OLED_DrawStr_manual(112, 32, strtemp, 16, 1);//2020
+
 	//OLED_GUI_Init();
 	while (1) {
-		//		OLED_DrawStr(0, 0, "CPU:    %", 16, 1);//利用率
+		RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct);
+		RTC_GetDate(RTC_Format_BIN, &RTC_DateStruct);
+		Second = RTC_TimeStruct.RTC_Seconds;
+		OS_ENTER_CRITICAL();
+		//**************  CPU利用率部分  *************
 		sprintf(strtemp, "%02d", OSCPUUsage);
 		OLED_DrawStr_manual(40, 0, strtemp, 16, 1);//利用率
+		/********************  秒  ******************/
+		if(Second%2) OLED_DrawChar(104, 0, ':', 16, 1);	//23:59
+		else OLED_DrawChar(104, 0, ' ', 16, 1);			//23:59
+		/********************  分  ******************/
+		if (Minute == RTC_TimeStruct.RTC_Minutes) OLED_Refresh();//分没变,直接刷新
+		else//变了
+		{
+			Minute = RTC_TimeStruct.RTC_Minutes;
+			sprintf(strtemp, "%02d", Minute);
+			OLED_DrawStr_manual(112, 0, strtemp, 16, 1);//23:00
 
-		OLED_DrawStr_manual(72, 0, " |03/31", 16, 1);
-		//	OLED_DrawStr(0, 22, "User QianQian", 12, 1);
-		OLED_DrawStr_manual(80, 16, "|12:13", 16, 1);//时间
-		OS_ENTER_CRITICAL();
-		OLED_Refresh();
+			if (Hour == RTC_TimeStruct.RTC_Hours) OLED_Refresh();//时没变,直接刷新
+			else//变了
+			{
+				Hour = RTC_TimeStruct.RTC_Hours;
+				sprintf(strtemp, "%02d", Hour);
+				OLED_DrawStr_manual(88, 0, strtemp, 16, 1);//00:00
+
+				if (Date == RTC_DateStruct.RTC_Date) OLED_Refresh();//日没变,直接刷新
+				else//变了
+				{
+					Date = RTC_DateStruct.RTC_Date;
+					sprintf(strtemp, "%02d", Date);
+					OLED_DrawStr_manual(112, 16, strtemp, 16, 1);//12/01
+
+					if (Month == RTC_DateStruct.RTC_Month) OLED_Refresh();//月没变,直接刷新
+					else//变了
+					{
+						Month = RTC_DateStruct.RTC_Month;
+						sprintf(strtemp, "%02d", Month);
+						OLED_DrawStr_manual(88, 16, strtemp, 16, 1);//01/01
+
+						if (Year == RTC_DateStruct.RTC_Year) OLED_Refresh();//年没变,直接刷新
+						else//变了
+						{
+							Year = RTC_DateStruct.RTC_Year;
+							sprintf(strtemp, "%02d", Year);
+							OLED_DrawStr_manual(112, 32, strtemp, 16, 1);//2020
+							OLED_Refresh();
+						}
+					}
+				}
+			}
+		}
+
 		OS_EXIT_CRITICAL();
-		delay_ms(1000);
+		delay_ms(333);
 	}
 }
+
+/*******************************RTC**********************************/
+RTC_TimeTypeDef RTC_TimeStruct;
+RTC_DateTypeDef RTC_DateStruct;
 
