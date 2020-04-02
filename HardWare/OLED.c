@@ -237,7 +237,7 @@ void OLED_Refresh(void) {
 			OLED_Data(OLED_GRAM[j][i]);
 		}
 	}
-	printf("OLED refreshed!\r");
+//	printf("OLED refreshed!\r");
 }
 //【打点函数】（在显存中打点）
 void OLED_DrawPoint(u8 x, u8 y, unsigned char mode) {

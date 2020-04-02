@@ -564,6 +564,7 @@ void LCD_Init(void)
 
 
 	LCD_LED = 1;
+	LCD_WriteReg(0x0000, 0x0001);
 	LCD_WR_REG(0x29); //display on
  	delay_ms(50); // delay 50 ms
  	LCD_WriteReg(0x0000,0x0001);
@@ -727,7 +728,7 @@ void LCD_Init(void)
 		LCD_WR_DATA(0x00);
 		LCD_WR_DATA(0xef);	 
 		LCD_WR_REG(0x11); //Exit Sleep
-		delay_ms(120);
+		delay_ms(200);
 		LCD_WR_REG(0x29); //display on	
 	}
 	LCD_Display_Dir(0);		//Ä¬ÈÏÎªÊúÆÁ

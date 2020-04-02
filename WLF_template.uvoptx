@@ -152,25 +152,25 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>59</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134253102</Address>
+          <LineNumber>1672</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>134249968</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\USER\main.c</Filename>
+          <Filename>.\HardWare\SDIO_SDCard.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\WLF_template\USER/main.c\59</Expression>
+          <Expression>\\WLF_template\HardWare/SDIO_SDCard.c\1672</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>566</LineNumber>
+          <LineNumber>737</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134232634</Address>
+          <Address>134233602</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -179,7 +179,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\HardWare\lcd.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\WLF_template\HardWare/lcd.c\566</Expression>
+          <Expression>\\WLF_template\HardWare/lcd.c\737</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>

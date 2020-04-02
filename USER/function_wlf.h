@@ -23,8 +23,15 @@
 
 #define USART1_BUSY 1//是否使能串口独占，0=不使用；1=使用
 
+
+
+
+
+
 extern u8  USART1_Busy;
 /******************************* WiFi 部分 ********************************/
+#define WIFI_DEBUG_TASK_PRIO				2
+#define WIFI_DEBUG_STK_SIZE					128
 #define WIFI_TASK_PRIO			8
 #define WIFI_STK_SIZE			128
 void WiFi_Debug(void);
@@ -75,3 +82,23 @@ void USMART_APP(void* pdata);
 
 #endif
 #endif 
+
+/*******************************  KEY  **********************************/
+#define KEY_TASK_PRIO				7
+#define KEY_STK_SIZE				32
+extern OS_STK KEY_TASK_STK[KEY_STK_SIZE];
+void Key_detect(void* pdata);
+
+
+/*****************************   REMOTE    *******************************/
+#define RDATA PAin(8)	 //红外数据输入脚
+
+//红外遥控识别码(ID),每款遥控器的该值基本都不一样,但也有一样的.
+//我们选用的遥控器识别码为0
+#define REMOTE_ID 0      		   
+
+extern u8 RmtCnt;	//按键按下的次数
+void Remote_Init(void);    //红外传感器接收头引脚初始化
+u8 Remote_Scan(void);
+
+

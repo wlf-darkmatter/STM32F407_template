@@ -134,6 +134,7 @@ typedef struct
 #define MAGENTA       	 0xF81F
 #define GREEN         	 0x07E0
 #define CYAN          	 0x7FFF
+#define PURPLE			 0xF81F
 #define YELLOW        	 0xFFE0
 #define BROWN 			 0XBC40 //×ØÉ«
 #define BRRED 			 0XFC07 //×ØºìÉ«

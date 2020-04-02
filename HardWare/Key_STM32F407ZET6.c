@@ -2,6 +2,8 @@
 #include <LED_STM32F407ZET6.h>
 #include <delay.h>
 #include <OLED.h>
+#include <lcd.h>
+#include "ucos_ii.h"
 u8 KEY_STA = 0;
 
 
@@ -28,7 +30,7 @@ void Key_Init(void) {
 	Key_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOA,&Key_InitStructure);
 
-
+#ifndef OS_CFG_H
 /*②用SYSCFG_EXTILineConfig()函数来初始化配置【输入源（引脚）】与【EXTI线】。
 	#记得使能【SYSCFG】（在【APB2】里）*/
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);//使能SYSCFG系统配置寄存器
@@ -74,10 +76,12 @@ void Key_Init(void) {
 	Key_NVIC.NVIC_IRQChannelSubPriority = 0x02;//子优先级2
 	Key_NVIC.NVIC_IRQChannelCmd = ENABLE;//使能外部中断通道
 	NVIC_Init(&Key_NVIC);//配置
+#endif
 }
 
 /*⑤定义外部中断服务函数*/
 /*要记得清除中断标志位！！！！！*/
+/*
 void EXTI3_IRQHandler(void) {
 	Key_IRQHandler();
 	EXTI_ClearITPendingBit(EXTI_Line3);
@@ -90,18 +94,18 @@ void EXTI0_IRQHandler(void) {
 	Key_IRQHandler();
 	EXTI_ClearITPendingBit(EXTI_Line0);
 }
-
+*/
 /*中断函数全部都进入这个函数统一判断*/
-void Key_IRQHandler(void) {
+/*void Key_IRQHandler(void) {
 	
-	/*这一部分仅仅是实现通过按按钮K0和K1来控制STM32自带的LED灯的功能*/
+	//这一部分仅仅是实现通过按按钮K0和K1来控制STM32自带的LED灯的功能
 	Key_Scan();
 	D1 = (((KEY_STA & 0x01) != 0) ? (!D1) : D1);
 	D2 = (((KEY_STA & 0x02) != 0) ? (!D2) : D2);
 	
 
 
-}
+}*/
 
 u8 Key_Scan(void) {
 	KEY_STA = 0;//每次查询前先清零
