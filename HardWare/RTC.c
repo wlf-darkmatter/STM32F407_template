@@ -13,6 +13,8 @@ NVIC_InitTypeDef   NVIC_InitStructure;
 //RTC时间设置
 //hour,min,sec:小时,分钟,秒钟
 //ampm:@RTC_AM_PM_Definitions  :RTC_H12_AM/RTC_H12_PM
+//#define RTC_H12_AM                     ((uint8_t)0x00)
+//#define RTC_H12_PM                     ((uint8_t)0x40)
 //返回值:SUCEE(1),成功
 //       ERROR(0),进入初始化模式失败 
 ErrorStatus RTC_Set_Time(u8 hour,u8 min,u8 sec,u8 ampm)

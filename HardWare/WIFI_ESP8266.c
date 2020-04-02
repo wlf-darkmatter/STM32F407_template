@@ -114,11 +114,7 @@ void ESP8266_WiFiConnect(char* SSID, char* passward) {
 	char CWJAP_str[60];//用于存放控制命令
 //	memset(CWJAP_str, '\0', 60 * sizeof(char));//清零
 	CWJAP_str[0] = 0;
-//	strcat(CWJAP_str,"AT+CWJAP=\"");//AT+CWJAP="
-//	strcat(CWJAP_str, SSID);//AT+CWJAP="SSID
-//	strcat(CWJAP_str, "\",\"");//AT+CWJAP="SSID","
-//	strcat(CWJAP_str, passward);//AT+CWJAP="SSID","passward
-//	strcat(CWJAP_str, "\"");
+
 	sprintf(CWJAP_str, "AT+CWJAP=\"%s\",\"%s\"", SSID, passward);//AT+CWJAP="SSID","passward"
 //"AT+CWJAP=\"东南沿海王大哥\",\"19981213\""
 	if (ESP8266_send_cmd(CWJAP_str, "WIFI GOT IP", 20000) == 0) {
@@ -126,10 +122,6 @@ void ESP8266_WiFiConnect(char* SSID, char* passward) {
 	}
 	else {
 		printf("20秒没有连接上指定的WiFi。\n%s", USART2_RX_BUF);
-/*		OLED_DrawStr(0, 24, "WiFi connection failed.", 12, 0);
-		OLED_DrawStr(0, 36, "I'm so Sorry.          ", 12, 0);
-		OLED_DrawStr(0, 48, "Please contact WLF.   ", 12, 0);
-		*/
 		return;
 	}
 

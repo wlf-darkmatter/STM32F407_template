@@ -453,6 +453,7 @@ void LCD_Set_Window(u16 sx,u16 sy,u16 width,u16 height)
 //在其他型号的驱动芯片上没有测试! 
 void LCD_Init(void)
 { 	
+
 	vu32 i=0;
 	
 	GPIO_InitTypeDef  GPIO_InitStructure;
@@ -560,6 +561,8 @@ void LCD_Init(void)
 	FSMC_NORSRAMInit(&FSMC_NORSRAMInitStructure);  //初始化FSMC配置
 
 	FSMC_NORSRAMCmd(FSMC_Bank1_NORSRAM4, ENABLE);  // 使能BANK1 
+
+
 
  	delay_ms(50); // delay 50 ms
  	LCD_WriteReg(0x0000,0x0001);
@@ -726,7 +729,6 @@ void LCD_Init(void)
 		delay_ms(120);
 		LCD_WR_REG(0x29); //display on	
 	}
-	LCD_Clear(WHITE);
 	LCD_Display_Dir(0);		//默认为竖屏
 	LCD_LED=1;				//点亮背光
 	LCD_Clear(WHITE);

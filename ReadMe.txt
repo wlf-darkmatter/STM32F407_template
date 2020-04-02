@@ -160,3 +160,8 @@ version = 1.13.8
 在usmart_config.c的struct _m_usmart_nametab usmart_nametab[]里
 特别注意，这个结构不可以有太多的函数，否则会使LCD初始化失败（我也不知道为什么）
 
+version = 1.14.01
+2020/04/02/17:39
+将部分内置的中断放进设置好的APP里
+最主要的就是把SMART放进去
+USMART APP添加

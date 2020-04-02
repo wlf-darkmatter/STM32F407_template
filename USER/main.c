@@ -2,10 +2,6 @@
 
 
 
-
-
-
-
 /*不要使用PA13和PA14，它们分别对应着【SW-DIO】和【SW-CLK】，且本身一直处于AF复用模式*/
 /*配置外设的时候要记得先使能时钟，然后在配置，因为需要一段时间等待时钟正常运行*/
 
@@ -20,45 +16,22 @@
 //START 任务
 //设置任务优先级
 #define START_TASK_PRIO      			10 //开始任务的优先级设置为最低
-//设置任务堆栈大小
-#define START_STK_SIZE  				128
-//任务堆栈	
-OS_STK START_TASK_STK[START_STK_SIZE];
-//任务函数
-void start_task(void* pdata);
+#define START_STK_SIZE  				128//设置任务堆栈大小
+OS_STK START_TASK_STK[START_STK_SIZE];//任务堆栈	
+void start_task(void* pdata);//任务函数
 
 
-//浮点测试任务
 #define FLOLAT_TASK_PRIO				5
-//设置任务堆栈大小
-#define FLOAT_STK_SIZE					128
-//如果人物中使用printf函数打印浮点数的话一定要8字节对齐
-
-#if __FPU_USED
+#define FLOAT_STK_SIZE					128//设置任务堆栈大小
+#if __FPU_USED//如果任务中使用printf函数打印浮点数的话一定要8字节对齐
 __align(8) OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
 #else
 OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
 #endif
 //任务函数
+//浮点测试任务
 void float_task(void* pdata);
 
-/*******************************       SD       ****************************************/
-//如果SD卡错误，是否自动格式化，1=是，0=否
-#define FORMAT_IF_ERROR 0
-OS_EVENT* message_SD;			//SD卡读写邮箱事件块指针
-/***************************************************************************************/
-
-/*******************************      OLED      ****************************************/
-#define OLED_TASK_PRIO				6
-#define OLED_STK_SIZE					128
-OS_STK OLED_TASK_STK[OLED_STK_SIZE];
-OS_EVENT* message_OLED;			//OLED卡读写邮箱事件块指针
-
-/***************************************************************************************/
-
-/*******************************      WiFi      ****************************************/
-#define WIFI_TASK_PRIO			8
-#define WIFI_STK_SIZE			128
 OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
 
 //见【function.c】
@@ -66,12 +39,7 @@ OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
 //#define WIFI_DEBUG_STK_SIZE				128
 /***************************************************************************************/
 
-char lcd_string[128];//指向需要打印的字符串的指针
-
-
-
-
-
+char lcd_string[64];//指向需要打印的字符串的指针
 
 
 
@@ -90,7 +58,6 @@ void STM32_init(void) {
 	usmart_init(84);/*******************************************************************/
 	delay_ms(200);//LCD复位比较慢
 	LCD_Init();/*******************************************************************/
-	LCD_Clear(0);
 	POINT_COLOR = BLACK;	//设置字体为黑色 									    
 	LCD_ShowString(20, 20, 200, 16, 16, "Welcome [LiuQian].");
 	LCD_ShowString(20, 40, 200, 16, 16, "LCD  Initialized.");
@@ -189,9 +156,6 @@ void STM32_init(void) {
 
 
 
-
-
-
 //开始任务
 void start_task(void* pdata)
 {
@@ -200,9 +164,7 @@ void start_task(void* pdata)
 	OSStatInit();					//初始化统计任务.这里会延时1秒钟左右
 	pdata = pdata;
 	OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
-//	OSTaskCreate(led0_task, (void*)0, (OS_STK*)&LED0_TASK_STK[LED0_STK_SIZE - 1], LED0_TASK_PRIO);
-//	OSTaskCreate(led1_task, (void*)0, (OS_STK*)&LED1_TASK_STK[LED1_STK_SIZE - 1], LED1_TASK_PRIO);
-//	OSTaskCreate(float_task, (void*)0, (OS_STK*)&FLOAT_TASK_STK[FLOAT_STK_SIZE - 1], FLOLAT_TASK_PRIO);
+	OSTaskCreate(USMART_APP, (void*)0, (OS_STK*)&USMART_APP_TASK_STK[USMART_APP_STK_SIZE - 1], USMART_APP_TASK_PRIO);
 	OSTaskCreate(OLED_GUI_update, (void*)0, (OS_STK*)&OLED_TASK_STK[OLED_STK_SIZE - 1], OLED_TASK_PRIO);
 	OSTaskSuspend(START_TASK_PRIO);	//挂起起始任务.
 	OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
@@ -223,8 +185,8 @@ TIM3_INT_Init(5000 - 1, 8400 - 1);//一般情况下，Tout=(I+1)*(II+1)/84 (单位us)
 
 
 /**********************************浮点测试任务****************************************/
-/*void float_task(void* pdata) {
-	OS_CPU_SR cpu_sr = 0;
+void float_task(void* pdata) {
+/*	OS_CPU_SR cpu_sr = 0;
 	static float float_num = 0.01f;
 	while (1) {
 		float_num += 0.01f;
@@ -233,7 +195,8 @@ TIM3_INT_Init(5000 - 1, 8400 - 1);//一般情况下，Tout=(I+1)*(II+1)/84 (单位us)
 		OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
 		delay_ms(500);
 	}
-}*/
+*/
+}
 /**************************************************************************************/
 
 

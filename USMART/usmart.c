@@ -191,31 +191,29 @@ u8 usmart_sys_cmd_exe(u8 *str) {
 #if USMART_ENTIMX_SCAN==1
 //复位runtime
 //需要根据所移植到的MCU的定时器参数进行修改
+
 void usmart_reset_runtime(void)
 {
- 
 	TIM_ClearFlag(TIM4,TIM_FLAG_Update);//清除中断标志位 
 	TIM_SetAutoreload(TIM4,0XFFFF);//将重装载值设置到最大
 	TIM_SetCounter(TIM4,0);		//清空定时器的CNT
 	usmart_dev.runtime=0;	
 }
+
+
 //获得runtime时间
 //返回值:执行时间,单位:0.1ms,最大延时时间为定时器CNT值的2倍*0.1ms
 //需要根据所移植到的MCU的定时器参数进行修改
+
 u32 usmart_get_runtime(void)
 {
-	if(TIM_GetFlagStatus(TIM4,TIM_FLAG_Update)==SET)//在运行期间,产生了定时器溢出
+	if (TIM_GetFlagStatus(TIM4, TIM_FLAG_Update) == SET)//在运行期间,产生了定时器溢出
 	{
-		usmart_dev.runtime+=0XFFFF;
+		usmart_dev.runtime += 0XFFFF;
 	}
-	usmart_dev.runtime+=TIM_GetCounter(TIM4);
+	usmart_dev.runtime += TIM_GetCounter(TIM4);
 	return usmart_dev.runtime;		//返回计数值
-}  
-
-
-
-
-
+}
 
 //使能定时器4,使能中断.
 void Timer4_Init(u16 arr,u16 psc)
@@ -231,7 +229,7 @@ void Timer4_Init(u16 arr,u16 psc)
 	TIM_TimeBaseInitStructure.TIM_ClockDivision=TIM_CKD_DIV1; 
 	
 	TIM_TimeBaseInit(TIM4,&TIM_TimeBaseInitStructure);//初始化定时器4
-	
+
 	TIM_ITConfig(TIM4,TIM_IT_Update,ENABLE); //允许定时器4更新中断
 	TIM_Cmd(TIM4,ENABLE); //使能定时器4
  
@@ -242,13 +240,16 @@ void Timer4_Init(u16 arr,u16 psc)
 	NVIC_Init(&NVIC_InitStructure);//配置NVIC
 	 							 
 }
+
 #endif
 ////////////////////////////////////////////////////////////////////////////////////////
 //初始化串口控制器
 //sysclk:系统时钟（Mhz）
 void usmart_init(u8 sysclk) {
 #if USMART_ENTIMX_SCAN==1
+
 	Timer4_Init(1000,(u32)sysclk*100-1);//分频,时钟为10K ,100ms中断一次,注意,计数频率必须为10Khz,以和runtime单位(0.1ms)同步.
+
 #endif
 	usmart_dev.sptype=1;	//十六进制显示参数
 }
@@ -314,6 +315,7 @@ void usmart_exe(void)
 	}
 	printf(")");
 	usmart_reset_runtime();	//计时器清零,开始计时
+
 	switch(usmart_dev.pnum)
 	{
 		case 0://无参数(void类型)											  
@@ -424,10 +426,12 @@ void write_addr(u32 addr,u32 val)
 /***********************************************************/
 /***********************************************************/
 //下面这两个函数,非USMART函数,放到这里,仅仅方便移植. 
-//定时器4中断服务程序	 
+//定时器4中断服务程序
 void TIM4_IRQHandler(void) {
 	if (TIM_GetITStatus(TIM4, TIM_IT_Update) == SET) {//溢出中断
+#if USE_SMART_APP==0//如果使USMART进程化了，就不启动中断函数中的scan函数了
 		usmart_dev.scan();	//执行usmart扫描
+#endif
 		TIM4->CNT = 0;//清空定时器的CNT——TIM_SetCounter(TIM4, 0);
 		TIM4->ARR = 100;//恢复原来的设置——TIM_SetAutoreload
 	}
@@ -435,6 +439,7 @@ void TIM4_IRQHandler(void) {
 }
 /***********************************************************/
 /***********************************************************/
+
 
 
 

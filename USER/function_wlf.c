@@ -22,9 +22,12 @@ void WiFi_Debug_task(void* pdata) {
 	u8* push_usart1 = mymalloc(SRAMIN, MAX_FNAME_LEN);
 	memcpy(push_usart1, USART1_RX_BUF, MAX_FNAME_LEN);
 	//关闭USMART
+#if USE_SMART_APP==0
 	TIM_ITConfig(TIM4, TIM_IT_Update, DISABLE); //取消定时器4更新中断
 	TIM_Cmd(TIM4, DISABLE); //关闭定时器4
-//	printf("\n/*********进入ESP8266【Debug】状态，退出请输入：-q \n");
+#elif USE_SMART_APP==1
+	OSTaskSuspend(USMART_APP_TASK_PRIO);
+#endif // USE_SMART_APP==0
 	USART1_Busy = 1;//独占串口，不打印其他数据
 	USART1_RX_STA = 0;
 	USART2_RX_STA = 0;
@@ -41,11 +44,15 @@ void WiFi_Debug_task(void* pdata) {
 				myfree(SRAMIN, push_usart1);
 				/*********************退出程序代码*********************/
 				WiFi_State &= ~(0x80);//取消Debug状态
+#if USE_SMART_APP==0
 				TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE); //定时器4更新中断
 				TIM_Cmd(TIM4, ENABLE); //打开定时器4
-				OS_EXIT_CRITICAL();
+#elif USE_SMART_APP==1
+				OSTaskResume(USMART_APP_TASK_PRIO);
+#endif
 				USART1_Busy = 0;//释放串口独占权
 				OSTaskDel(OS_PRIO_SELF);
+				OS_EXIT_CRITICAL();
 				return;
 				/*****************************************************/
 			}
@@ -53,7 +60,7 @@ void WiFi_Debug_task(void* pdata) {
 			USART1_RX_BUF[len] = '\0';	//在末尾加入结束符. 
 			/********退出条件*******/
 			/*******不是退出命令,那就是发送的命令,******/
-			OS_EXIT_CRITICAL(); ;//向ESP8266打印这个需要中断
+			OS_EXIT_CRITICAL();//向ESP8266打印这个需要中断
 			USART1_Busy = 0;
 			printf("<----%s\n", USART1_RX_BUF);
 			USART1_Busy = 1;
@@ -73,7 +80,8 @@ void WiFi_Debug_task(void* pdata) {
 	}
 	
 }
-
+/*******************************       SD       ****************************************/
+OS_EVENT* message_SD;			//SD卡读写邮箱事件块指针
 
 /*******************************图片部分********************************/
 struct _app_LCD App_LCD;
@@ -169,13 +177,16 @@ u16 pic_get_tnum(u8* path)
 }
 
 /*******************************OLED GUI部分********************************/
+OS_EVENT* message_OLED;
+OS_STK OLED_TASK_STK[OLED_STK_SIZE];
+OS_EVENT* message_OLED;
 void OLED_GUIGRAM_Init(void) {
 	//安放整体布局
 	OLED_Clear();
 	OLED_DrawStr_manual(0, 0, "CPU: 00 %", 16, 1);//利用率
-	OLED_DrawStr_manual(80, 0, "|18:58", 16, 1);//时间
+	OLED_DrawStr_manual(80, 0,  "|18:58", 16, 1);//时间
 	OLED_DrawStr_manual(80, 16, "|06/14", 16, 1);//时期
-	OLED_DrawStr_manual(80, 32, "|20_19", 16, 1);//年份
+	OLED_DrawStr_manual(80, 32, "|@2019", 16, 1);//年份
 	OLED_DrawStr_manual(0, 22, "User QianQian", 12, 1);
 }
 
@@ -257,4 +268,19 @@ void OLED_GUI_update(void* pdata) {
 /*******************************RTC**********************************/
 RTC_TimeTypeDef RTC_TimeStruct;
 RTC_DateTypeDef RTC_DateStruct;
+
+
+/*******************************  USMART  **********************************/
+#if USE_SMART_APP==1
+OS_STK USMART_APP_TASK_STK[USMART_APP_STK_SIZE];
+void USMART_APP(void* pdata) {
+	OS_CPU_SR cpu_sr = 0;
+	while (1) {
+		delay_ms(150);
+		OS_ENTER_CRITICAL();
+		usmart_scan();
+		OS_EXIT_CRITICAL();
+	}
+}
+#endif
 
