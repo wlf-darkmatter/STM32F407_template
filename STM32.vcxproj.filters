@@ -267,6 +267,9 @@
     <ClInclude Include="USER\function_wlf.h">
       <Filter>USER</Filter>
     </ClInclude>
+    <ClInclude Include="HardWare\RTC.h">
+      <Filter>HardWare</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FWLIB\src\misc.c">
@@ -511,6 +514,9 @@
     </ClCompile>
     <ClCompile Include="USER\function_wlf.c">
       <Filter>USER</Filter>
+    </ClCompile>
+    <ClCompile Include="HardWare\RTC.c">
+      <Filter>HardWare</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

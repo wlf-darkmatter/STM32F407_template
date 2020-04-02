@@ -78,6 +78,7 @@
     <ClInclude Include="HardWare\LED_STM32F407ZET6.h" />
     <ClInclude Include="HardWare\OLED.h" />
     <ClInclude Include="HardWare\PWM.h" />
+    <ClInclude Include="HardWare\RTC.h" />
     <ClInclude Include="HardWare\SDIO_SDCard.h" />
     <ClInclude Include="HardWare\Tim.h" />
     <ClInclude Include="HardWare\WIFI_ESP8266.h" />
@@ -153,6 +154,7 @@
     <ClCompile Include="HardWare\LED_STM32F407ZET6.c" />
     <ClCompile Include="HardWare\OLED.c" />
     <ClCompile Include="HardWare\PWM.c" />
+    <ClCompile Include="HardWare\RTC.c" />
     <ClCompile Include="HardWare\SDIO_SDCard.c" />
     <ClCompile Include="HardWare\Tim.c" />
     <ClCompile Include="HardWare\WIFI_ESP8266.c" />

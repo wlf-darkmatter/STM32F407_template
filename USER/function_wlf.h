@@ -14,7 +14,7 @@
 #include <wlf_I2C.h>
 #include <OLED.h>
 #include <WLF_font.h>
-
+#include <RTC.h>
 #include <WIFI_ESP8266.h>
 #include "SDIO_SDCard.h"
 #include "malloc.h"

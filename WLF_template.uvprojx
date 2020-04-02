@@ -452,6 +452,11 @@
               <FileType>1</FileType>
               <FilePath>.\HardWare\lcd.c</FilePath>
             </File>
+            <File>
+              <FileName>RTC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\HardWare\RTC.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -526,6 +531,11 @@
               <FileName>stm32f4xx_dma.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FWLIB\src\stm32f4xx_dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FWLIB\src\stm32f4xx_rtc.c</FilePath>
             </File>
           </Files>
         </Group>
