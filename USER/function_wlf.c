@@ -1,7 +1,26 @@
 #include "function_wlf.h"
+
 //[0]——1，被占用，除非被复位，否则不执行printf
 //[7]——1，正在接受数据；0，空闲
 u8 USART1_Busy;
+
+
+/********************************  输入控制  ***********************************/
+
+OS_STK INPUT_TASK_STK[INPUT_STK_SIZE];
+void InputCommand_task(void* pdata) {
+	OS_CPU_SR cpu_sr;
+
+	while (1) {
+		OS_ENTER_CRITICAL();
+		Key_detect();
+		OS_EXIT_CRITICAL();
+		Remote_Scan();
+	}
+
+}
+
+
 //重定义fputc函数 
 //加入串口独占判断指令
 /******************************* WiFi 部分 ********************************/
@@ -192,8 +211,10 @@ void OLED_GUIGRAM_Init(void) {
 }
 
 void OLED_GUI_update(void* pdata) {
-	OS_CPU_SR cpu_sr = 0;
+	OS_CPU_SR cpu_sr;
 	char strtemp[8];
+	RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct);
+	RTC_GetDate(RTC_Format_BIN, &RTC_DateStruct);
 	u8 Year = RTC_DateStruct.RTC_Year, Month = RTC_DateStruct.RTC_Month, Date = RTC_DateStruct.RTC_Date;
 	u8 Hour=RTC_TimeStruct.RTC_Hours, Minute= RTC_TimeStruct.RTC_Minutes, Second= RTC_TimeStruct.RTC_Seconds;
 	sprintf(strtemp, "%02d", Minute);
@@ -204,9 +225,15 @@ void OLED_GUI_update(void* pdata) {
 	OLED_DrawStr_manual(112, 16, strtemp, 16, 1);//12/01
 	sprintf(strtemp, "%02d", Month);
 	OLED_DrawStr_manual(88, 16, strtemp, 16, 1);//01/01
+	if (Date == 25 && Month == 5) {
+		OLED_DrawStr_manual(88, 16, "05/25", 16, 0);//01/01
+	}
+	if (Date == 13 && Month == 12) {
+		OLED_DrawStr_manual(88, 16, "12/13", 16, 0);//01/01
+	}
 	sprintf(strtemp, "%02d", Year);
 	OLED_DrawStr_manual(112, 32, strtemp, 16, 1);//2020
-
+	OLED_Refresh();
 	//OLED_GUI_Init();
 	while (1) {
 		RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct);
@@ -269,7 +296,11 @@ void OLED_GUI_update(void* pdata) {
 /*******************************RTC**********************************/
 RTC_TimeTypeDef RTC_TimeStruct;
 RTC_DateTypeDef RTC_DateStruct;
-
+void Show_RTC(void) {
+	u8 Year = RTC_DateStruct.RTC_Year, Month = RTC_DateStruct.RTC_Month, Date = RTC_DateStruct.RTC_Date;
+	u8 Hour = RTC_TimeStruct.RTC_Hours, Minute = RTC_TimeStruct.RTC_Minutes, Second = RTC_TimeStruct.RTC_Seconds;
+	printf("20%02d-%02d-%02d\n%02d:%02d:%02d", Year, Month, Date, Hour, Minute, Second);
+}
 
 /*******************************  USMART  **********************************/
 #if USE_SMART_APP==1
@@ -285,18 +316,11 @@ void USMART_APP(void* pdata) {
 }
 #endif
 
-/*******************************  KEY  **********************************/
-OS_STK KEY_TASK_STK[KEY_STK_SIZE];
+/****************  KEY  *****************/
 
-void Key_detect(void* pdata) {
-	OS_CPU_SR cpu_sr ;
-	cpu_sr=cpu_sr;
-	while (1) {
-		OS_ENTER_CRITICAL();
-
-
-		OS_EXIT_CRITICAL();
-	}
+u8 Key_detect(void) {
+	
+	
 
 
 
@@ -304,10 +328,7 @@ void Key_detect(void* pdata) {
 
 }
 
-/*****************************   REMOTE    *******************************/
-
-#include "delay.h"
-#include "usart.h"
+/**************   REMOTE    ***************/
 
 //红外遥控初始化
 //设置IO以及TIM2_CH1的输入捕获
@@ -391,6 +412,7 @@ void TIM1_UP_TIM10_IRQHandler(void)
 	}
 	TIM_ClearITPendingBit(TIM1, TIM_IT_Update);  //清除中断标志位 
 }
+
 //定时器1输入捕获中断服务程序	 
 void TIM1_CC_IRQHandler(void)
 {
@@ -438,6 +460,7 @@ void TIM1_CC_IRQHandler(void)
 	}
 	TIM_ClearITPendingBit(TIM1, TIM_IT_CC1);  //清除中断标志位 
 }
+
 //处理红外键盘
 //返回值:
 //	 0,没有任何按键按下

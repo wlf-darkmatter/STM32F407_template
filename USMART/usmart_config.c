@@ -89,6 +89,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)RTC_Set_Date,"u8 RTC_Set_Date(u8 year,u8 month,u8 date,u8 week)",
 	(void*)RTC_Set_AlarmA,"void RTC_Set_AlarmA(u8 week,u8 hour,u8 min,u8 sec)",
 	(void*)RTC_Set_WakeUp,"void RTC_Set_WakeUp(u8 wksel,u16 cnt)",
+	(void*)Show_RTC,"void Show_RTC(void)",
 	/******************   SD **********************/
 /*	(void*)mf_mount,"u8 mf_mount(u8* path,u8 mt)",
 	(void*)mf_open,"u8 mf_open(u8*path,u8 mode)",

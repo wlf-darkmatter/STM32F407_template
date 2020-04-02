@@ -22,18 +22,27 @@
 #include "piclib.h"
 
 #define USART1_BUSY 1//是否使能串口独占，0=不使用；1=使用
-
-
-
-
-
-
 extern u8  USART1_Busy;
+/********************************  输入控制  ***********************************/
+#define INPUT_TASK_PRIO				4
+#define INPUT_STK_SIZE				32
+extern OS_STK KEY_TASK_STK[INPUT_STK_SIZE];
+
+void InputCommand_task(void* pdata);
+
+/*--------------  KEY  -----------------*/
+u8 Key_detect(void);
+
+/*-------------  REMOTE  ---------------*/
+u8 Remote_Scan(void);
+
+
 /******************************* WiFi 部分 ********************************/
 #define WIFI_DEBUG_TASK_PRIO				2
 #define WIFI_DEBUG_STK_SIZE					128
 #define WIFI_TASK_PRIO			8
 #define WIFI_STK_SIZE			128
+
 void WiFi_Debug(void);
 void WiFi_Debug_task(void* pdata);
 
@@ -70,7 +79,7 @@ void OLED_GUI_update(void* pdata);
 /*******************************RTC**********************************/
 extern RTC_TimeTypeDef RTC_TimeStruct;
 extern RTC_DateTypeDef RTC_DateStruct;
-
+void Show_RTC(void);
 
 /*******************************  USMART  **********************************/
 #if USE_SMART_APP==1
@@ -83,11 +92,7 @@ void USMART_APP(void* pdata);
 #endif
 #endif 
 
-/*******************************  KEY  **********************************/
-#define KEY_TASK_PRIO				7
-#define KEY_STK_SIZE				32
-extern OS_STK KEY_TASK_STK[KEY_STK_SIZE];
-void Key_detect(void* pdata);
+
 
 
 /*****************************   REMOTE    *******************************/
@@ -98,7 +103,8 @@ void Key_detect(void* pdata);
 #define REMOTE_ID 0      		   
 
 extern u8 RmtCnt;	//按键按下的次数
+extern u32 RmtRec;
 void Remote_Init(void);    //红外传感器接收头引脚初始化
-u8 Remote_Scan(void);
+
 
 
