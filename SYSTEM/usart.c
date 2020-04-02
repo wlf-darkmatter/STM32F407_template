@@ -2,11 +2,13 @@
 #include "usart.h"	
 #include "LED_STM32F407ZET6.h"
 #include "delay.h"
+#include <function_wlf.h>
 ////////////////////////////////////////////////////////////////////////////////// 	 
 //如果使用ucos,则包括下面的头文件即可.
 #if SYSTEM_SUPPORT_UCOS
 #include "includes.h"					//ucos 使用	  
 #endif
+
 
 /*——————————————————————————————————————*/
 /*         Universal Synchronous Asynchronous Receiver Transmitter            */
@@ -76,8 +78,14 @@ void _sys_exit(int x){
 	x = x; 
 }
 
-//重定义fputc函数 
-int fputc(int ch, FILE *f){ 	
+
+extern u8 USART1_Busy;
+int fputc(int ch, FILE *f){
+#if USART1_BUSY==1
+	const u8* temp = &USART1_Busy;
+	if (*temp == 1) 
+		return 0;
+#endif
 	USART1->DR = (u8)ch;
 	while ((USART1->SR & 0X40) == 0);//循环发送,直到发送完毕   
 	return ch;

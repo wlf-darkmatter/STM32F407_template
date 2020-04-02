@@ -80,6 +80,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)usart2_init,"void usart2_init(u32 bound)",
 	(void*)ESP8266_send_data,"u8* ESP8266_send_data(char* cmd, u16 waittime)",
 	(void*)usart2_printf,"void usart2_printf(char* fmt, ...)",
+	(void*)WiFi_Debug,"void WiFi_Debug(void)",
 
 	
 	(void*)mf_mount,"u8 mf_mount(u8* path,u8 mt)",

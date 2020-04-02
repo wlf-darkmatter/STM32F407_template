@@ -6,6 +6,8 @@
 
 
 
+/*不要使用PA13和PA14，它们分别对应着【SW-DIO】和【SW-CLK】，且本身一直处于AF复用模式*/
+/*配置外设的时候要记得先使能时钟，然后在配置，因为需要一段时间等待时钟正常运行*/
 
 
 /*******************************定时器****************************/
@@ -51,13 +53,17 @@ OS_EVENT* message_SD;			//SD卡读写邮箱事件块指针
 #define OLED_STK_SIZE					128
 OS_STK OLED_TASK_STK[OLED_STK_SIZE];
 OS_EVENT* message_OLED;			//OLED卡读写邮箱事件块指针
-void OLED_GUI_update(void* pdata);
+
 /***************************************************************************************/
 
 /*******************************      WiFi      ****************************************/
 #define WIFI_TASK_PRIO			8
 #define WIFI_STK_SIZE			128
 OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
+
+//见【function.c】
+//#define WIFI_DEBUG_TASK_PRIO				2
+//#define WIFI_DEBUG_STK_SIZE				128
 /***************************************************************************************/
 
 char lcd_string[128];//指向需要打印的字符串的指针
@@ -65,12 +71,11 @@ char lcd_string[128];//指向需要打印的字符串的指针
 
 
 
+
+
+
+
 void STM32_init(void);
-
-
-
-/*不要使用PA13和PA14，它们分别对应着【SW-DIO】和【SW-CLK】，且本身一直处于AF复用模式*/
-/*配置外设的时候要记得先使能时钟，然后在配置，因为需要一段时间等待时钟正常运行*/
 void STM32_init(void) {
 
 	u32 total, free;

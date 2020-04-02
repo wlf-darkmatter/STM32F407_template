@@ -1,29 +1,82 @@
 #include "function_wlf.h"
 
-
-
-struct _app_LCD App_LCD;
-
-
-void OLED_GUI_update(void* pdata) {
+u8 USART1_Busy;//1代表独占
+//重定义fputc函数 
+//加入串口独占判断指令
+#define WIFI_DEBUG_TASK_PRIO				2
+#define WIFI_DEBUG_STK_SIZE					128
+OS_STK WIFI_DEBUG_TASK_STK[WIFI_DEBUG_STK_SIZE];
+/******************************* WiFi 部分 ********************************/
+u8 WiFi_State;//[7]位是1，那就是处于debug状态
+void WiFi_Debug(void) {
+	OSTaskCreate(WiFi_Debug_task,(void*)0,(OS_STK*)&WIFI_DEBUG_TASK_STK[WIFI_DEBUG_STK_SIZE-1],WIFI_DEBUG_TASK_PRIO);
+	printf("\n/*********进入ESP8266【Debug】状态，退出请输入：-q \n");
+}
+void WiFi_Debug_task(void* pdata) {
+	pdata=pdata;
 	OS_CPU_SR cpu_sr = 0;
-	char strtemp[8];
-	//OLED_GUI_Init();
+	WiFi_State |= 0x80;//设置Debug状态
+	u8 len;
+	u16 RX1=USART1_RX_STA;
+	u16 RX2=USART2_RX_STA;
+	u8* push_usart1 = mymalloc(SRAMIN, MAX_FNAME_LEN);
+	memcpy(push_usart1, USART1_RX_BUF, MAX_FNAME_LEN);
+	//关闭USMART
+	TIM_ITConfig(TIM4, TIM_IT_Update, DISABLE); //取消定时器4更新中断
+	TIM_Cmd(TIM4, DISABLE); //关闭定时器4
+//	printf("\n/*********进入ESP8266【Debug】状态，退出请输入：-q \n");
+	USART1_Busy = 1;//独占串口，不打印其他数据
+	USART1_RX_STA = 0;
+	USART2_RX_STA = 0;
+	//扫描输入
 	while (1) {
-		//		OLED_DrawStr(0, 0, "CPU:    %", 16, 1);//利用率
-		sprintf(strtemp, "%02d", OSCPUUsage);
-		OLED_DrawStr_manual(40, 0, strtemp, 16, 1);//利用率
-
-		OLED_DrawStr_manual(72, 0, " |03/31", 16, 1);
-		//	OLED_DrawStr(0, 22, "User QianQian", 12, 1);
-		OLED_DrawStr_manual(80, 16, "|12:13", 16, 1);//时间
+		delay_ms(300);
 		OS_ENTER_CRITICAL();
-		OLED_Refresh();
+		if (USART1_RX_STA & 0x8000)//串口1接收完成？
+		{
+			if (USART1_RX_BUF[0] == '-' && USART1_RX_BUF[1] == 'q') {
+				USART2_RX_STA=RX2;
+				USART1_RX_STA=RX1;
+				memcpy(USART1_RX_BUF, push_usart1, MAX_FNAME_LEN);
+				myfree(SRAMIN, push_usart1);
+				/*********************退出程序代码*********************/
+				WiFi_State &= ~(0x80);//取消Debug状态
+				TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE); //定时器4更新中断
+				TIM_Cmd(TIM4, ENABLE); //打开定时器4
+				OS_EXIT_CRITICAL();
+				USART1_Busy = 0;//释放串口独占权
+				OSTaskDel(WIFI_DEBUG_TASK_PRIO);
+				return;
+				/*****************************************************/
+			}
+			len = USART1_RX_STA & 0x3fff;	//得到此次接收到的数据长度[13:0]
+			USART1_RX_BUF[len] = '\0';	//在末尾加入结束符. 
+			/********退出条件*******/
+			/*******不是退出命令,那就是发送的命令,******/
+			OS_EXIT_CRITICAL(); ;//向ESP8266打印这个需要中断
+			USART1_Busy = 0;
+			printf("<----%s\n", USART1_RX_BUF);
+			USART1_Busy = 1;
+			USART1_RX_STA = 0;//状态寄存器清空	    
+			usart2_printf("%s\r\n", USART1_RX_BUF);	//发送给esp8266
+		}
+		if (USART2_RX_STA & 0x8000) {
+			len = USART2_RX_STA & 0x7fff;
+			USART2_RX_BUF[len] = '\0';	//在末尾加入结束符.
+			USART1_Busy = 0;
+			printf("%s", USART2_RX_BUF);
+			USART1_Busy = 1;
+			USART2_RX_STA = 0;
+		}
 		OS_EXIT_CRITICAL();
-		delay_ms(1000);
+
 	}
+	
 }
 
+
+/*******************************图片部分********************************/
+struct _app_LCD App_LCD;
 DIR PictureDir;//之后每次打开一个文件，都需要这个，所以就保存为实体了
 
 u8 PictureFile_Init(void) {
@@ -115,7 +168,7 @@ u16 pic_get_tnum(u8* path)
 	return rval;
 }
 
-
+/*******************************OLED GUI部分********************************/
 void OLED_GUI_Init(void) {
 	OLED_Clear();
 	OLED_DrawStr(0, 0, "CPU: 00 %", 16, 1);//利用率
@@ -123,3 +176,23 @@ void OLED_GUI_Init(void) {
 	OLED_DrawStr(0, 22, "User QianQian", 12, 1);
 	OLED_DrawStr(80, 16, "|12:13", 16, 1);//时间
 }
+
+void OLED_GUI_update(void* pdata) {
+	OS_CPU_SR cpu_sr = 0;
+	char strtemp[8];
+	//OLED_GUI_Init();
+	while (1) {
+		//		OLED_DrawStr(0, 0, "CPU:    %", 16, 1);//利用率
+		sprintf(strtemp, "%02d", OSCPUUsage);
+		OLED_DrawStr_manual(40, 0, strtemp, 16, 1);//利用率
+
+		OLED_DrawStr_manual(72, 0, " |03/31", 16, 1);
+		//	OLED_DrawStr(0, 22, "User QianQian", 12, 1);
+		OLED_DrawStr_manual(80, 16, "|12:13", 16, 1);//时间
+		OS_ENTER_CRITICAL();
+		OLED_Refresh();
+		OS_EXIT_CRITICAL();
+		delay_ms(1000);
+	}
+}
+

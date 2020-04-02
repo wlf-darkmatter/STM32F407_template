@@ -236,10 +236,10 @@ void Timer4_Init(u16 arr,u16 psc)
 	TIM_Cmd(TIM4,ENABLE); //使能定时器4
  
 	NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;//外部中断4
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x03;//抢占优先级3
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x03;//子优先级3
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;//使能外部中断通道
-  NVIC_Init(&NVIC_InitStructure);//配置NVIC
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x03;//抢占优先级3
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x03;//子优先级3
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;//使能外部中断通道
+	NVIC_Init(&NVIC_InitStructure);//配置NVIC
 	 							 
 }
 #endif

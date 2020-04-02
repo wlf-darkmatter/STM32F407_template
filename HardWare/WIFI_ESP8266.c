@@ -550,8 +550,10 @@ void TIM7_IRQHandler(void) {
 	}
 }
 
+extern u8 WiFi_State;//ÅÐ¶ÏÊÇ·ñ´¦ÓÚDebug×´Ì¬µÄ8Î»Êý
 //¢ß	±àÐ´ÖÐ¶Ï´¦Àíº¯Êý¡ª¡ªº¯Êý¸ñÊ½Ó¦¸ÃÎª USARTxIRQHandler£¨xÎª´®¿ÚºÅ£©
-void USART2_IRQHandler(void) { //´®¿Ú1ÖÐ¶Ï·þÎñ³ÌÐò£¬¡¾*¡¿¸Ãº¯ÊýµÄµ÷ÓÃÎ»ÖÃÔÚÆô¶¯ÎÄ¼þstartup_stm32f40_41xxx.sÖÐ
+extern u8 USART1_Busy;
+void USART2_IRQHandler(void) { //´®¿Ú2ÖÐ¶Ï·þÎñ³ÌÐò£¬¡¾*¡¿¸Ãº¯ÊýµÄµ÷ÓÃÎ»ÖÃÔÚÆô¶¯ÎÄ¼þstartup_stm32f40_41xxx.sÖÐ
 
 	u8 Res;
 #ifdef OS_TICKS_PER_SEC	 	//Èç¹ûÊ±ÖÓ½ÚÅÄÊý¶¨ÒåÁË,ËµÃ÷ÒªÊ¹ÓÃucosIIÁË.
@@ -568,14 +570,16 @@ void USART2_IRQHandler(void) { //´®¿Ú1ÖÐ¶Ï·þÎñ³ÌÐò£¬¡¾*¡¿¸Ãº¯ÊýµÄµ÷ÓÃÎ»ÖÃÔÚÆô¶¯Î
 		Res = USART_ReceiveData(USART2);//(USART2->DR);	//DRÊÇ½ÓÊÕµ½µÄÊý¾Ý»òÒÑ·¢ËÍµÄÊý¾Ý¡ª¡ª·ÅÈëRes
 		//ResÊÇ8Î»µÄ£¬DRÊÇ16Î»µÄ£¬ÕâÀïÓÐÁËÀàÐÍ×ª»»
 		//ÕâÀïResµÃµ½ÁË·¢ËÍ¹ýÀ´µÄÊý¾Ý
-
+/*		if (WiFi_State & 0x80) {
+			USART1_Busy = 1;
+			printf("%c",Res);
+			USART1_Busy = 0;
+		}*/
 		//Ä£¿é·¢ËÍ»ØÀ´µÄÐÅÏ¢ÊÇÓÐºÜ¶àÐÐµÄ£¬ÅÐ¶¨Ä£¿é·¢ËÍÍê±ÏµÄ±ê×¼¾ÍÊÇ¡¾Ò»¶¨Ê±¼ä¡¿ÄÚÃ»ÓÐÔÙ´Î·¢ËÍÐÂµÄÏûÏ¢
 		if ((USART2_RX_STA & 0x8000) == 0) {//USART_RX_STA[15]==0  ½ÓÊÕÎ´Íê³É
 			if (USART2_RX_STA < USART2_REC_LEN)	{//»¹¿ÉÒÔ½ÓÊÕÊý¾Ý
 				TIM_SetCounter(TIM7, 0);//¼ÆÊýÆ÷Çå¿Õ
-				if (USART2_RX_STA == 0) {
-					TIM_Cmd(TIM7, ENABLE);//Ê¹ÄÜ¶¨Ê±Æ÷7µÄÖÐ¶Ï 
-				}
+				if (USART2_RX_STA == 0)	TIM_Cmd(TIM7, ENABLE);//Ê¹ÄÜ¶¨Ê±Æ÷7µÄÖÐ¶Ï 
 				USART2_RX_BUF[USART2_RX_STA++] = Res;	//¼ÇÂ¼½ÓÊÕµ½µÄÖµ	 
 			}
 

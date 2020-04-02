@@ -12,7 +12,7 @@
 #define NVIC_TIM7_SubPriority 1
 
 //定义字符串容量
-#define USART2_REC_LEN  			1000
+#define USART2_REC_LEN  			500
 #define USART2_TRA_LEN  			200
 
 extern u8  USART2_RX_BUF[USART2_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.末字节为换行符 
