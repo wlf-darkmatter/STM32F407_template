@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>199</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134237832</Address>
+          <Address>134237828</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -168,18 +168,18 @@
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>199</LineNumber>
+          <LineNumber>732</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134238214</Address>
+          <Address>134233580</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\USER\function_wlf.c</Filename>
+          <Filename>.\HardWare\lcd.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\WLF_template\USER/function_wlf.c\199</Expression>
+          <Expression>\\WLF_template\HardWare/lcd.c\732</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -246,7 +246,7 @@
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>x&amp;0x0F</ItemText>
+          <ItemText>lcddev</ItemText>
         </Ww>
         <Ww>
           <count>13</count>

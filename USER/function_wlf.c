@@ -45,7 +45,7 @@ void WiFi_Debug_task(void* pdata) {
 				TIM_Cmd(TIM4, ENABLE); //打开定时器4
 				OS_EXIT_CRITICAL();
 				USART1_Busy = 0;//释放串口独占权
-				OSTaskDel(WIFI_DEBUG_TASK_PRIO);
+				OSTaskDel(OS_PRIO_SELF);
 				return;
 				/*****************************************************/
 			}

@@ -13,6 +13,7 @@
 //extern void test_fun(void(*ledset)(u8),u8 sta);
 //函数名列表初始化(用户自己添加)
 //用户直接在这里输入要执行的函数名及其查找串
+//特别注意，这个结构不可以有太多的函数，否则会使LCD初始化失败（我也不知道为什么）
 struct _m_usmart_nametab usmart_nametab[]=
 {
 #if USMART_USE_WRFUNS==1 	//如果使能了读写操作
@@ -89,7 +90,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)RTC_Set_AlarmA,"void RTC_Set_AlarmA(u8 week,u8 hour,u8 min,u8 sec)",
 	(void*)RTC_Set_WakeUp,"void RTC_Set_WakeUp(u8 wksel,u16 cnt)",
 	/******************   SD **********************/
-	(void*)mf_mount,"u8 mf_mount(u8* path,u8 mt)",
+/*	(void*)mf_mount,"u8 mf_mount(u8* path,u8 mt)",
 	(void*)mf_open,"u8 mf_open(u8*path,u8 mode)",
 	(void*)mf_close,"u8 mf_close(void)",
 	(void*)mf_read,"u8 mf_read(u16 len)",
@@ -110,7 +111,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 	(void*)mf_setlabel,"void mf_setlabel(u8 *path)",
 	(void*)mf_gets,"void mf_gets(u16 size)",
 	(void*)mf_putc,"u8 mf_putc(u8 c)",
-	(void*)mf_puts,"u8 mf_puts(u8*c)",
+	(void*)mf_puts,"u8 mf_puts(u8*c)",*/
 
 
 	(void*)show_picture,"u8 show_picture(const u8* filename, u8 fast)",

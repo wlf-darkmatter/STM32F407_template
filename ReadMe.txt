@@ -156,5 +156,7 @@ version = 1.13.7
 
 version = 1.13.8
 2020/04/02/16:25
-替换lcd库
+找到BUG，LCD初始化不正常
+在usmart_config.c的struct _m_usmart_nametab usmart_nametab[]里
+特别注意，这个结构不可以有太多的函数，否则会使LCD初始化失败（我也不知道为什么）
 

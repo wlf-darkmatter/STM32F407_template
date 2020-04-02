@@ -90,6 +90,7 @@ void STM32_init(void) {
 	usmart_init(84);/*******************************************************************/
 	delay_ms(200);//LCD复位比较慢
 	LCD_Init();/*******************************************************************/
+	LCD_Clear(0);
 	POINT_COLOR = BLACK;	//设置字体为黑色 									    
 	LCD_ShowString(20, 20, 200, 16, 16, "Welcome [LiuQian].");
 	LCD_ShowString(20, 40, 200, 16, 16, "LCD  Initialized.");

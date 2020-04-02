@@ -726,10 +726,11 @@ void LCD_Init(void)
 		delay_ms(120);
 		LCD_WR_REG(0x29); //display on	
 	}
- 
+	LCD_Clear(WHITE);
 	LCD_Display_Dir(0);		//默认为竖屏
 	LCD_LED=1;				//点亮背光
 	LCD_Clear(WHITE);
+	
 }
 
 //清屏函数
