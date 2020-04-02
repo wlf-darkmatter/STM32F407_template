@@ -563,7 +563,8 @@ void LCD_Init(void)
 	FSMC_NORSRAMCmd(FSMC_Bank1_NORSRAM4, ENABLE);  // 使能BANK1 
 
 
-
+	LCD_LED = 1;
+	LCD_WR_REG(0x29); //display on
  	delay_ms(50); // delay 50 ms
  	LCD_WriteReg(0x0000,0x0001);
 	delay_ms(50); // delay 50 ms 
@@ -730,8 +731,8 @@ void LCD_Init(void)
 		LCD_WR_REG(0x29); //display on	
 	}
 	LCD_Display_Dir(0);		//默认为竖屏
-	LCD_LED=1;				//点亮背光
 	LCD_Clear(WHITE);
+	LCD_LED=1;				//点亮背光
 	
 }
 

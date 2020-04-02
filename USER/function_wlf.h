@@ -22,7 +22,8 @@
 #include "piclib.h"
 
 #define USART1_BUSY 1//是否使能串口独占，0=不使用；1=使用
-extern u8  USART1_Busy;					//如果为0，那就是被占用，除非被复位，否则不执行printf
+
+extern u8  USART1_Busy;
 /******************************* WiFi 部分 ********************************/
 #define WIFI_TASK_PRIO			8
 #define WIFI_STK_SIZE			128

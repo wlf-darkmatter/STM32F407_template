@@ -1,6 +1,7 @@
 #include "function_wlf.h"
-
-u8 USART1_Busy;//1代表独占
+//[0]——1，被占用，除非被复位，否则不执行printf
+//[7]——1，正在接受数据；0，空闲
+u8 USART1_Busy;
 //重定义fputc函数 
 //加入串口独占判断指令
 #define WIFI_DEBUG_TASK_PRIO				2
@@ -28,13 +29,14 @@ void WiFi_Debug_task(void* pdata) {
 #elif USE_SMART_APP==1
 	OSTaskSuspend(USMART_APP_TASK_PRIO);
 #endif // USE_SMART_APP==0
-	USART1_Busy = 1;//独占串口，不打印其他数据
+	USART1_Busy |= 0x01;//独占串口，不打印其他数据
 	USART1_RX_STA = 0;
 	USART2_RX_STA = 0;
 	//扫描输入
 	while (1) {
-		delay_ms(300);
+		delay_ms(100);
 		OS_ENTER_CRITICAL();
+		
 		if (USART1_RX_STA & 0x8000)//串口1接收完成？
 		{
 			if (USART1_RX_BUF[0] == '-' && USART1_RX_BUF[1] == 'q') {
@@ -50,7 +52,7 @@ void WiFi_Debug_task(void* pdata) {
 #elif USE_SMART_APP==1
 				OSTaskResume(USMART_APP_TASK_PRIO);
 #endif
-				USART1_Busy = 0;//释放串口独占权
+				USART1_Busy |= ~(0x01);//释放串口独占权
 				OSTaskDel(OS_PRIO_SELF);
 				OS_EXIT_CRITICAL();
 				return;
@@ -61,18 +63,18 @@ void WiFi_Debug_task(void* pdata) {
 			/********退出条件*******/
 			/*******不是退出命令,那就是发送的命令,******/
 			OS_EXIT_CRITICAL();//向ESP8266打印这个需要中断
-			USART1_Busy = 0;
+			USART1_Busy &= ~(0x01);
 			printf("<----%s\n", USART1_RX_BUF);
-			USART1_Busy = 1;
+			USART1_Busy |= 0x01;
 			USART1_RX_STA = 0;//状态寄存器清空	    
 			usart2_printf("%s\r\n", USART1_RX_BUF);	//发送给esp8266
 		}
 		if (USART2_RX_STA & 0x8000) {
 			len = USART2_RX_STA & 0x7fff;
 			USART2_RX_BUF[len] = '\0';	//在末尾加入结束符.
-			USART1_Busy = 0;
+			USART1_Busy &= ~(0x01);
 			printf("%s", USART2_RX_BUF);
-			USART1_Busy = 1;
+			USART1_Busy |= 0x01;
 			USART2_RX_STA = 0;
 		}
 		OS_EXIT_CRITICAL();
