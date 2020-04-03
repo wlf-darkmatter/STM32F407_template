@@ -264,11 +264,11 @@
     <ClInclude Include="SYSTEM\UCOSII\CONFIG\os_cfg.h">
       <Filter>SYSTEM\USCII\CONFIG</Filter>
     </ClInclude>
-    <ClInclude Include="USER\function_wlf.h">
-      <Filter>USER</Filter>
-    </ClInclude>
     <ClInclude Include="HardWare\RTC.h">
       <Filter>HardWare</Filter>
+    </ClInclude>
+    <ClInclude Include="USER\function_wlf.h">
+      <Filter>USER</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

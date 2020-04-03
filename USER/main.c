@@ -20,27 +20,12 @@
 OS_STK START_TASK_STK[START_STK_SIZE];//任务堆栈	
 void start_task(void* pdata);//任务函数
 
-
-#define FLOLAT_TASK_PRIO				5
-#define FLOAT_STK_SIZE					128//设置任务堆栈大小
-#if __FPU_USED//如果任务中使用printf函数打印浮点数的话一定要8字节对齐
-__align(8) OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
-#else
-OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
-#endif
-//任务函数
-//浮点测试任务
-void float_task(void* pdata);
-
-OS_STK FLOAT_TASK_STK[FLOAT_STK_SIZE];
-
-//见【function.c】
-//#define WIFI_DEBUG_TASK_PRIO				2
-//#define WIFI_DEBUG_STK_SIZE				128
-/***************************************************************************************/
+#define MAIN_TASK_PRIO					5
+#define MAIN_STK_SIZE					128
+OS_STK MAIN_TASK_STK[INPUT_STK_SIZE];
+void main_task(void* padta);
 
 char lcd_string[64];//指向需要打印的字符串的指针
-
 
 
 void STM32_init(void);
@@ -165,52 +150,23 @@ void STM32_init(void) {
 void start_task(void* pdata)
 {
 	OS_CPU_SR cpu_sr = 0;
-	message_SD = OSMboxCreate((void*)0);
-	OSStatInit();					//初始化统计任务.这里会延时1秒钟左右
 	pdata = pdata;
+	message_SD = OSMboxCreate((void*)0);
+	Message_Input = OSMboxCreate((void*)0);//传递【红外】的和【按钮】的输入
+	OSStatInit();					//初始化统计任务.这里会延时1秒钟左右
 	OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
-	OSTaskCreate(USMART_APP, (void*)0, (OS_STK*)&USMART_APP_TASK_STK[USMART_APP_STK_SIZE - 1], USMART_APP_TASK_PRIO);
-	OSTaskCreate(OLED_GUI_update, (void*)0, (OS_STK*)&OLED_TASK_STK[OLED_STK_SIZE - 1], OLED_TASK_PRIO);
-	OSTaskCreate(InputCommand_task, (void*)0, (OS_STK*)&INPUT_TASK_STK[INPUT_STK_SIZE-1], INPUT_TASK_PRIO);
+	OSTaskCreate(USMART_APP,(void*)0,(OS_STK*)&USMART_APP_TASK_STK[USMART_APP_STK_SIZE-1],USMART_APP_TASK_PRIO);//2级
+	OSTaskCreate(main_task, (void*)0, (OS_STK*)&MAIN_TASK_STK[MAIN_STK_SIZE-1], MAIN_TASK_PRIO);//4级
+	OSTaskCreate(InputCommand_task, (void*)0, (OS_STK*)&INPUT_TASK_STK[INPUT_STK_SIZE-1], INPUT_TASK_PRIO);//5级
+	OSTaskCreate(OLED_GUI_update, (void*)0, (OS_STK*)&OLED_TASK_STK[OLED_STK_SIZE - 1], OLED_TASK_PRIO);//6级
 	OSTaskSuspend(START_TASK_PRIO);	//挂起起始任务.
 	OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
 }
-
-/*【PWM】部分
-
-//PWM_TIM14_Init(500 - 1, 84 - 1);//周期时间为500us,第一个参数是【ARR】，也叫【period】周期值
-*/
-
-/*【TIM3】计数及【TIM3】中断
-
-TIM3_INT_Init(5000 - 1, 8400 - 1);//一般情况下，Tout=(I+1)*(II+1)/84 (单位us)
-*/
-
-
-//通过串口打印SD卡相关信息
-
-
-/**********************************浮点测试任务****************************************/
-void float_task(void* pdata) {
-/*	OS_CPU_SR cpu_sr = 0;
-	static float float_num = 0.01f;
-	while (1) {
-		float_num += 0.01f;
-		OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
-		printf("float_num的值为：%.4f\n", float_num);
-		OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
-		delay_ms(500);
-	}
-*/
-}
-/**************************************************************************************/
-
 
 
 
 int main(void) {
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
-	
 	//基本程序初始化
 	STM32_init();
 	//系统初始化
@@ -219,16 +175,77 @@ int main(void) {
 	OSTaskCreate(start_task, (void*)0, (OS_STK*)&START_TASK_STK[START_STK_SIZE - 1], START_TASK_PRIO);
 	//开始任务
 	OSStart();
-
 }
 
-//在OLED.c中实现
-/*u8 OLED_GUI_Init(void) {
-	OLED_Clear();
-	OLED_DrawStr(0, 0, "CPU: 00 %", 16, 1);//利用率
-	OLED_DrawStr(72, 0, " |12:13", 16, 1);//时间
-	OLED_DrawStr(0, 22, "User: QianQian", 12, 1);
-	OLED_DrawStr(80, 16, "|03/31", 16, 1);
-}*/
+void main_task(void* padta) {
+	OS_CPU_SR cpu_sr;
+	u8 err;
+	u32 res;
+	_RMT_CMD* cmd;
+	u8 cmd_num;
+	char* cmd_str;
+	while (1) {
+		res = (u32)OSMboxPend(Message_Input,300,&err);//等待200个系统滴答，在此期间会启用系统调度
+		OLED_DrawStr(0, 34, "    ", 24, 1);
+		OS_ENTER_CRITICAL();
+		if (res != 0) {
+			switch (res)
+		{
+		default:	cmd = &Remote_CmdStr[0];
+			break;
+		case 162:	cmd = &Remote_CmdStr[1];
+			break;
+		case 98:	cmd = &Remote_CmdStr[2];
+			break;
+		case 226:	cmd = &Remote_CmdStr[3];
+			break;
+		case 34:	cmd = &Remote_CmdStr[4];
+			break;
+		case 2:		cmd = &Remote_CmdStr[5];
+			break;
+		case 194:	cmd = &Remote_CmdStr[6];
+			break;
+		case 224:	cmd = &Remote_CmdStr[7];
+			break;
+		case 168:	cmd = &Remote_CmdStr[8];
+			break;
+		case 144:	cmd = &Remote_CmdStr[9];
+			break;
+		case 104:	cmd = &Remote_CmdStr[10];
+			break;
+		case 152:	cmd = &Remote_CmdStr[11];
+			break;
+		case 176:	cmd = &Remote_CmdStr[12];
+			break;
+		case 48:	cmd = &Remote_CmdStr[13];
+			break;
+		case 24:	cmd = &Remote_CmdStr[14];
+			break;
+		case 122:	cmd = &Remote_CmdStr[15];
+			break;
+		case 16:	cmd = &Remote_CmdStr[16];
+			break;
+		case 56:	cmd = &Remote_CmdStr[17];
+			break;
+		case 90:	cmd = &Remote_CmdStr[18];
+			break;
+		case 66:	cmd = &Remote_CmdStr[19];
+			break;
+		case 74:	cmd = &Remote_CmdStr[20];
+			break;
+		case 82:	cmd = &Remote_CmdStr[21];
+			break;
+		}
+			cmd_num = cmd->cmd_num;
+			cmd_str = (char*)(cmd->name);
+			OS_EXIT_CRITICAL();
+			OLED_DrawStr(0, 34, cmd_str, 24, 1);
+			printf("%d\n",cmd_num);
+			OSTimeDly(2000);
+		}
 
+		OS_EXIT_CRITICAL();
 
+		
+	}
+}

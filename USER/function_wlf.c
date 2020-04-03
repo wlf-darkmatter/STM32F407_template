@@ -1,21 +1,59 @@
 #include "function_wlf.h"
 
+//STM32F407ZET6_info.USART1_Busy
 //[0]——1，被占用，除非被复位，否则不执行printf
 //[7]——1，正在接受数据；0，空闲
-u8 USART1_Busy;
-
+struct _STM32_INFO STM32F407ZET6_info;
 
 /********************************  输入控制  ***********************************/
 
 OS_STK INPUT_TASK_STK[INPUT_STK_SIZE];
+OS_EVENT* Message_Input;
+
+_RMT_CMD Remote_CmdStr[22] = {
+	0,		"    ",
+	162,	"CH -",			//01
+	98,		"CH  ",			//02
+	226,	"CH +",			//03
+	34,		"|<< ",			//04
+	2,		">>| ",			//05
+	194,	"Play",			//06
+	224,	" -  ",			//07
+	168,	" +  ",			//08
+	144,	" EQ ",			//09
+	104,	" 0  ",			//10
+	152,	"100+",			//11
+	176,	"200+",			//12
+	48,		" 1  ",			//13
+	24,		" 2  ",			//14
+	122,	" 3  ",			//15
+	16,		" 4  ",			//16
+	56,		" 5  ",			//17
+	90,		" 6  ",			//18
+	66,		" 7  ",			//19
+	74,		" 8  ",			//20
+	82,		" 9  ",			//21
+};
+
 void InputCommand_task(void* pdata) {
 	OS_CPU_SR cpu_sr;
-
+	u8 res;
 	while (1) {
+		
 		OS_ENTER_CRITICAL();
 		Key_detect();
+		res=Remote_Scan();
 		OS_EXIT_CRITICAL();
-		Remote_Scan();
+		//给cmd指针赋值↓
+		if (res != 0) 
+		{
+			OSMboxPost(Message_Input, (void*)res);//发送输入的命令
+			OSTimeDly(20);
+			
+		}
+		OSTimeDly(20);
+		//得到命令后并不是要马上就去执行的
+
 	}
 
 }
@@ -47,7 +85,7 @@ void WiFi_Debug_task(void* pdata) {
 #elif USE_SMART_APP==1
 	OSTaskSuspend(USMART_APP_TASK_PRIO);
 #endif // USE_SMART_APP==0
-	USART1_Busy |= 0x01;//独占串口，不打印其他数据
+	STM32F407ZET6_info.USART1_Busy |= 0x01;//独占串口，不打印其他数据
 	USART1_RX_STA = 0;
 	USART2_RX_STA = 0;
 	//扫描输入
@@ -70,7 +108,7 @@ void WiFi_Debug_task(void* pdata) {
 #elif USE_SMART_APP==1
 				OSTaskResume(USMART_APP_TASK_PRIO);
 #endif
-				USART1_Busy |= ~(0x01);//释放串口独占权
+				STM32F407ZET6_info.USART1_Busy |= ~(0x01);//释放串口独占权
 				OSTaskDel(OS_PRIO_SELF);
 				OS_EXIT_CRITICAL();
 				return;
@@ -81,18 +119,18 @@ void WiFi_Debug_task(void* pdata) {
 			/********退出条件*******/
 			/*******不是退出命令,那就是发送的命令,******/
 			OS_EXIT_CRITICAL();//向ESP8266打印这个需要中断
-			USART1_Busy &= ~(0x01);
+			STM32F407ZET6_info.USART1_Busy &= ~(0x01);
 			printf("<----%s\n", USART1_RX_BUF);
-			USART1_Busy |= 0x01;
+			STM32F407ZET6_info.USART1_Busy |= 0x01;
 			USART1_RX_STA = 0;//状态寄存器清空	    
 			usart2_printf("%s\r\n", USART1_RX_BUF);	//发送给esp8266
 		}
 		if (USART2_RX_STA & 0x8000) {
 			len = USART2_RX_STA & 0x7fff;
 			USART2_RX_BUF[len] = '\0';	//在末尾加入结束符.
-			USART1_Busy &= ~(0x01);
+			STM32F407ZET6_info.USART1_Busy &= ~(0x01);
 			printf("%s", USART2_RX_BUF);
-			USART1_Busy |= 0x01;
+			STM32F407ZET6_info.USART1_Busy |= 0x01;
 			USART2_RX_STA = 0;
 		}
 		OS_EXIT_CRITICAL();
@@ -325,7 +363,7 @@ u8 Key_detect(void) {
 
 
 
-
+	return 0;
 }
 
 /**************   REMOTE    ***************/
@@ -354,7 +392,7 @@ void Remote_Init(void)
 
 	TIM_TimeBaseStructure.TIM_Prescaler = 167;  ////预分频器,1M的计数频率,1us加1.	
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; //向上计数模式
-	TIM_TimeBaseStructure.TIM_Period = 10000;   //设定计数器自动重装值 最大10ms溢出  
+	TIM_TimeBaseStructure.TIM_Period = 5000;   //设定计数器自动重装值 最大10ms溢出  
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
 
@@ -401,8 +439,10 @@ void TIM1_UP_TIM10_IRQHandler(void)
 		if (RmtSta & 0x80)//上次有数据被接收到了
 		{
 			RmtSta &= ~0X10;						//取消上升沿已经被捕获标记
-			if ((RmtSta & 0X0F) == 0X00)RmtSta |= 1 << 6;//标记已经完成一次按键的键值信息采集
-			if ((RmtSta & 0X0F) < 14)RmtSta++;
+			if ((RmtSta & 0X0F) == 0X00)
+				RmtSta |= 1 << 6;//标记已经完成一次按键的键值信息采集
+			if ((RmtSta & 0X0F) < 7)
+				RmtSta++;
 			else
 			{
 				RmtSta &= ~(1 << 7);//清空引导标识
@@ -411,13 +451,14 @@ void TIM1_UP_TIM10_IRQHandler(void)
 		}
 	}
 	TIM_ClearITPendingBit(TIM1, TIM_IT_Update);  //清除中断标志位 
-}
+}	
 
 //定时器1输入捕获中断服务程序	 
 void TIM1_CC_IRQHandler(void)
 {
 	if (TIM_GetITStatus(TIM1, TIM_IT_CC1) == SET) //处理捕获(CC1IE)中断
 	{
+		LED2 = 0;
 		if (RDATA)//上升沿捕获
 		{
 			TIM_OC1PolarityConfig(TIM1, TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
@@ -432,7 +473,6 @@ void TIM1_CC_IRQHandler(void)
 			{
 				if (RmtSta & 0X80)//接收到了引导码
 				{
-
 					if (Dval > 300 && Dval < 800)			//560为标准值,560us
 					{
 						RmtRec <<= 1;	//左移一位.
@@ -473,12 +513,16 @@ u8 Remote_Scan(void)
 	{
 		t1 = RmtRec >> 24;			//得到地址码
 		t2 = (RmtRec >> 16) & 0xff;	//得到地址反码 
-		printf("%d,%d,%d,%d\n", RmtRec >> 24, (RmtRec >> 16) & 0xFF, (RmtRec >> 8) & 0xFF, (RmtRec) & 0xFF);
 		if ((t1 == (u8)~t2) && t1 == REMOTE_ID)//检验遥控识别码(ID)及地址 
 		{
 			t1 = RmtRec >> 8;
 			t2 = RmtRec;
-			if (t1 == (u8)~t2)sta = t1;//键值正确	 
+			if (t1 == (u8)~t2)
+			{
+				printf("%d,%d,%d,%d\n", RmtRec >> 24, (RmtRec >> 16) & 0xFF, (RmtRec >> 8) & 0xFF, (RmtRec) & 0xFF);
+				sta = t1;//键值正确	 
+			}
+
 		}
 		if ((sta == 0) || ((RmtSta & 0X80) == 0))//按键数据错误/遥控已经没有按下了
 		{
@@ -486,6 +530,7 @@ u8 Remote_Scan(void)
 			RmtCnt = 0;		//清除按键次数计数器
 		}
 	}
+	LED2 = 1;
 	return sta;
 }
 

@@ -80,7 +80,7 @@ void _sys_exit(int x){
 
 
 int fputc(int ch, FILE *f){
-	const u8* temp = &USART1_Busy;
+	const u8* temp = &STM32F407ZET6_info.USART1_Busy;
 #if USART1_BUSY==1
 	if (*temp&0x01 == 1) return 0xFE;
 #endif
@@ -269,7 +269,7 @@ void USART1_IRQHandler(void) //´®¿Ú1ÖÐ¶Ï·þÎñ³ÌÐò£¬¡¾*¡¿¸Ãº¯ÊýµÄµ÷ÓÃÎ»ÖÃÔÚÆô¶¯ÎÄ¼
 		//0£ºÎ´½ÓÊÕµ½Êý¾Ý
 		//1£ºÒÑ×¼±¸ºÃ½ÓÊÕÊý¾Ý¡£
 		//USART_ClearITPendingBit(USART1, USART_IT_RXNE);//RXENÇåÁã£¨Í¨¹ý¶ÁDR¼Ä´æÆ÷ÆäÊµ¾Í¿ÉÒÔÓ²¼þ¸´Î»£©
-		USART1_Busy |= 0x80;
+		STM32F407ZET6_info.USART1_Busy |= 0x80;
 		Res = USART_ReceiveData(USART1);//(USART1->DR);	//DRÊÇ½ÓÊÕµ½µÄÊý¾Ý»òÒÑ·¢ËÍµÄÊý¾Ý¡ª¡ª·ÅÈëRes
 		//ResÊÇ8Î»µÄ£¬DRÊÇ16Î»µÄ£¬ÕâÀïÓÐÁËÀàÐÍ×ª»»
 		//ÕâÀïResµÃµ½ÁË·¢ËÍ¹ýÀ´µÄÊý¾Ý
@@ -280,7 +280,7 @@ void USART1_IRQHandler(void) //´®¿Ú1ÖÐ¶Ï·þÎñ³ÌÐò£¬¡¾*¡¿¸Ãº¯ÊýµÄµ÷ÓÃÎ»ÖÃÔÚÆô¶¯ÎÄ¼
 			{
 				if (Res != 0x0a) USART1_RX_STA = 0;//½ÓÊÕ´íÎó,ÖØÐÂ¿ªÊ¼
 				else USART1_RX_STA |= 0x8000;	//½ÓÊÕÍê³ÉÁË
-				USART1_Busy &= ~0x80;
+				STM32F407ZET6_info.USART1_Busy &= ~0x80;
 			}
 			else //»¹Ã»ÊÕµ½0X0D
 			{
@@ -291,7 +291,7 @@ void USART1_IRQHandler(void) //´®¿Ú1ÖÐ¶Ï·þÎñ³ÌÐò£¬¡¾*¡¿¸Ãº¯ÊýµÄµ÷ÓÃÎ»ÖÃÔÚÆô¶¯ÎÄ¼
 					USART1_RX_STA++;
 					if (USART1_RX_STA > (USART1_REC_LEN - 1)) {
 						USART1_RX_STA = 0;
-						USART1_Busy &= ~0x80;
+						STM32F407ZET6_info.USART1_Busy &= ~0x80;
 					}//½ÓÊÕÊý¾Ý´íÎó,ÖØÐÂ¿ªÊ¼½ÓÊÕ
 				}
 			}

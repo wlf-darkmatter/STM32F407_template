@@ -1,5 +1,9 @@
 #include "delay.h"
 #include "sys.h"
+
+#include <function_wlf.h>
+
+
 ////////////////////////////////////////////////////////////////////////////////// 	 
 //如果使用ucos,则包括下面的头文件即可.
 #if SYSTEM_SUPPORT_UCOS
@@ -46,6 +50,8 @@ void delay_init(u8 SYSCLK)
 #else
 	fac_ms=(u16)fac_us*1000;//非ucos下,代表每个ms需要的systick时钟数，在168MHz的情况下，需要21000次SYSCLK的跳动   
 #endif
+	STM32F407ZET6_info.fac_ms = fac_ms;
+	STM32F407ZET6_info.fac_us = fac_us;
 }								    
 
 #ifdef OS_CRITICAL_METHOD 	//如果OS_CRITICAL_METHOD定义了,说明使用ucosII了.
