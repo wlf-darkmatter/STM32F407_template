@@ -20,8 +20,8 @@
 OS_STK START_TASK_STK[START_STK_SIZE];//任务堆栈	
 void start_task(void* pdata);//任务函数
 
-#define MAIN_TASK_PRIO					5
-#define MAIN_STK_SIZE					128
+#define MAIN_TASK_PRIO					4
+#define MAIN_STK_SIZE					64
 OS_STK MAIN_TASK_STK[INPUT_STK_SIZE];
 void main_task(void* padta);
 
@@ -184,10 +184,15 @@ void main_task(void* padta) {
 	_RMT_CMD* cmd;
 	u8 cmd_num;
 	char* cmd_str;
+	u8 is_show_cmd;
 	while (1) {
-		res = (u32)OSMboxPend(Message_Input,300,&err);//等待200个系统滴答，在此期间会启用系统调度
-		OLED_DrawStr(0, 34, "    ", 24, 1);
+		res = (u32)OSMboxPend(Message_Input,30,&err);//等待200个系统滴答，在此期间会启用系统调度
 		OS_ENTER_CRITICAL();
+		if (is_show_cmd) {
+			OSTimeDly(200);
+			OLED_DrawStr(0, 34, "    ", 24, 1);
+			is_show_cmd = 0;
+		}
 		if (res != 0) {
 			switch (res)
 		{
@@ -240,8 +245,9 @@ void main_task(void* padta) {
 			cmd_str = (char*)(cmd->name);
 			OS_EXIT_CRITICAL();
 			OLED_DrawStr(0, 34, cmd_str, 24, 1);
+			is_show_cmd = 1;
 			printf("%d\n",cmd_num);
-			OSTimeDly(2000);
+			OSTimeDly(20);
 		}
 
 		OS_EXIT_CRITICAL();

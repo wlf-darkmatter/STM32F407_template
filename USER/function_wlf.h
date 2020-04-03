@@ -42,7 +42,7 @@ extern _RMT_CMD Remote_CmdStr[22];
 #define USART1_BUSY 1//是否使能串口独占，0=不使用；1=使用
 
 /********************************  输入控制  ***********************************/
-#define INPUT_TASK_PRIO					4
+#define INPUT_TASK_PRIO					5
 #define INPUT_STK_SIZE					64
 extern OS_EVENT* Message_Input;
 extern OS_STK INPUT_TASK_STK[INPUT_STK_SIZE];
@@ -90,7 +90,7 @@ u16 pic_get_tnum(u8* path);
 
 /*******************************  OLED GUI部分  ********************************/
 #define OLED_TASK_PRIO				6
-#define OLED_STK_SIZE				128
+#define OLED_STK_SIZE				64
 extern OS_STK OLED_TASK_STK[OLED_STK_SIZE];
 extern OS_EVENT* message_OLED;			//OLED卡读写邮箱事件块指针
 
@@ -107,7 +107,7 @@ void Show_RTC(void);
 #if USE_SMART_APP==1
 
 #define USMART_APP_TASK_PRIO				2
-#define USMART_APP_STK_SIZE					128
+#define USMART_APP_STK_SIZE					64
 extern OS_STK USMART_APP_TASK_STK[USMART_APP_STK_SIZE];
 void USMART_APP(void* pdata);
 

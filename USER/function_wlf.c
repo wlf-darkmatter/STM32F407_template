@@ -48,10 +48,10 @@ void InputCommand_task(void* pdata) {
 		if (res != 0) 
 		{
 			OSMboxPost(Message_Input, (void*)res);//发送输入的命令
-			OSTimeDly(20);
+			OSTimeDly(10);
 			
 		}
-		OSTimeDly(20);
+		OSTimeDly(5);
 		//得到命令后并不是要马上就去执行的
 
 	}
