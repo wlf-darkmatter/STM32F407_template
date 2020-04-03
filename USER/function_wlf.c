@@ -392,7 +392,7 @@ void Remote_Init(void)
 
 	TIM_TimeBaseStructure.TIM_Prescaler = 167;  ////预分频器,1M的计数频率,1us加1.	
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; //向上计数模式
-	TIM_TimeBaseStructure.TIM_Period = 5000;   //设定计数器自动重装值 最大10ms溢出  
+	TIM_TimeBaseStructure.TIM_Period = 10000;   //设定计数器自动重装值 最大10ms溢出  
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
 
@@ -433,14 +433,15 @@ u8  RmtCnt = 0;	//按键按下的次数
 //定时器1溢出中断
 void TIM1_UP_TIM10_IRQHandler(void)
 {
-
 	if (TIM_GetITStatus(TIM1, TIM_IT_Update) == SET) //溢出中断
 	{
 		if (RmtSta & 0x80)//上次有数据被接收到了
 		{
+				
 			RmtSta &= ~0X10;						//取消上升沿已经被捕获标记
 			if ((RmtSta & 0X0F) == 0X00)
 				RmtSta |= 1 << 6;//标记已经完成一次按键的键值信息采集
+				OSMboxPost(Message_Input, (void*)1);//发送信号
 			if ((RmtSta & 0X0F) < 7)
 				RmtSta++;
 			else
@@ -486,13 +487,15 @@ void TIM1_CC_IRQHandler(void)
 					else if (Dval > 2200 && Dval < 2600)	//得到按键键值增加的信息 2500为标准值2.5ms
 					{
 						RmtCnt++; 		//按键次数增加1次
-						RmtSta &= 0XF0;	//清空计时器		
+						RmtSta &= 0XF0;	//清空计时器
+						
 					}
 				}
 				else if (Dval > 4200 && Dval < 4700)		//4500为标准值4.5ms
 				{
 					RmtSta |= 1 << 7;	//标记成功接收到了引导码
 					RmtCnt = 0;		//清除按键次数计数器
+					
 				}
 			}
 			RmtSta &= ~(1 << 4);
@@ -521,6 +524,7 @@ u8 Remote_Scan(void)
 			{
 				printf("%d,%d,%d,%d\n", RmtRec >> 24, (RmtRec >> 16) & 0xFF, (RmtRec >> 8) & 0xFF, (RmtRec) & 0xFF);
 				sta = t1;//键值正确	 
+				RmtRec = 0;
 			}
 
 		}
