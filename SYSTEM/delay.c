@@ -77,7 +77,7 @@ void delay_us(u32 nus)
 //nms:要延时的ms数
 void delay_ms(u16 nms)
 {	
-		if(OSRunning==OS_TRUE&&OSLockNesting==0)//如果os已经在跑了	   
+	if(OSRunning == OS_TRUE && OSLockNesting == 0)//如果os已经在跑了	   
 	{		  
 		if(nms>=fac_ms)//延时的时间大于ucos的最少时间周期 
 		{

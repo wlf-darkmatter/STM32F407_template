@@ -171,6 +171,7 @@ void start_task(void* pdata)
 	OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
 	OSTaskCreate(USMART_APP, (void*)0, (OS_STK*)&USMART_APP_TASK_STK[USMART_APP_STK_SIZE - 1], USMART_APP_TASK_PRIO);
 	OSTaskCreate(OLED_GUI_update, (void*)0, (OS_STK*)&OLED_TASK_STK[OLED_STK_SIZE - 1], OLED_TASK_PRIO);
+	OSTaskCreate(InputCommand_task, (void*)0, (OS_STK*)&INPUT_TASK_STK[INPUT_STK_SIZE-1], INPUT_TASK_PRIO);
 	OSTaskSuspend(START_TASK_PRIO);	//挂起起始任务.
 	OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
 }

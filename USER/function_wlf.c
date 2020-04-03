@@ -473,6 +473,7 @@ u8 Remote_Scan(void)
 	{
 		t1 = RmtRec >> 24;			//得到地址码
 		t2 = (RmtRec >> 16) & 0xff;	//得到地址反码 
+		printf("%d,%d,%d,%d\n", RmtRec >> 24, (RmtRec >> 16) & 0xFF, (RmtRec >> 8) & 0xFF, (RmtRec) & 0xFF);
 		if ((t1 == (u8)~t2) && t1 == REMOTE_ID)//检验遥控识别码(ID)及地址 
 		{
 			t1 = RmtRec >> 8;

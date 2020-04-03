@@ -21,12 +21,15 @@
 #include "includes.h"
 #include "piclib.h"
 
+#define B2H(n) ((n>>21)&0x80)|((n>>18)&0x40)|((n>>15)&0x20)|((n>>12)&0x10)|((n>>9)&0x08)|((n>>6)&0x04)|((n>>3)&0x02)|((n)&0x01)
+#define B(n) B2H(0x##n##l)
+
 #define USART1_BUSY 1//是否使能串口独占，0=不使用；1=使用
 extern u8  USART1_Busy;
 /********************************  输入控制  ***********************************/
 #define INPUT_TASK_PRIO				4
 #define INPUT_STK_SIZE				32
-extern OS_STK KEY_TASK_STK[INPUT_STK_SIZE];
+extern OS_STK INPUT_TASK_STK[INPUT_STK_SIZE];
 
 void InputCommand_task(void* pdata);
 
@@ -99,8 +102,8 @@ void USMART_APP(void* pdata);
 #define RDATA PAin(8)	 //红外数据输入脚
 
 //红外遥控识别码(ID),每款遥控器的该值基本都不一样,但也有一样的.
-//我们选用的遥控器识别码为0
-#define REMOTE_ID 0      		   
+//Carmp3的遥控器识别码为1
+#define REMOTE_ID 0x01    		   
 
 extern u8 RmtCnt;	//按键按下的次数
 extern u32 RmtRec;
