@@ -40,6 +40,7 @@ struct _STM32_INFO {
 extern struct _STM32_INFO STM32F407ZET6_info;
 
 typedef struct  {
+	u8 index;
 	u8 cmd_num;
 	const char* name;
 }_RMT_CMD;
@@ -142,10 +143,10 @@ void Remote_Init(void);    //红外传感器接收头引脚初始化
 /**********************      APP    主函数     *************************/
 #define APP_TASK_PRIO					5
 #define APP_STK_SIZE					256
+extern OS_EVENT* Message_APP_cmd; //传递主函数给的命令
+extern OS_STK APP_TASK_STK[APP_STK_SIZE];
 
-extern OS_STK INPUT_TASK_STK[APP_STK_SIZE];
-
-
+void APP_task(void* pdata);
 
 /**********************      APP    外部函数     *************************/
 

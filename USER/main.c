@@ -159,11 +159,12 @@ void start_task(void* pdata)
 	pdata = pdata;
 	message_SD = OSMboxCreate((void*)0);
 	Message_Input = OSMboxCreate((void*)0);//传递【红外】的和【按钮】的输入
+	Message_APP_cmd = OSMboxCreate((void*)0);//传递给【主函数】的命令输入
 	OSStatInit();					//初始化统计任务.这里会延时1秒钟左右
 	OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
 	OSTaskCreate(USMART_APP,(void*)0,(OS_STK*)&USMART_APP_TASK_STK[USMART_APP_STK_SIZE-1],USMART_APP_TASK_PRIO);//3级
 	OSTaskCreate(main_task, (void*)0, (OS_STK*)&MAIN_TASK_STK[MAIN_STK_SIZE-1], MAIN_TASK_PRIO);//4级
-//	OSTaskCreate(InputCommand_task, (void*)0, (OS_STK*)&INPUT_TASK_STK[INPUT_STK_SIZE-1], INPUT_TASK_PRIO);//5级
+	OSTaskCreate(APP_task, (void*)0, (OS_STK*)&APP_TASK_STK[APP_STK_SIZE-1], APP_TASK_PRIO);//5级
 	OSTaskCreate(OLED_GUI_update, (void*)0, (OS_STK*)&OLED_TASK_STK[OLED_STK_SIZE - 1], OLED_TASK_PRIO);//6级
 	OSTaskSuspend(START_TASK_PRIO);	//挂起起始任务.
 	OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
@@ -193,17 +194,13 @@ void main_task(void* padta) {
 
 	while (1) {
 		while (1) {
-			if ((u32)OSMboxPend(Message_Input, 500, &err) != 0) break;
-			else OLED_DrawStr(0, 34, "    ", 24, 1);//500个系统滴答都没有收到消息后，自动清零
+			if ((u32)OSMboxPend(Message_Input, 800, &err) != 0) break;
+			else OLED_DrawStr(0, 34, "    ", 24, 1);//800个系统滴答都没有收到消息后，自动清零
 		}
 		res = Remote_Scan();//等待500个系统滴答，在此期间会启用系统调度
 		
 		OS_ENTER_CRITICAL();
-/*		if (is_show_cmd) {
-			OSTimeDly(200);
-			OLED_DrawStr(0, 34, "    ", 24, 1);
-			is_show_cmd = 0;
-		}*/
+
 		if (res != 0) {
 			switch (res)
 		{
@@ -254,11 +251,13 @@ void main_task(void* padta) {
 		}
 			cmd_num = cmd->cmd_num;
 			cmd_str = (char*)(cmd->name);
+			/*********************给APP发送消息***********************/
+
+//			printf("%d\n",cmd_num);
+			OSMboxPost(Message_APP_cmd, &cmd->index);//发送信号
 			OS_EXIT_CRITICAL();
-			OLED_DrawStr(0, 34, cmd_str, 24, 1);
-//			is_show_cmd = 1;
-			printf("%d\n",cmd_num);
-			OSTimeDly(20);
+			/*********************************************************/
+			OSTimeDly(100);
 		}
 
 		OS_EXIT_CRITICAL();

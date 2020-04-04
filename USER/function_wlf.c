@@ -11,28 +11,28 @@ struct _STM32_INFO STM32F407ZET6_info;
 OS_EVENT* Message_Input;
 
 _RMT_CMD Remote_CmdStr[22] = {
-	0,		"    ",
-	162,	"CH -",			//01
-	98,		"CH  ",			//02
-	226,	"CH +",			//03
-	34,		"|<< ",			//04
-	2,		">>| ",			//05
-	194,	"Play",			//06
-	224,	" -  ",			//07
-	168,	" +  ",			//08
-	144,	" EQ ",			//09
-	104,	" 0  ",			//10
-	152,	"100+",			//11
-	176,	"200+",			//12
-	48,		" 1  ",			//13
-	24,		" 2  ",			//14
-	122,	" 3  ",			//15
-	16,		" 4  ",			//16
-	56,		" 5  ",			//17
-	90,		" 6  ",			//18
-	66,		" 7  ",			//19
-	74,		" 8  ",			//20
-	82,		" 9  ",			//21
+0,	0,		"    ",
+1,	162,	"CH -",			//01
+2,	98,		"CH  ",			//02
+3,	226,	"CH +",			//03
+4,	34,		"|<< ",			//04
+5,	2,		">>| ",			//05
+6,	194,	"Play",			//06
+7,	224,	" -  ",			//07
+8,	168,	" +  ",			//08
+9,	144,	" EQ ",			//09
+10,	104,	" 0  ",			//10
+11,	152,	"100+",			//11
+12,	176,	"200+",			//12
+13,	48,		" 1  ",			//13
+14,	24,		" 2  ",			//14
+15,	122,	" 3  ",			//15
+16,	16,		" 4  ",			//16
+17,	56,		" 5  ",			//17
+18,	90,		" 6  ",			//18
+19,	66,		" 7  ",			//19
+20,	74,		" 8  ",			//20
+21,	82,		" 9  ",			//21
 };
 
 
@@ -427,13 +427,15 @@ void TIM1_UP_TIM10_IRQHandler(void)
 {
 	if (TIM_GetITStatus(TIM1, TIM_IT_Update) == SET) //溢出中断
 	{
+		LED2 = 1;
 		if (RmtSta & 0x80)//上次有数据被接收到了
 		{
-			
 			RmtSta &= ~0X10;						//取消上升沿已经被捕获标记
 			if ((RmtSta & 0X0F) == 0X00)
+			{
 				RmtSta |= 1 << 6;//标记已经完成一次按键的键值信息采集
 				OSMboxPost(Message_Input, (void*)1);//发送信号
+			}
 			if ((RmtSta & 0X0F) < 7)
 				RmtSta++;
 			else
@@ -449,17 +451,19 @@ void TIM1_UP_TIM10_IRQHandler(void)
 //定时器1输入捕获中断服务程序	 
 void TIM1_CC_IRQHandler(void)
 {
+
 	if (TIM_GetITStatus(TIM1, TIM_IT_CC1) == SET) //处理捕获(CC1IE)中断
 	{
-		LED2 = 0;
 		if (RDATA)//上升沿捕获
 		{
 			TIM_OC1PolarityConfig(TIM1, TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
 			TIM_SetCounter(TIM1, 0);	   	//清空定时器值
 			RmtSta |= 0X10;					//标记上升沿已经被捕获
+			LED2 = 0;
 		}
 		else //下降沿捕获
 		{
+			LED2 = 1;
 			Dval = TIM_GetCapture1(TIM1);//读取CCR1也可以清CC1IF标志位
 			TIM_OC1PolarityConfig(TIM1, TIM_ICPolarity_Rising); //CC1P=0	设置为上升沿捕获
 			if (RmtSta & 0X10)					//完成一次高电平捕获 
@@ -480,14 +484,12 @@ void TIM1_CC_IRQHandler(void)
 					{
 						RmtCnt++; 		//按键次数增加1次
 						RmtSta &= 0XF0;	//清空计时器
-						
 					}
 				}
 				else if (Dval > 4200 && Dval < 4700)		//4500为标准值4.5ms
 				{
 					RmtSta |= 1 << 7;	//标记成功接收到了引导码
 					RmtCnt = 0;		//清除按键次数计数器
-					
 				}
 			}
 			RmtSta &= ~(1 << 4);
@@ -514,8 +516,8 @@ u8 Remote_Scan(void)
 			t2 = RmtRec;
 			if (t1 == (u8)~t2)
 			{
-				printf("%d,%d,%d,%d\n", RmtRec >> 24, (RmtRec >> 16) & 0xFF, (RmtRec >> 8) & 0xFF, (RmtRec) & 0xFF);
-				sta = t1;//键值正确	 
+//				printf("%d,%d,%d,%d\n", RmtRec >> 24, (RmtRec >> 16) & 0xFF, (RmtRec >> 8) & 0xFF, (RmtRec) & 0xFF);
+				sta = t1;//键值正确	
 				RmtRec = 0;
 			}
 		}
@@ -531,14 +533,28 @@ u8 Remote_Scan(void)
 
 
 /**********************           APP 主函数   *************************/
+OS_STK APP_TASK_STK[APP_STK_SIZE];
+OS_EVENT* Message_APP_cmd;
+
 void APP_task(void* pdata) {
-	return;
+	pdata = pdata;
+	OS_CPU_SR cpu_sr;
+//	message_APP_cmd = OSMboxCreate((void*)0); 在start_task中定义了
+	u8 cmd_index = 0;
+	u8 err;
+	_RMT_CMD* cmd;
+	while (1) {
+		cmd_index = *(u8*)OSMboxPend(Message_APP_cmd, 0, &err);
+		cmd = &Remote_CmdStr[cmd_index];
+		OLED_DrawStr(0, 34, cmd->name, 24, 1);
+		printf("\nIndex:%d", cmd->index);
+/*************************************************************************/
+		
+	}
 }
 
 
 /**********************           APP 外部函数   *************************/
-OS_STK APP_TASK_STK[APP_STK_SIZE];
-
 //显示系统信息函数
 void lcd_ShowSystemInfo(void) {
 	/*******************基本格局********************/

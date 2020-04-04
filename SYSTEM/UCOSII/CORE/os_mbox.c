@@ -315,9 +315,9 @@ void  *OSMboxPend (OS_EVENT  *pevent,
         return ((void *)0);
     }
     OS_ENTER_CRITICAL();
-    pmsg = pevent->OSEventPtr;
+    pmsg = pevent->OSEventPtr;                        /* 读取邮箱中的数据 */
     if (pmsg != (void *)0) {                          /* See if there is already a message             */
-        pevent->OSEventPtr = (void *)0;               /* Clear the mailbox                             */
+        pevent->OSEventPtr = (void *)0;               /* Clear the mailbox  如果邮箱中已经有数据了会自动清空 */
         OS_EXIT_CRITICAL();
         *perr = OS_ERR_NONE;
         return (pmsg);                                /* Return the message received (or NULL)         */
