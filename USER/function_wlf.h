@@ -30,6 +30,11 @@ struct _STM32_INFO {
 	//[0]——1，被占用，除非被复位，否则不执行printf
 	//[7]——1，正在接受数据；0，空闲
 	u8 USART1_Busy;
+	u32 SD_total;
+	u32 SD_free;
+	
+	u16* font_COLOR;//指向当前系统字体颜色的指针
+	u8* font_BOLD;//指向当前系统字体粗细的指针
 };
 extern struct _STM32_INFO STM32F407ZET6_info;
 
@@ -106,10 +111,14 @@ void Show_RTC(void);
 /*******************************  USMART  **********************************/
 #if USE_SMART_APP==1
 
-#define USMART_APP_TASK_PRIO				2
-#define USMART_APP_STK_SIZE					64
+#define USMART_APP_TASK_PRIO				3
+#define USMART_APP_STK_SIZE					200//如果输入的命令比较长，那就需要大一点的栈
 extern OS_STK USMART_APP_TASK_STK[USMART_APP_STK_SIZE];
 void USMART_APP(void* pdata);
+
+void Debug(void);
+
+void Exit(void);
 
 #endif
 #endif 

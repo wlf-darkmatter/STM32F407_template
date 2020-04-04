@@ -1018,13 +1018,14 @@ void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,char *p)
 		
 		if ((*str <='~')&&(*str >=' ')) //是ASCII码
 		{
+			
 			if (x >= width) { x = x0; y += size; }
-			if (y >= height)break;//退出
+			if (y >= height) break;//退出
 			LCD_ShowChar(x, y, *str, size, 0);
 			x += size / 2;
 			str++;
 		}else
-		if (*p > 0x80) //是中文字符
+		if (*str > 0x80) //是中文字符
 		{
 			if (x + size >= width) { x = x0; y += size; }
 			if (y >= height) break;
@@ -1032,12 +1033,9 @@ void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,char *p)
 			LCD_ShowGBK(x, y, GBKmat, size, 0);
 			x += size;
 			str += 2;
-		}else
-		if (*str == '\n'|| *str == '\r') {
-			y += size; x = x0;
-			str++;
 		}
-    }
+		
+  }
 	myfree(SRAMIN,GBKmat);
 }
 

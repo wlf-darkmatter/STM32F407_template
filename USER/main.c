@@ -30,7 +30,6 @@ char lcd_string[64];//指向需要打印的字符串的指针
 
 void STM32_init(void);
 void STM32_init(void) {
-
 	u32 total, free;
 	u8 t = 0;
 	u8 res = 0;
@@ -103,6 +102,10 @@ void STM32_init(void) {
 	LCD_ShowNum(20 + 8 * 14, 170, total >> 10, 5, 16);//显示SD卡总容量 MB
 	POINT_COLOR = (free < total / 5) ? RED : BLUE;//设置字体
 	LCD_ShowNum(20 + 8 * 14, 190, free >> 10, 5, 16);//显示SD卡剩余容量 MB	
+	STM32F407ZET6_info.SD_total = total;
+	STM32F407ZET6_info.SD_free = free;
+	STM32F407ZET6_info.SD_free = free;
+
 
 	//初始化cc936
 	cc936_Init();/*******************************************************************/
@@ -140,8 +143,10 @@ void STM32_init(void) {
 
 
 
+	STM32F407ZET6_info.font_COLOR=&POINT_COLOR;
+	STM32F407ZET6_info.font_BOLD=&FontBold;
 
-	//myfree(SRAMIN, lcd_string);
+	
 }
 
 
@@ -155,7 +160,7 @@ void start_task(void* pdata)
 	Message_Input = OSMboxCreate((void*)0);//传递【红外】的和【按钮】的输入
 	OSStatInit();					//初始化统计任务.这里会延时1秒钟左右
 	OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
-	OSTaskCreate(USMART_APP,(void*)0,(OS_STK*)&USMART_APP_TASK_STK[USMART_APP_STK_SIZE-1],USMART_APP_TASK_PRIO);//2级
+	OSTaskCreate(USMART_APP,(void*)0,(OS_STK*)&USMART_APP_TASK_STK[USMART_APP_STK_SIZE-1],USMART_APP_TASK_PRIO);//3级
 	OSTaskCreate(main_task, (void*)0, (OS_STK*)&MAIN_TASK_STK[MAIN_STK_SIZE-1], MAIN_TASK_PRIO);//4级
 //	OSTaskCreate(InputCommand_task, (void*)0, (OS_STK*)&INPUT_TASK_STK[INPUT_STK_SIZE-1], INPUT_TASK_PRIO);//5级
 	OSTaskCreate(OLED_GUI_update, (void*)0, (OS_STK*)&OLED_TASK_STK[OLED_STK_SIZE - 1], OLED_TASK_PRIO);//6级

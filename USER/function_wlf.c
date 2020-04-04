@@ -352,6 +352,19 @@ void USMART_APP(void* pdata) {
 		OS_EXIT_CRITICAL();
 	}
 }
+
+void Debug(void) {
+	OS_CPU_SR cpu_sr;
+	OS_ENTER_CRITICAL();
+	OSTaskSuspend(4);
+	OSTaskSuspend(OLED_TASK_PRIO);
+	OS_EXIT_CRITICAL();
+}
+
+void Exit(void) {
+	OSTaskResume(4);
+	OSTaskResume(OLED_TASK_PRIO);
+}
 #endif
 
 /****************  KEY  *****************/
@@ -437,7 +450,7 @@ void TIM1_UP_TIM10_IRQHandler(void)
 	{
 		if (RmtSta & 0x80)//上次有数据被接收到了
 		{
-				
+			
 			RmtSta &= ~0X10;						//取消上升沿已经被捕获标记
 			if ((RmtSta & 0X0F) == 0X00)
 				RmtSta |= 1 << 6;//标记已经完成一次按键的键值信息采集
@@ -543,7 +556,15 @@ u8 Remote_Scan(void)
 
 
 
+/**********************           APP            *************************/
+//显示系统信息函数
+void lcd_ShowSystemInfo(void) {
+	LCD_Clear(WHITE);
+	POINT_COLOR = BLACK;
+	LCD_ShowString(0, 0, 240, 48, 24, "----------------------------------------------\n系统状态如下：\n");
+	LCD_ShowString(30, 20, 200, 24, 24, "时间：");
 
+}
 
 
 
