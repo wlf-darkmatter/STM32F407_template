@@ -22,7 +22,7 @@ void start_task(void* pdata);//任务函数
 
 #define MAIN_TASK_PRIO					4
 #define MAIN_STK_SIZE					64
-OS_STK MAIN_TASK_STK[INPUT_STK_SIZE];
+OS_STK MAIN_TASK_STK[MAIN_STK_SIZE];
 void main_task(void* padta);
 
 char lcd_string[64];//指向需要打印的字符串的指针
@@ -142,9 +142,10 @@ void STM32_init(void) {
 	ESP8266_init();/*******************************************************************/
 
 
-
-	STM32F407ZET6_info.font_COLOR=&POINT_COLOR;
+	STM32F407ZET6_info.point_COLOR=&POINT_COLOR;
+	STM32F407ZET6_info.back_COLOR=&BACK_COLOR;
 	STM32F407ZET6_info.font_BOLD=&FontBold;
+
 
 	
 }
@@ -189,7 +190,7 @@ void main_task(void* padta) {
 	_RMT_CMD* cmd;
 	u8 cmd_num;
 	char* cmd_str;
-	u8 is_show_cmd;
+
 	while (1) {
 		while (1) {
 			if ((u32)OSMboxPend(Message_Input, 500, &err) != 0) break;

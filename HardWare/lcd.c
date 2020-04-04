@@ -1065,8 +1065,9 @@ u8 show_picture(const u8* filename, u8 fast) {
 //设置颜色和字体粗细
 //color为颜色
 //bold为粗细，有0，16，32，64，128 其中0为默认
-void LCD_Font_setting(u16 color, u8 bold) {
+void LCD_Draw_setting(u16 color, u16 back_color, u8 bold) {
 	POINT_COLOR = color;
+	BACK_COLOR = back_color;
 	FontBold = bold;
 }
 

@@ -7,7 +7,7 @@ struct _STM32_INFO STM32F407ZET6_info;
 
 /********************************  输入控制  ***********************************/
 
-OS_STK INPUT_TASK_STK[INPUT_STK_SIZE];
+
 OS_EVENT* Message_Input;
 
 _RMT_CMD Remote_CmdStr[22] = {
@@ -35,28 +35,7 @@ _RMT_CMD Remote_CmdStr[22] = {
 	82,		" 9  ",			//21
 };
 
-void InputCommand_task(void* pdata) {
-	OS_CPU_SR cpu_sr;
-	u8 res;
-	while (1) {
-		
-		OS_ENTER_CRITICAL();
-		Key_detect();
-		res=Remote_Scan();
-		OS_EXIT_CRITICAL();
-		//给cmd指针赋值↓
-		if (res != 0) 
-		{
-			OSMboxPost(Message_Input, (void*)res);//发送输入的命令
-			OSTimeDly(10);
-			
-		}
-		OSTimeDly(5);
-		//得到命令后并不是要马上就去执行的
 
-	}
-
-}
 
 
 //重定义fputc函数 
@@ -539,7 +518,6 @@ u8 Remote_Scan(void)
 				sta = t1;//键值正确	 
 				RmtRec = 0;
 			}
-
 		}
 		if ((sta == 0) || ((RmtSta & 0X80) == 0))//按键数据错误/遥控已经没有按下了
 		{
@@ -552,17 +530,53 @@ u8 Remote_Scan(void)
 }
 
 
+/**********************           APP 主函数   *************************/
+void APP_task(void* pdata) {
+	return;
+}
 
 
+/**********************           APP 外部函数   *************************/
+OS_STK APP_TASK_STK[APP_STK_SIZE];
 
-
-/**********************           APP            *************************/
 //显示系统信息函数
 void lcd_ShowSystemInfo(void) {
+	/*******************基本格局********************/
 	LCD_Clear(WHITE);
 	POINT_COLOR = BLACK;
-	LCD_ShowString(0, 0, 240, 48, 24, "----------------------------------------------\n系统状态如下：\n");
-	LCD_ShowString(30, 20, 200, 24, 24, "时间：");
+	LCD_ShowString(0, 0 , 240, 16, 16, "(>▽<)～【系统状态】(￣▽￣～)");
+	POINT_COLOR = BLUE;
+	/****************************************************************************/
+	LCD_DrawLine(0, 17, 240, 16); LCD_DrawLine(0, 18, 240, 16); LCD_DrawLine(0, 19, 240, 16);
+	POINT_COLOR = BLACK;
+	LCD_ShowString(8, 20 , 230, 16, 16, "<时间> 19:10:00 <周期数>嘿嘿");//x:5~53
+	LCD_Draw_setting(BLACK, WHITE, 128);
+	LCD_ShowString(8, 40 , 230, 16, 16, "<日期>2020年04月04日星期六");
+	/********************************硬件模块************************************/
+	LCD_DrawLine(0, 58, 240, 16); LCD_DrawLine(0, 59, 240, 16);
+	LCD_ShowString(8, 60 , 230, 16, 16, "<网络> WiFi模块 [异常]×");
+	LCD_ShowString(8, 80 , 230, 16, 16, "<控制> 遥控模块 [异常]×");
+	LCD_ShowString(8, 100, 230, 16, 16, "<显示> OLED模块 [异常]×");
+	LCD_ShowString(8, 120, 230, 16, 16, "<显示> LCD 模块 [异常]×");
+	LCD_ShowString(8, 140, 230, 16, 16, "<储存> SD卡模块 [异常]×");
+	LCD_ShowString(8, 160, 230, 16, 16, "总量: 0000 MB 空闲: 0000 MB");
+	/********************************软件模块************************************/
+	LCD_DrawLine(0, 168, 240, 16); LCD_DrawLine(0, 169, 240, 16);
+	LCD_ShowString(8, 180, 230, 16, 16, "<汉字> 库存汉字 21,003个");
+	LCD_ShowString(8, 200, 230, 16, 16, "<图片> 库存图片    23 张");
+
+	LCD_ShowString(8, 220, 230, 16, 16, "<颜值> ");
+	LCD_ShowString(8, 240, 230, 16, 16, "过于美丽，无法识别");
+
+
+	LCD_ShowString(8, 260, 230, 16, 16, "<上次查看时间>：");
+	LCD_ShowString(8, 280, 230, 16, 16, "2020年 4月 4日 19:48");
+	LCD_Draw_setting(BLACK, WHITE, 128);
+	LCD_ShowString(8, 300, 230, 16, 16, "你都不来看看我惹 ╥﹏╥...");
+
+	
+
+//	LCD_Draw_setting(0x0000, 0xFFFF, 64);
 
 }
 

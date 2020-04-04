@@ -33,7 +33,8 @@ struct _STM32_INFO {
 	u32 SD_total;
 	u32 SD_free;
 	
-	u16* font_COLOR;//指向当前系统字体颜色的指针
+	u16* point_COLOR;//指向当前系统字体颜色的指针
+	u16* back_COLOR;//指向当前系统背景颜色的指针
 	u8* font_BOLD;//指向当前系统字体粗细的指针
 };
 extern struct _STM32_INFO STM32F407ZET6_info;
@@ -47,20 +48,19 @@ extern _RMT_CMD Remote_CmdStr[22];
 #define USART1_BUSY 1//是否使能串口独占，0=不使用；1=使用
 
 /********************************  输入控制  ***********************************/
-#define INPUT_TASK_PRIO					5
-#define INPUT_STK_SIZE					64
+
+
+
 extern OS_EVENT* Message_Input;
-extern OS_STK INPUT_TASK_STK[INPUT_STK_SIZE];
-
-
-
-void InputCommand_task(void* pdata);
+void APP_task(void* pdata);
 
 /*--------------  KEY  -----------------*/
 u8 Key_detect(void);
 
 /*-------------  REMOTE  ---------------*/
 u8 Remote_Scan(void);
+
+
 
 
 /******************************* WiFi 部分 ********************************/
@@ -139,3 +139,14 @@ void Remote_Init(void);    //红外传感器接收头引脚初始化
 
 
 
+/**********************      APP    主函数     *************************/
+#define APP_TASK_PRIO					5
+#define APP_STK_SIZE					256
+
+extern OS_STK INPUT_TASK_STK[APP_STK_SIZE];
+
+
+
+/**********************      APP    外部函数     *************************/
+
+void lcd_ShowSystemInfo(void);
