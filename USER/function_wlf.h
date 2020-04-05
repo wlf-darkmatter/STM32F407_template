@@ -30,12 +30,16 @@ struct _STM32_INFO {
 	//[0]——1，被占用，除非被复位，否则不执行printf
 	//[7]——1，正在接受数据；0，空闲
 	u8 USART1_Busy;
+	u16 Picture_totalnum;//记录图片总数
 	u32 SD_total;
 	u32 SD_free;
 	
 	u16* point_COLOR;//指向当前系统字体颜色的指针
 	u16* back_COLOR;//指向当前系统背景颜色的指针
 	u8* font_BOLD;//指向当前系统字体粗细的指针
+
+
+	char* current_picture;
 };
 extern struct _STM32_INFO STM32F407ZET6_info;
 
@@ -54,6 +58,8 @@ extern _RMT_CMD Remote_CmdStr[22];
 
 extern OS_EVENT* Message_Input;
 void APP_task(void* pdata);
+
+void Dialog_set(u8 dialog_state);
 
 /*--------------  KEY  -----------------*/
 u8 Key_detect(void);
@@ -84,11 +90,18 @@ extern OS_EVENT* message_SD;			//SD卡读写邮箱事件块指针
 
 
 /*******************************图片部分********************************/
-struct _app_LCD {
-	u16 Picture_num;
+
+//u16 picture_index
+//char picture_name[62]
+struct _structure_picture_name {
+	u16 picture_index;
+	char picture_name[62];//支持30个汉字组成的长名字
 };
-extern struct _app_LCD App_LCD;
+extern struct _structure_picture_name* pic_reference;
+
 extern DIR PictureDir;
+void SD_picinfo_write(FIL* pic_fil, u8 index, struct _structure_picture_name* write_Structure);
+void SD_picinfo_read(FIL* pic_fil, u8 index, struct _structure_picture_name* read_Structure);
 //获取图片数量
 u8 PictureFile_Init(void);//记录所有图片信息
 u16 pic_get_tnum(u8* path);

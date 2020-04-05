@@ -120,8 +120,37 @@ void WiFi_Debug_task(void* pdata) {
 /*******************************       SD       ****************************************/
 OS_EVENT* message_SD;			//SD卡读写邮箱事件块指针
 
+//SD卡读写，读取并写入到文件【Picture_reference.wlf】文件中
+//pic_fil 指向自建索引的文件指针
+//write_Structure 写入这样一个结构体指针【_structure_picture_name】
+//确保文件已经打开
+void SD_picinfo_write(FIL* pic_fil, u8 index, struct _structure_picture_name* write_Structure) {
+	//在文件大小可以看出记录了几个图片文件
+	u16 offset = index * 64;
+	UINT* ByteRead;
+	f_lseek(pic_fil, offset);
+	f_write(pic_fil, &(write_Structure->picture_index), 2, ByteRead);
+	if (index != 0)	f_write(pic_fil, &(write_Structure->picture_name), 62, ByteRead);												
+	//之所以要这样绕一圈，是因为簇不是连续的,
+}
+
+//读取自己建的图片索引
+//pic_fil 指向自建索引的文件指针
+//index 要读取的索引号
+//确保文件已经打开
+void SD_picinfo_read(FIL* pic_fil, u8 index, struct _structure_picture_name* read_Structure) {
+	//在文件的第一个64B区域写当前是在记录第几个图片（每次都要）
+	u16 offset = index * 64;
+	UINT* ByteRead;
+	f_lseek(pic_fil, offset);
+	f_read(pic_fil, &(read_Structure->picture_index),2 ,ByteRead);
+	if (index != 0) f_read(pic_fil, &(read_Structure->picture_name), 62, ByteRead);
+}
 /*******************************图片部分********************************/
-struct _app_LCD App_LCD;
+
+//方便写入和读取图片信息的一个结构体
+//初始化的时候被完整的用一次
+struct _structure_picture_name* pic_reference;
 DIR PictureDir;//之后每次打开一个文件，都需要这个，所以就保存为实体了
 
 u8 PictureFile_Init(void) {
@@ -130,59 +159,105 @@ u8 PictureFile_Init(void) {
 	u8* pname;//带路径的文件名
 	u8 res;
 	u16 curindex;//文件当前索引
-	u16 temp;
+	u16 wlf_picnum;//SD卡中记录的图片文件数量
 	u8* fn;//长文件名
 	u8 time = 0;
-	u16* picindextbl; //用于存放图片索引
+//	u16* picindextbl; //用于存放图片索引
+	FIL* pic_fil_reference;//这个是指向SD卡中本应该保存图片信息的一个文件的指针
+	pic_fil_reference = mymalloc(SRAMIN, sizeof(FIL));
+	pic_reference = mymalloc(SRAMIN, 64);//picture_nam的单个实体占据64B
 
-	while (f_opendir(&PictureDir, "0:/PICTURE"))//打开图片文件夹
+	res = f_open(pic_fil_reference, "0:/Picture_reference.wlf", FA_OPEN_EXISTING | FA_WRITE);
+	if (res == FR_NO_FILE) {
+		printf("没有找到文件，创建了一个，请重启!!!\n");
+		f_open(pic_fil_reference, "0:/Picture_reference.wlf", FA_CREATE_NEW | FA_WRITE);
+	}
+	SD_picinfo_read(pic_fil_reference, 0, pic_reference);//读取第0个序列，值写在index里，其实是图片的数量
+	wlf_picnum = pic_reference->picture_index;
+	//打开图片文件夹
+	while (f_opendir(&PictureDir, "0:/PICTURE"))
 	{
 		LCD_ShowString(20, 230, 200, 16, 16, "PICTURE文件夹错误!");
 		delay_ms(20);
-		if (time++ >= 0xff) return 1;
+		if (time++ >= 0xFF) return 1;
 	}
 	totpicnum = pic_get_tnum("0:/PICTURE"); //得到总有效文件数
 	time = 0;
-	while (totpicnum == NULL)//图片文件为0		
+	//图片文件为0
+	while (totpicnum == NULL)
 	{
 		LCD_ShowString(20, 230, 200, 16, 16, "没有图片文件!");
 		delay_ms(20);
 		if (time++ >= 0xff) return 2;
 	}
+	
+
 	picfileinfo.lfsize = _MAX_LFN * 2 + 1;						//长文件名最大长度
 	picfileinfo.lfname = mymalloc(SRAMIN, picfileinfo.lfsize);	//为长文件缓存区分配内存
 	pname = mymalloc(SRAMIN, picfileinfo.lfsize);				//为带路径的文件名分配内存
-	picindextbl = mymalloc(SRAMIN, 2 * totpicnum);				//申请2*totpicnum个字节的内存,用于存放图片索引
+//	picindextbl = mymalloc(SRAMIN, 2 * totpicnum);				//申请2*totpicnum个字节的内存,用于存放图片索引
 	time = 0;
-	while (picfileinfo.lfname == NULL || pname == NULL || picindextbl == NULL)//内存分配出错
+	//内存分配出错
+	while (picfileinfo.lfname == NULL || pname == NULL )
 	{
 		LCD_ShowString(20, 230, 200, 16, 16, "内存分配失败!");
 		delay_ms(20);
 		if (time++ >= 0xff) return 3;
 	}
-	//记录索引
 	res = f_opendir(&PictureDir, "0:/PICTURE"); //打开目录
 	if (res == FR_OK)
 	{
 		curindex = 0;//当前索引为0
+	/*************************************************************************/
+	//记录索引，第一次检索SD卡中的图片,记录图片数量
 		while (1)//全部查询一遍
 		{
-			temp = PictureDir.index;								//记录当前index
 			res = f_readdir(&PictureDir, &picfileinfo);       		//读取目录下的一个文件
-			if (res != FR_OK || picfileinfo.fname[0] == 0) break;	//错误了/到末尾了,退出		  
+			if (res != FR_OK || picfileinfo.fname[0] == 0) break;	//错误了/到末尾了,退出
 			fn = (u8*)(*picfileinfo.lfname ? picfileinfo.lfname : picfileinfo.fname);
-			res = f_typetell(fn);
-			if ((res & 0XF0) == 0X50)//取高四位,看看是不是图片文件	
-			{
-				picindextbl[curindex] = temp;//记录索引
+			res = f_typetell(fn);//高四位表示所属大类,低四位表示所属小类
+			if ((res & 0xF0) == 0x50)//取高四位,看看是不是图片文件
 				curindex++;
-			}
 		}
+		/*************************************************************************/
+		//与索引文件中记录的数量不符合，重新编撰索引
+		if (curindex != wlf_picnum) 
+		{
+			f_closedir(&PictureDir);//先关闭，重新打开一次
+			wlf_picnum = curindex;
+			////////////////////////////////////////////
+			curindex = 0;//当前索引为1
+			f_opendir(&PictureDir, "0:/PICTURE"); //打开目录
+			while (1)//全部查询一遍
+			{
+				res = f_readdir(&PictureDir, &picfileinfo);       		//读取目录下的一个文件
+				if (res != FR_OK || picfileinfo.fname[0] == 0) break;	//错误了/到末尾了,退出		  
+				fn = (u8*)(*picfileinfo.lfname ? picfileinfo.lfname : picfileinfo.fname);
+				res = f_typetell(fn);//高四位表示所属大类,低四位表示所属小类
+				if ((res & 0XF0) == 0X50)//取高四位,看看是不是图片文件	
+				{
+					curindex++;
+			/*************************    写入图片对应的索引和名字       ************************/
+					memcpy(pic_reference->picture_name, fn, strlen((const char*)fn) + 1);
+					pic_reference->picture_index = PictureDir.index;			//记录当前index
+					SD_picinfo_write(pic_fil_reference, curindex, pic_reference);//把名字写到对应的索引文件中
+				}
+			}
+			/*******************************************************************/
+			pic_reference->picture_index = wlf_picnum;
+			SD_picinfo_write(pic_fil_reference, 0, pic_reference);
+			myfree(SRAMIN, pic_reference);		//释放内存
+		}
+		f_close(pic_fil_reference);
 	}
-	App_LCD.Picture_num = curindex;
+	STM32F407ZET6_info.Picture_totalnum = wlf_picnum;
+
 	myfree(SRAMIN, picfileinfo.lfname);	//释放内存			    
 	myfree(SRAMIN, pname);				//释放内存			    
-	myfree(SRAMIN, picindextbl);		//释放内存		
+//	myfree(SRAMIN, picindextbl);		//释放内存		
+	myfree(SRAMIN, pic_fil_reference);		//释放内存		
+	myfree(SRAMIN, pic_reference);		//释放内存		
+			
 	return 0;
 }
 
@@ -540,19 +615,42 @@ void APP_task(void* pdata) {
 	pdata = pdata;
 	OS_CPU_SR cpu_sr;
 //	message_APP_cmd = OSMboxCreate((void*)0); 在start_task中定义了
-	u8 cmd_index = 0;
+	u8 app_cmd_index = 0;
 	u8 err;
 	_RMT_CMD* cmd;
+	//0是在桌面，也就是图片
+	//1是在详情界面
+	//2是在时钟界面
+	u8 Dialog_state;
 	while (1) {
-		cmd_index = *(u8*)OSMboxPend(Message_APP_cmd, 0, &err);
-		cmd = &Remote_CmdStr[cmd_index];
-		OLED_DrawStr(0, 34, cmd->name, 24, 1);
+		app_cmd_index = *(u8*)OSMboxPend(Message_APP_cmd, 0, &err);
+		cmd = &Remote_CmdStr[app_cmd_index];
+		OLED_DrawStr(0, 34, (char*)cmd->name, 24, 1);
 		printf("\nIndex:%d", cmd->index);
 /*************************************************************************/
-		
+		if (app_cmd_index == 3) {
+			//是CH+ 信号，显示系统详情界面
+			Dialog_state = 1;
+		}
+		if (app_cmd_index == 2) {
+			Dialog_state = 0;
+		}
+
+
+		OS_ENTER_CRITICAL();
+		Dialog_set(Dialog_state);
+		OS_EXIT_CRITICAL();
 	}
 }
 
+void Dialog_set(u8 dialog_state) {
+	if (dialog_state == 0) {
+		show_picture("0:/PICTURE/头像.bmp", 1);
+	}
+	if (dialog_state == 1) {
+		lcd_ShowSystemInfo();
+	}
+}
 
 /**********************           APP 外部函数   *************************/
 //显示系统信息函数
@@ -560,34 +658,34 @@ void lcd_ShowSystemInfo(void) {
 	/*******************基本格局********************/
 	LCD_Clear(WHITE);
 	POINT_COLOR = BLACK;
-	LCD_ShowString(0, 0 , 240, 16, 16, "(>▽<)～【系统状态】(￣▽￣～)");
+	LCD_ShowString(0, 2 , 240, 16, 16, "(>▽<)～【系统状态】(￣▽￣～)");
 	POINT_COLOR = BLUE;
 	/****************************************************************************/
-	LCD_DrawLine(0, 17, 240, 16); LCD_DrawLine(0, 18, 240, 16); LCD_DrawLine(0, 19, 240, 16);
+	LCD_DrawLine(8, 17, 232, 17); LCD_DrawLine(8, 18, 232, 18); //横线
+	LCD_DrawLine(8, 17, 8, 300); LCD_DrawLine(232, 17, 232, 300);//两侧竖线
 	POINT_COLOR = BLACK;
-	LCD_ShowString(8, 20 , 230, 16, 16, "<时间> 19:10:00 <周期数>嘿嘿");//x:5~53
+	LCD_ShowString(8, 20 , 230, 16, 16, "<时间> 19:10:00 <周期数> 嘿嘿");//x:5~53
 	LCD_Draw_setting(BLACK, WHITE, 128);
-	LCD_ShowString(8, 40 , 230, 16, 16, "<日期>2020年04月04日星期六");
+	LCD_ShowString(8, 40 , 230, 16, 16, "<日期> 2020年04月04日 星期六");
 	/********************************硬件模块************************************/
-	LCD_DrawLine(0, 58, 240, 16); LCD_DrawLine(0, 59, 240, 16);
-	LCD_ShowString(8, 60 , 230, 16, 16, "<网络> WiFi模块 [异常]×");
-	LCD_ShowString(8, 80 , 230, 16, 16, "<控制> 遥控模块 [异常]×");
-	LCD_ShowString(8, 100, 230, 16, 16, "<显示> OLED模块 [异常]×");
-	LCD_ShowString(8, 120, 230, 16, 16, "<显示> LCD 模块 [异常]×");
-	LCD_ShowString(8, 140, 230, 16, 16, "<储存> SD卡模块 [异常]×");
+	LCD_DrawLine(8, 57, 232, 57); LCD_DrawLine(8, 58, 232, 58); 
+	LCD_ShowString(8, 60 , 230, 16, 16, "<网络> WiFi模块    [异常]×");
+	LCD_ShowString(8, 80 , 230, 16, 16, "<控制> 遥控模块    [异常]×");
+	LCD_ShowString(8, 100, 230, 16, 16, "<显示> OLED模块    [异常]×");
+	LCD_ShowString(8, 120, 230, 16, 16, "<显示> LCD 模块    [异常]×");
+	LCD_ShowString(8, 140, 230, 16, 16, "<储存> SD卡模块    [异常]×");
 	LCD_ShowString(8, 160, 230, 16, 16, "总量: 0000 MB 空闲: 0000 MB");
 	/********************************软件模块************************************/
-	LCD_DrawLine(0, 168, 240, 16); LCD_DrawLine(0, 169, 240, 16);
-	LCD_ShowString(8, 180, 230, 16, 16, "<汉字> 库存汉字 21,003个");
-	LCD_ShowString(8, 200, 230, 16, 16, "<图片> 库存图片    23 张");
-
-	LCD_ShowString(8, 220, 230, 16, 16, "<颜值> ");
-	LCD_ShowString(8, 240, 230, 16, 16, "过于美丽，无法识别");
-
-
-	LCD_ShowString(8, 260, 230, 16, 16, "<上次查看时间>：");
-	LCD_ShowString(8, 280, 230, 16, 16, "2020年 4月 4日 19:48");
+	LCD_DrawLine(8, 177, 232, 177);LCD_DrawLine(8, 178, 232, 178); 
+	LCD_ShowString(8, 180, 230, 16, 16, "<汉字> 库存汉字    21,003个");
+	LCD_ShowString(8, 200, 230, 16, 16, "<图片> 库存图片       23 张");
+	LCD_Draw_setting(PURPLE, WHITE, 0);
+	LCD_ShowString(8, 220, 230, 32, 16, "<颜值> 过于美丽，无法识别");
+	LCD_Draw_setting(GREEN, WHITE, 0);
+	LCD_DrawLine(8, 257, 232, 257); LCD_DrawLine(8, 258, 232, 258);
 	LCD_Draw_setting(BLACK, WHITE, 128);
+	LCD_ShowString(8, 260, 230, 16, 16, "<上次查看时间>");
+	LCD_ShowString(8, 280, 230, 16, 16, "2020 年 4月 4 日 19:48");
 	LCD_ShowString(8, 300, 230, 16, 16, "你都不来看看我惹 ╥﹏╥...");
 
 	

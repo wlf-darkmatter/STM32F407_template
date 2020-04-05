@@ -122,7 +122,8 @@ void STM32_init(void) {
 	LCD_ShowString(20, 100, 200, 24, 24, "刘倩,欢迎使用~");
 	POINT_COLOR = BLACK;
 	res=PictureFile_Init();/*******************************************************************/
-	sprintf(lcd_string, "图片读取完毕，共%d个", App_LCD.Picture_num);
+	sprintf(lcd_string, "图片读取完毕，共%d个", STM32F407ZET6_info.Picture_totalnum);
+
 	printf("%s\n",lcd_string);
 	if(res==0) LCD_ShowString(20, 230, 200, 16, 16, lcd_string);
 	piclib_init();/*******************************************************************/
@@ -191,7 +192,8 @@ void main_task(void* padta) {
 	_RMT_CMD* cmd;
 	u8 cmd_num;
 	char* cmd_str;
-
+	cmd_num=cmd_num;
+	cmd_str=cmd_str;
 	while (1) {
 		while (1) {
 			if ((u32)OSMboxPend(Message_Input, 800, &err) != 0) break;

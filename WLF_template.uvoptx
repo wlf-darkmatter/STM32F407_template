@@ -170,7 +170,7 @@
           <Type>0</Type>
           <LineNumber>67</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134229892</Address>
+          <Address>134229988</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -186,7 +186,7 @@
           <Type>0</Type>
           <LineNumber>290</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134280384</Address>
+          <Address>134281344</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -196,6 +196,22 @@
           <Filename>.\USMART\usmart.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\WLF_template\USMART/usmart.c\290</Expression>
+        </Bp>
+        <Bp>
+          <Number>3</Number>
+          <Type>0</Type>
+          <LineNumber>595</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134274924</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\USER\function_wlf.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\WLF_template\USER/function_wlf.c\595</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>

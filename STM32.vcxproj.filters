@@ -34,9 +34,6 @@
     <Filter Include="Picture">
       <UniqueIdentifier>{eb49a099-eea5-48b9-9661-f8e9f0f643a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SYSTEM\FAT\UCOSII">
-      <UniqueIdentifier>{1a64408e-0f15-4d28-a05c-f1086dda1497}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SYSTEM\USCII">
       <UniqueIdentifier>{a2bb493e-41e1-4959-8b6e-48bff535cf2b}</UniqueIdentifier>
     </Filter>
