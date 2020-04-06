@@ -38,15 +38,13 @@ struct _STM32_INFO {
 	u16* back_COLOR;//指向当前系统背景颜色的指针
 	u8* font_BOLD;//指向当前系统字体粗细的指针
 
-
 	char* current_picture;
 
+	u8 LQ_period;//记录生理期
 
-
-	
 };
 extern struct _STM32_INFO STM32F407ZET6_info;
-
+extern char string_buff[64];
 typedef struct  {
 	u8 index;
 	u8 cmd_num;
@@ -59,12 +57,10 @@ extern _RMT_CMD Remote_CmdStr[22];
 /********************************  输入控制  ***********************************/
 
 
-
 extern OS_EVENT* Message_Input;
 void APP_task(void* pdata);
 
 void Dialog_set(u8 dialog_state);
-
 
 
 /*--------------  KEY  -----------------*/
@@ -177,8 +173,14 @@ void Show_LQ_CLOCK(void* pdata);
 
 void lcd_ShowSystemInfo(void);
 
+u8 LQ_period_read(void);
+
+void LQ_period_write(u8 period);
+
 /*************显示 LQ_CLOCK 函数【1】 【APP】********************/
 #define LQ_CLOCK_TASK_PRIO				7
 #define LQ_CLOCK_STK_SIZE				256
 extern OS_STK LQ_CLOCK_TASK_STK[LQ_CLOCK_STK_SIZE];
 extern OS_EVENT* Message_LQ_clock;			//OLED卡读写邮箱事件块指针
+
+

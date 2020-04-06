@@ -34,6 +34,7 @@ _RMT_CMD Remote_CmdStr[22] = {
 20,	74,		" 8  ",			//20
 21,	82,		" 9  ",			//21
 };
+char string_buff[64];//指向需要打印的字符串的指针
 
 
 
@@ -374,7 +375,7 @@ void OLED_GUI_update(void* pdata) {
 					Date = RTC_DateStruct.RTC_Date;
 					sprintf(strtemp, "%02d", Date);
 					OLED_DrawStr_manual(112, 16, strtemp, 16, 1);//12/01
-
+					LQ_period_write(STM32F407ZET6_info.LQ_period++);//写入生理期
 					if (Month == RTC_DateStruct.RTC_Month) OLED_Refresh();//月没变,直接刷新
 					else//变了
 					{
@@ -641,13 +642,17 @@ void APP_task(void* pdata) {
 	u8 Dialog_state;
 	while (1) {
 		app_cmd_index = *(u8*)OSMboxPend(Message_APP_cmd, 0, &err);
+		OS_ENTER_CRITICAL();
 		cmd = &Remote_CmdStr[app_cmd_index];
-		OLED_DrawStr(0, 34, (char*)cmd->name, 24, 1);
-		printf("\nIndex:%d", cmd->index);
+		
+		
 /*************************************************************************/
-		//是CH+ 信号，修改系统主界面
+		//是CH类 信号，修改系统主界面
+
 		switch (app_cmd_index)
 		{
+		default:
+			break;
 		case 1:
 			Dialog_state = 1;
 			break;
@@ -665,15 +670,35 @@ void APP_task(void* pdata) {
 				Dialog_set(Dialog_state);
 			}
 			break;
-		default:
+		case 8://+
+//			OS_ENTER_CRITICAL();
+			STM32F407ZET6_info.LQ_period++;
+			OS_EXIT_CRITICAL();
+			LQ_period_write(STM32F407ZET6_info.LQ_period);
 			break;
+		case 7://-
+//			OS_ENTER_CRITICAL();
+			if (STM32F407ZET6_info.LQ_period != 0) {
+				STM32F407ZET6_info.LQ_period--;
+				OS_EXIT_CRITICAL();
+				LQ_period_write(STM32F407ZET6_info.LQ_period);
+			}
+			break;
+		case 10:
+			STM32F407ZET6_info.LQ_period = 0;
+			LQ_period_write(0);
+			OS_EXIT_CRITICAL();
+			break;
+
 		}
-
-
-
-		OS_ENTER_CRITICAL();
-		Dialog_set(Dialog_state);
 		OS_EXIT_CRITICAL();
+
+		OLED_DrawStr(0, 34, (char*)cmd->name, 24, 1);
+//		printf("\nIndex:%d", cmd->index);
+
+//		OS_ENTER_CRITICAL();
+		Dialog_set(Dialog_state);
+//		OS_EXIT_CRITICAL();
 	}
 }
 
@@ -759,7 +784,7 @@ void CLOCK_pic_change(u8 hour,u8 minute)
 		}
 		if (n >=40) {
 			CLOCK_height = 30;
-			CLOCK_color = WHITE;
+			CLOCK_color = RGB2u16(55, 55, 222);
 		}
 	
 	
@@ -779,10 +804,9 @@ void Show_LQ_CLOCK(void* pdata) {
 	pdata = pdata;
 	OS_CPU_SR cpu_sr;
 	INT8U err;
-	u8 res;
 	u8 hour_10, hour_1, minute_10, minute_1;
-
-
+	u8 res;
+	res=res;
 	while (1) {
 		res=*(u8*)OSMboxPend(Message_LQ_clock, 4000, &err);
 		if (LQ_clock_state == 1) {
@@ -823,29 +847,62 @@ void lcd_ShowSystemInfo(void) {
 	LCD_DrawLine(8, 17, 232, 17); LCD_DrawLine(8, 18, 232, 18); //横线
 	LCD_DrawLine(8, 17, 8, 300); LCD_DrawLine(232, 17, 232, 300);//两侧竖线
 	POINT_COLOR = BLACK;
-	LCD_ShowString(8, 20 , 230, 16, 16, "<时间> 19:10:00 <周期数> 嘿嘿");//x:5~53
+	sprintf(string_buff, "<时间> %02d:%02d:%02d <周期数> %02d",\
+				RTC_TimeStruct.RTC_Hours, RTC_TimeStruct.RTC_Minutes,RTC_TimeStruct.RTC_Seconds,\
+				STM32F407ZET6_info.LQ_period);
+	LCD_ShowString(8, 20 , 230, 16, 16, string_buff);//x:5~53
+	
 	LCD_Draw_setting(BLACK, WHITE, 128);
-	LCD_ShowString(8, 40 , 230, 16, 16, "<日期> 2020年04月04日 星期六");
+	sprintf(string_buff, "<日期> 20%02d年%02d月%02d日 星期",\
+				RTC_DateStruct.RTC_Year, RTC_DateStruct.RTC_Month, RTC_DateStruct.RTC_Date);
+	switch (RTC_DateStruct.RTC_WeekDay)
+	{
+	case 1:
+		strcat(string_buff, "一");
+		break;
+	case 2:
+		strcat(string_buff, "二");
+		break;
+	case 3:
+		strcat(string_buff, "三");
+		break;
+	case 4:
+		strcat(string_buff, "四");
+		break;
+	case 5:
+		strcat(string_buff, "五");
+		break;
+	case 6:
+		strcat(string_buff, "六");
+		break;
+	case 7:
+		strcat(string_buff, "天");
+		break;
+	default:
+		break;
+	}
+	LCD_ShowString(8, 40 , 230, 16, 16, string_buff);//写日期
+
 	/********************************硬件模块************************************/
 	LCD_DrawLine(8, 57, 232, 57); LCD_DrawLine(8, 58, 232, 58); 
-	LCD_ShowString(8, 60 , 230, 16, 16, "<网络> WiFi模块    [异常]×");
-	LCD_ShowString(8, 80 , 230, 16, 16, "<控制> 遥控模块    [异常]×");
-	LCD_ShowString(8, 100, 230, 16, 16, "<显示> OLED模块    [异常]×");
-	LCD_ShowString(8, 120, 230, 16, 16, "<显示> LCD 模块    [异常]×");
-	LCD_ShowString(8, 140, 230, 16, 16, "<储存> SD卡模块    [异常]×");
-	LCD_ShowString(8, 160, 230, 16, 16, "总量: 0000 MB 空闲: 0000 MB");
+	LCD_ShowString(8, 60 , 230, 16, 16, "<网络> WiFi模块    [正常]√");
+	LCD_ShowString(8, 80 , 230, 16, 16, "<控制> 遥控模块    [正常]√");
+	LCD_ShowString(8, 100, 230, 16, 16, "<显示> OLED模块    [正常]√");
+	LCD_ShowString(8, 120, 230, 16, 16, "<显示> LCD 模块    [正常]√");
+	LCD_ShowString(8, 140, 230, 16, 16, "<储存> SD卡模块    [正常]√");
+	sprintf(string_buff, "总量: %04d MB", STM32F407ZET6_info.SD_total/1024);
+	LCD_ShowString(8, 160, 230, 16, 16, string_buff);
+	sprintf(string_buff, "空闲: %04d MB", STM32F407ZET6_info.SD_free/1024);
+	LCD_ShowString(8, 180, 230, 16, 16, string_buff);
 	/********************************软件模块************************************/
-	LCD_DrawLine(8, 177, 232, 177);LCD_DrawLine(8, 178, 232, 178); 
-	LCD_ShowString(8, 180, 230, 16, 16, "<汉字> 库存汉字    21,003个");
-	LCD_ShowString(8, 200, 230, 16, 16, "<图片> 库存图片       23 张");
+	LCD_DrawLine(8, 197, 232, 197);LCD_DrawLine(8, 198, 232, 198); 
+	LCD_ShowString(8, 200, 230, 16, 16, "<汉字> 库存汉字    21,003个");
+	LCD_ShowString(8, 220, 230, 16, 16, "<图片> 库存图片       23 张");
 	LCD_Draw_setting(PURPLE, WHITE, 0);
-	LCD_ShowString(8, 220, 230, 32, 16, "<颜值> 过于美丽，无法识别");
+	LCD_ShowString(8, 240, 230, 32, 16, "<管理员电话：13671145174> ");
 	LCD_Draw_setting(GREEN, WHITE, 0);
 	LCD_DrawLine(8, 257, 232, 257); LCD_DrawLine(8, 258, 232, 258);
 	LCD_Draw_setting(BLACK, WHITE, 128);
-	LCD_ShowString(8, 260, 230, 16, 16, "<上次查看时间>");
-	LCD_ShowString(8, 280, 230, 16, 16, "2020 年 4月 4 日 19:48");
-	LCD_ShowString(8, 300, 230, 16, 16, "你都不来看看我惹 ╥﹏╥...");
 
 	
 
@@ -853,9 +910,37 @@ void lcd_ShowSystemInfo(void) {
 
 }
 
+//读取生理期时间
+//同时同步到系统信息中
+u8 LQ_period_read(void) {
+	FIL* LQ_f_period;//这个是指向SD卡中本应该保存刘倩生理期时间的文件
+	u8 res;
+	UINT* br;
+	LQ_f_period = mymalloc(SRAMIN, sizeof(FIL));
+	res = f_open(LQ_f_period, "0:/LQ_period.wlf", FA_OPEN_EXISTING | FA_READ);
+	if (res == FR_NO_FILE) {
+		f_open(LQ_f_period, "0:/LQ_period.wlf", FA_CREATE_NEW | FA_READ);
+	}
+	f_lseek(LQ_f_period, 1);
+	f_read(LQ_f_period, &STM32F407ZET6_info.LQ_period, 1,br );
 
+	myfree(SRAMIN,LQ_f_period);
+	f_close(LQ_f_period);
+	return STM32F407ZET6_info.LQ_period;
+}
 
+void LQ_period_write(u8 period) {
+	FIL* LQ_f_period;//这个是指向SD卡中本应该保存刘倩生理期时间的文件
+	UINT* br;
+	LQ_f_period = mymalloc(SRAMIN, sizeof(FIL));
+	f_open(LQ_f_period, "0:/LQ_period.wlf", FA_OPEN_EXISTING | FA_WRITE);
+	f_lseek(LQ_f_period, 1);
+	f_write(LQ_f_period, &period, 1, br);
 
+	myfree(SRAMIN, LQ_f_period);
+	f_close(LQ_f_period);
+	return ;
+}
 
 
 

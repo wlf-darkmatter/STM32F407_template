@@ -175,6 +175,8 @@ void LCD_ShowNum(u16 x,u16 y,u32 num,u8 len,u8 size);  						//显示一个数字
 					//显示一个汉字
 void LCD_ShowxNum(u16 x,u16 y,u32 num,u8 len,u8 size,u8 mode);				//显示 数字
 void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,char *p);		//显示一个字符串,12/16字体
+//叠加方式
+void LCD_PrintString(u16 x, u16 y, u16 width, u16 height, u8 size, char* p);
 
 u8 show_picture(const u8* filename, u8 fast);
 

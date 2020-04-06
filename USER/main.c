@@ -25,7 +25,6 @@ void start_task(void* pdata);//任务函数
 OS_STK MAIN_TASK_STK[MAIN_STK_SIZE];
 void main_task(void* padta);
 
-char lcd_string[64];//指向需要打印的字符串的指针
 
 
 void STM32_init(void);
@@ -47,8 +46,8 @@ void STM32_init(void) {
 	POINT_COLOR = BLACK;	//设置字体为黑色 									    
 	LCD_ShowString(20, 20, 200, 16, 16, "Welcome [LiuQian].");
 	LCD_ShowString(20, 40, 200, 16, 16, "LCD  Initialized.");
-	sprintf(lcd_string, "LCD_H=[%d]  LCD_W=[%d]",lcddev.height,lcddev.width);
-	LCD_ShowString(20, 60, 200, 16, 16, lcd_string);
+	sprintf(string_buff, "LCD_H=[%d]  LCD_W=[%d]",lcddev.height,lcddev.width);
+	LCD_ShowString(20, 60, 200, 16, 16, string_buff);
 
 	OLED_Init();/*******************************************************************/
 	OLED_Clear();
@@ -122,10 +121,10 @@ void STM32_init(void) {
 	LCD_ShowString(20, 100, 200, 24, 24, "刘倩,欢迎使用~");
 	POINT_COLOR = BLACK;
 	res=PictureFile_Init();/*******************************************************************/
-	sprintf(lcd_string, "图片读取完毕，共%d个", STM32F407ZET6_info.Picture_totalnum);
+	sprintf(string_buff, "图片读取完毕，共%d个", STM32F407ZET6_info.Picture_totalnum);
 
-	printf("%s\n",lcd_string);
-	if(res==0) LCD_ShowString(20, 230, 200, 16, 16, lcd_string);
+	printf("%s\n",string_buff);
+	if(res==0) LCD_ShowString(20, 230, 200, 16, 16, string_buff);
 	piclib_init();/*******************************************************************/
 	
 	//OLED_GUIGRAM_Init();/*******************************************************************/
@@ -147,8 +146,8 @@ void STM32_init(void) {
 	STM32F407ZET6_info.back_COLOR=&BACK_COLOR;
 	STM32F407ZET6_info.font_BOLD=&FontBold;
 
-
 	
+	LQ_period_read();//读取生理期时间
 }
 
 
@@ -192,12 +191,14 @@ void main_task(void* padta) {
 	u8 err;
 	u32 res;
 	_RMT_CMD* cmd;
-	u8 cmd_num;
+	u8 cmd_index;
 	char* cmd_str;
-	cmd_num=cmd_num;
+	
 	cmd_str=cmd_str;
 	while (1) {
+		
 		while (1) {
+
 			if ((u32)OSMboxPend(Message_Input, 800, &err) != 0) break;
 			else OLED_DrawStr(0, 34, "    ", 24, 1);//800个系统滴答都没有收到消息后，自动清零
 		}
@@ -253,15 +254,15 @@ void main_task(void* padta) {
 		case 82:	cmd = &Remote_CmdStr[21];
 			break;
 		}
-			cmd_num = cmd->cmd_num;
+			cmd_index = cmd->index;
 //			cmd_str = (char*)(cmd->name);
 			/*********************给APP发送消息***********************/
 
 //			printf("%d\n",cmd_num);
-			OSMboxPost(Message_APP_cmd, &cmd->index);//发送信号
+			OSMboxPost(Message_APP_cmd, &cmd_index);//发送信号
 			OS_EXIT_CRITICAL();
 			/*********************************************************/
-			OSTimeDly(12);
+			
 		}
 
 		OS_EXIT_CRITICAL();

@@ -1040,10 +1040,8 @@ void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,char *p)
 	/*if(res!=0) {printf("字库文件打开失败\n");return;}*/
 	FontStartClust = fs_hz.sclust;
 	f_close(&fs_hz);
-
     while( *str !=0 )//判断是不是结尾
     {
-		
 		if ((*str <='~')&&(*str >=' ')) //是ASCII码
 		{
 			
@@ -1062,9 +1060,50 @@ void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,char *p)
 			x += size;
 			str += 2;
 		}
-		
-  }
+	}
 	myfree(SRAMIN,GBKmat);
+}
+//该函数是叠加的一种打印方式
+void LCD_PrintString(u16 x, u16 y, u16 width, u16 height, u8 size, char* p)
+{
+	u8* str = (u8*)p;
+	u8 x0 = x;
+	char fontpath[32]; fontpath[0] = 0;
+	char* name = fontpath + 5;
+	u8* GBKmat = mymalloc(SRAMIN, (size / 8 + ((size % 8) ? 1 : 0)) * (size));
+	width += x;//相对坐标变换绝对坐标
+	height += y;
+	strcat(fontpath, "FONT/"); *name = 0;
+	if (FontBold != 0) sprintf(name, "%d黑白阈值/", FontBold);
+	sprintf(name, "GBK%d.FON", size);
+
+	f_open(&fs_hz, fontpath, FA_OPEN_EXISTING | FA_READ);
+	/*if(res!=0) {printf("字库文件打开失败\n");return;}*/
+	FontStartClust = fs_hz.sclust;
+	f_close(&fs_hz);
+	while (*str != 0)//判断是不是结尾
+	{
+		if ((*str <= '~') && (*str >= ' ')) //是ASCII码
+		{
+
+			if (x >= width) { x = x0; y += size; }
+			if (y >= height) break;//退出
+			LCD_ShowChar(x, y, *str, size, 1);
+			x += size / 2;
+			str++;
+		}
+		else
+			if (*str > 0x80) //是中文字符
+			{
+				if (x + size >= width) { x = x0; y += size; }
+				if (y >= height) break;
+				Font_GetGBKMat(str, GBKmat, size);
+				LCD_ShowGBK(x, y, GBKmat, size, 1);
+				x += size;
+				str += 2;
+			}
+	}
+	myfree(SRAMIN, GBKmat);
 }
 
 u8 show_picture(const u8* filename, u8 fast) {
