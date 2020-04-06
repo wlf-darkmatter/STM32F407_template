@@ -162,6 +162,7 @@ void LCD_DrawPoint(u16 x,u16 y);											//画点
 void LCD_Fast_DrawPoint(u16 x,u16 y,u16 color);								//快速画点
 u16  LCD_ReadPoint(u16 x,u16 y); 											//读点 
 void LCD_Draw_Circle(u16 x0,u16 y0,u8 r);						 			//画圆
+void LCD_ShowLQ_CLOCK(u16 x, u16 y, u8 num, u8 size);
 void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2);							//画线
 void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2);		   				//画矩形
 void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color);		   				//填充单色

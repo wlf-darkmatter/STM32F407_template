@@ -40,6 +40,10 @@ struct _STM32_INFO {
 
 
 	char* current_picture;
+
+
+
+	
 };
 extern struct _STM32_INFO STM32F407ZET6_info;
 

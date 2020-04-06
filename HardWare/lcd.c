@@ -863,6 +863,33 @@ void LCD_Draw_Circle(u16 x0,u16 y0,u8 r)
 	}
 }
 
+void LCD_ShowLQ_CLOCK(u16 x, u16 y, u8 num, u8 size)
+{
+	u8 temp, t1, t;
+	u16 y0 = y;
+	u8 csize = (size / 8 + ((size % 8) ? 1 : 0)) * (size / 2);		//得到字体一个字符对应点阵集所占的字节数	
+	num = num - ' ';//得到偏移后的值（ASCII字库是从空格开始取模，所以-' '就是对应字符的字库）
+	for (t = 0; t < csize; t++)
+	{
+		if (num == ':' - ' ') temp = lcd_clock_numstr[num][10];
+		else temp = lcd_clock_numstr[num][t]; 	 	//调用lcd_clock_numstr 40号大字体
+		for (t1 = 0; t1 < 8; t1++)
+		{
+			if (temp & 0x01)LCD_Fast_DrawPoint(x, y, POINT_COLOR);
+			temp >>= 1;
+			y++;
+			if (y >= lcddev.height)return;		//超区域了
+			if ((y - y0) == size)
+			{
+				y = y0;
+				x++;
+				if (x >= lcddev.width)return;	//超区域了
+				break;
+			}
+		}
+	}
+}
+
 //在指定位置显示一个字符
 //x,y:起始坐标
 //num:要显示的字符:" "--->"~"
@@ -882,7 +909,7 @@ void LCD_ShowChar(u16 x,u16 y,u8 num,u8 size,u8 mode)
 		else return;								//没有的字库
 		for(t1=0;t1<8;t1++)
 		{			    
-			if(temp&0x01)LCD_Fast_DrawPoint(x,y,POINT_COLOR);
+			if(temp &0x01)LCD_Fast_DrawPoint(x,y,POINT_COLOR);
 			else if(mode==0)LCD_Fast_DrawPoint(x,y,BACK_COLOR);
 			temp>>=1;
 			y++;
@@ -897,6 +924,7 @@ void LCD_ShowChar(u16 x,u16 y,u8 num,u8 size,u8 mode)
 		}
 	}
 }
+
 
 //在指定位置显示一个汉字
 //x,y:起始坐标

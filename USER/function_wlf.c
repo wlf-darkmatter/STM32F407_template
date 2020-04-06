@@ -128,9 +128,11 @@ void SD_picinfo_write(FIL* pic_fil, u8 index, struct _structure_picture_name* wr
 	//在文件大小可以看出记录了几个图片文件
 	u16 offset = index * 64;
 	UINT* ByteRead;
+	u8 len = 0;
 	f_lseek(pic_fil, offset);
 	f_write(pic_fil, &(write_Structure->picture_index), 2, ByteRead);
-	if (index != 0)	f_write(pic_fil, &(write_Structure->picture_name), 62, ByteRead);												
+	len = strlen(write_Structure->picture_name);
+	if (index != 0)	f_write(pic_fil, &(write_Structure->picture_name), len+1, ByteRead);
 	//之所以要这样绕一圈，是因为簇不是连续的,
 }
 
@@ -618,9 +620,9 @@ void APP_task(void* pdata) {
 	u8 app_cmd_index = 0;
 	u8 err;
 	_RMT_CMD* cmd;
-	//0是在桌面，也就是图片
-	//1是在详情界面
-	//2是在时钟界面
+	//3是在详情界面
+	//1是在时钟界面
+	//2是在桌面，也就是图片
 	u8 Dialog_state;
 	while (1) {
 		app_cmd_index = *(u8*)OSMboxPend(Message_APP_cmd, 0, &err);
@@ -628,12 +630,15 @@ void APP_task(void* pdata) {
 		OLED_DrawStr(0, 34, (char*)cmd->name, 24, 1);
 		printf("\nIndex:%d", cmd->index);
 /*************************************************************************/
+		//是CH+ 信号，修改系统主界面
 		if (app_cmd_index == 3) {
-			//是CH+ 信号，显示系统详情界面
-			Dialog_state = 1;
+			Dialog_state = 3;
 		}
 		if (app_cmd_index == 2) {
-			Dialog_state = 0;
+			Dialog_state = 2;
+		}
+		if (app_cmd_index == 1) {
+			Dialog_state = 1;
 		}
 
 
@@ -644,13 +649,36 @@ void APP_task(void* pdata) {
 }
 
 void Dialog_set(u8 dialog_state) {
-	if (dialog_state == 0) {
-		show_picture("0:/PICTURE/头像.bmp", 1);
-	}
 	if (dialog_state == 1) {
+		show_picture("0:/SYSTEM_WLF/LQ_CLOCK.jpg",1);
+	}
+
+
+
+	if (dialog_state == 2) {
+		RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct);
+		RTC_GetDate(RTC_Format_BIN, &RTC_DateStruct);
+		if (RTC_DateStruct.RTC_Month == 5 && (RTC_DateStruct.RTC_Date >= 25 && RTC_DateStruct.RTC_Date <= 27)) {
+			show_picture("0:/PICTURE/爱头像.bmp", 1);//生日当天和第二天显示此头像
+
+		}
+		else 
+			show_picture("0:/PICTURE/头像.bmp", 1);
+	}
+
+
+	if (dialog_state == 3) {
 		lcd_ShowSystemInfo();
 	}
 }
+
+void Show_LQ_CLOCK(void) {
+	
+	show_picture("0:/SYSTEM_WLF/LQ_CLOCK.jpg", 1);
+	
+}
+
+
 
 /**********************           APP 外部函数   *************************/
 //显示系统信息函数
