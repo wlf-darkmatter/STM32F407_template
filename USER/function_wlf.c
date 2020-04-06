@@ -627,7 +627,7 @@ u8 Remote_Scan(void)
 OS_STK APP_TASK_STK[APP_STK_SIZE];
 OS_EVENT* Message_APP_cmd;
 //0表示未启用，1表示启用
-u8 LQ_clock_state;
+u8 LQ_clock_state = 1;
 
 void APP_task(void* pdata) {
 	pdata = pdata;
@@ -684,6 +684,9 @@ void APP_task(void* pdata) {
 				LQ_period_write(STM32F407ZET6_info.LQ_period);
 			}
 			break;
+		case 9:
+			LCD_Init();
+			break;
 		case 10:
 			STM32F407ZET6_info.LQ_period = 0;
 			LQ_period_write(0);
@@ -723,8 +726,8 @@ void Dialog_set(u8 dialog_state) {
 
 	if (dialog_state == 2) {
 		
-		if (RTC_DateStruct.RTC_Month == 5 && (RTC_DateStruct.RTC_Date >= 25 && RTC_DateStruct.RTC_Date <= 27)) {
-			show_picture("0:/PICTURE/爱头像.bmp", 1);//生日当天和第二天显示此头像
+		if (RTC_DateStruct.RTC_Month == 5 && (RTC_DateStruct.RTC_Date ==25 || RTC_DateStruct.RTC_Date == 26)) {
+			show_picture("0:/PICTURE/生日快乐.jpg", 1);//生日当天和第二天显示此头像
 
 		}
 		else 
@@ -783,8 +786,8 @@ void CLOCK_pic_change(u8 hour,u8 minute)
 			CLOCK_color = YELLOW;
 		}
 		if (n >=40) {
-			CLOCK_height = 30;
-			CLOCK_color = RGB2u16(55, 55, 222);
+			CLOCK_height = 20;
+			CLOCK_color = RGB2u16(111, 111, 255);
 		}
 	
 	
