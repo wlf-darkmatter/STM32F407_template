@@ -897,13 +897,13 @@ void lcd_ShowSystemInfo(void) {
 	/********************************软件模块************************************/
 	LCD_DrawLine(8, 197, 232, 197);LCD_DrawLine(8, 198, 232, 198); 
 	LCD_ShowString(8, 200, 230, 16, 16, "<汉字> 库存汉字    21,003个");
-	LCD_ShowString(8, 220, 230, 16, 16, "<图片> 库存图片       23 张");
+	LCD_ShowString(8, 220, 230, 16, 16, "<图片> 库存图片 WLF置 48 张");
 	LCD_Draw_setting(PURPLE, WHITE, 0);
 	LCD_ShowString(8, 240, 230, 32, 16, "<管理员电话：13671145174> ");
 	LCD_Draw_setting(GREEN, WHITE, 0);
 	LCD_DrawLine(8, 257, 232, 257); LCD_DrawLine(8, 258, 232, 258);
 	LCD_Draw_setting(BLACK, WHITE, 128);
-
+	LCD_ShowString(8, 260, 230, 32, 16, "<著作权所有者>： @王凌枫 ");
 	
 
 //	LCD_Draw_setting(0x0000, 0xFFFF, 64);
