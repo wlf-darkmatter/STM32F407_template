@@ -148,72 +148,7 @@
           <Name>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F4xx_512 -FS08000000 -FL080000 -FP0($$Device:STM32F407ZETx$CMSIS\Flash\STM32F4xx_512.FLM))</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>197</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134218542</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\CORE\startup_stm32f40_41xxx.s</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\WLF_template\CORE/startup_stm32f40_41xxx.s\197</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>67</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134229988</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\USER\stm32f4xx_it.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\WLF_template\USER/stm32f4xx_it.c\67</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>290</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134281344</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\USMART\usmart.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\WLF_template\USMART/usmart.c\290</Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
-          <LineNumber>595</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134274924</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\USER\function_wlf.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\WLF_template\USER/function_wlf.c\595</Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
@@ -303,7 +238,7 @@
         <Ww>
           <count>17</count>
           <WinNumber>1</WinNumber>
-          <ItemText>str</ItemText>
+          <ItemText>CLOCK_picname</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

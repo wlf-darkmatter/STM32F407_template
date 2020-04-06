@@ -187,6 +187,9 @@ void LCD_Scan_Dir(u8 dir);									//设置屏扫描方向
 void LCD_Display_Dir(u8 dir);								//设置屏幕显示方向
 void LCD_Set_Window(u16 sx,u16 sy,u16 width,u16 height);
 void LCD_Draw_setting(u16 color, u16 back_color, u8 bold);
+
+u16 RGB2u16(u8 R, u8 G, u8 B);//自己编写的把RGB颜色变为u16位的值
+
 //设置窗口
 u32 LCD_Pow(u8 m, u8 n);
 //LCD分辨率设置

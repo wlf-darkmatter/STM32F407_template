@@ -161,12 +161,14 @@ void start_task(void* pdata)
 	message_SD = OSMboxCreate((void*)0);
 	Message_Input = OSMboxCreate((void*)0);//传递【红外】的和【按钮】的输入
 	Message_APP_cmd = OSMboxCreate((void*)0);//传递给【主函数】的命令输入
+	Message_LQ_clock = OSMboxCreate((void*)0);//传递给【LQ_clock】的时间输入
 	OSStatInit();					//初始化统计任务.这里会延时1秒钟左右
 	OS_ENTER_CRITICAL();			//进入临界区(无法被中断打断)    
 	OSTaskCreate(USMART_APP,(void*)0,(OS_STK*)&USMART_APP_TASK_STK[USMART_APP_STK_SIZE-1],USMART_APP_TASK_PRIO);//3级
 	OSTaskCreate(main_task, (void*)0, (OS_STK*)&MAIN_TASK_STK[MAIN_STK_SIZE-1], MAIN_TASK_PRIO);//4级
 	OSTaskCreate(APP_task, (void*)0, (OS_STK*)&APP_TASK_STK[APP_STK_SIZE-1], APP_TASK_PRIO);//5级
 	OSTaskCreate(OLED_GUI_update, (void*)0, (OS_STK*)&OLED_TASK_STK[OLED_STK_SIZE - 1], OLED_TASK_PRIO);//6级
+	OSTaskCreate(Show_LQ_CLOCK, (void*)0, (OS_STK*)&LQ_CLOCK_TASK_STK[LQ_CLOCK_STK_SIZE - 1], LQ_CLOCK_TASK_PRIO);//7级
 	OSTaskSuspend(START_TASK_PRIO);	//挂起起始任务.
 	OS_EXIT_CRITICAL();				//退出临界区(可以被中断打断)
 }
@@ -252,14 +254,14 @@ void main_task(void* padta) {
 			break;
 		}
 			cmd_num = cmd->cmd_num;
-			cmd_str = (char*)(cmd->name);
+//			cmd_str = (char*)(cmd->name);
 			/*********************给APP发送消息***********************/
 
 //			printf("%d\n",cmd_num);
 			OSMboxPost(Message_APP_cmd, &cmd->index);//发送信号
 			OS_EXIT_CRITICAL();
 			/*********************************************************/
-			OSTimeDly(100);
+			OSTimeDly(12);
 		}
 
 		OS_EXIT_CRITICAL();

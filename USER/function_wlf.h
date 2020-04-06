@@ -65,6 +65,8 @@ void APP_task(void* pdata);
 
 void Dialog_set(u8 dialog_state);
 
+
+
 /*--------------  KEY  -----------------*/
 u8 Key_detect(void);
 
@@ -166,5 +168,17 @@ extern OS_STK APP_TASK_STK[APP_STK_SIZE];
 void APP_task(void* pdata);
 
 /**********************      APP    外部函数     *************************/
+extern char CLOCK_picname[30];
+extern u8 CLOCK_height;
+extern u8 CLOCK_index;
+extern u16 CLOCK_color;
+void CLOCK_pic_change(u8 hour, u8 minute);//修改clock显示的图片和时钟的位置及颜色
+void Show_LQ_CLOCK(void* pdata);
 
 void lcd_ShowSystemInfo(void);
+
+/*************显示 LQ_CLOCK 函数【1】 【APP】********************/
+#define LQ_CLOCK_TASK_PRIO				7
+#define LQ_CLOCK_STK_SIZE				256
+extern OS_STK LQ_CLOCK_TASK_STK[LQ_CLOCK_STK_SIZE];
+extern OS_EVENT* Message_LQ_clock;			//OLED卡读写邮箱事件块指针

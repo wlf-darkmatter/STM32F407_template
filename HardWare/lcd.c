@@ -6,6 +6,7 @@
 #include "delay.h"	 
 #include <SDIO_SDCard.h>
 #include "piclib.h"
+#include <function_wlf.h>
 //LCD的画笔颜色和背景色	   
 u16 POINT_COLOR=0x0000;	//画笔颜色
 u16 BACK_COLOR=0xFFFF;  //背景色 
@@ -868,14 +869,13 @@ void LCD_ShowLQ_CLOCK(u16 x, u16 y, u8 num, u8 size)
 	u8 temp, t1, t;
 	u16 y0 = y;
 	u8 csize = (size / 8 + ((size % 8) ? 1 : 0)) * (size / 2);		//得到字体一个字符对应点阵集所占的字节数	
-	num = num - ' ';//得到偏移后的值（ASCII字库是从空格开始取模，所以-' '就是对应字符的字库）
 	for (t = 0; t < csize; t++)
 	{
-		if (num == ':' - ' ') temp = lcd_clock_numstr[num][10];
-		else temp = lcd_clock_numstr[num][t]; 	 	//调用lcd_clock_numstr 40号大字体
+		if (num == ':') temp = lcd_clock_numstr[10][t];
+		else temp = lcd_clock_numstr[num][t]; 	 	//调用lcd_clock_numstr 60号大字体
 		for (t1 = 0; t1 < 8; t1++)
 		{
-			if (temp & 0x01)LCD_Fast_DrawPoint(x, y, POINT_COLOR);
+			if (temp & 0x01)LCD_Fast_DrawPoint(x, y, CLOCK_color);
 			temp >>= 1;
 			y++;
 			if (y >= lcddev.height)return;		//超区域了
@@ -1109,6 +1109,19 @@ u32 LCD_Pow(u8 m,u8 n)
 }
 
 
-
+u16 RGB2u16(u8 R, u8 G, u8 B) 
+{
+	u16 color = 0;
+	//R只有5位，
+	//G有6位
+	//B只有5位
+	R >>= 3;
+	G >>= 2;
+	B >>= 3;
+	color |= R << 11;
+	color |= G << 5;
+	color |= B ;
+	return color;
+}
 
 

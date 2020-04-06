@@ -321,6 +321,7 @@ void OLED_GUI_update(void* pdata) {
 	RTC_GetDate(RTC_Format_BIN, &RTC_DateStruct);
 	u8 Year = RTC_DateStruct.RTC_Year, Month = RTC_DateStruct.RTC_Month, Date = RTC_DateStruct.RTC_Date;
 	u8 Hour=RTC_TimeStruct.RTC_Hours, Minute= RTC_TimeStruct.RTC_Minutes, Second= RTC_TimeStruct.RTC_Seconds;
+	CLOCK_pic_change(Hour,Minute);/******************************************************************/
 	sprintf(strtemp, "%02d", Minute);
 	OLED_DrawStr_manual(112, 0, strtemp, 16, 1);//23:00
 	sprintf(strtemp, "%02d", Hour);
@@ -348,23 +349,25 @@ void OLED_GUI_update(void* pdata) {
 		sprintf(strtemp, "%02d", OSCPUUsage);
 		OLED_DrawStr_manual(40, 0, strtemp, 16, 1);//利用率
 		/********************  秒  ******************/
+		OS_EXIT_CRITICAL();
 		if(Second%2) OLED_DrawChar(104, 0, ':', 16, 1);	//23:59
 		else OLED_DrawChar(104, 0, ' ', 16, 1);			//23:59
+		OS_ENTER_CRITICAL();
 		/********************  分  ******************/
 		if (Minute == RTC_TimeStruct.RTC_Minutes) OLED_Refresh();//分没变,直接刷新
 		else//变了
 		{
 			Minute = RTC_TimeStruct.RTC_Minutes;
+			CLOCK_pic_change(Hour,Minute);/******************************************************************/
 			sprintf(strtemp, "%02d", Minute);
 			OLED_DrawStr_manual(112, 0, strtemp, 16, 1);//23:00
-
+			OSMboxPost(Message_LQ_clock, &Minute);
 			if (Hour == RTC_TimeStruct.RTC_Hours) OLED_Refresh();//时没变,直接刷新
 			else//变了
 			{
 				Hour = RTC_TimeStruct.RTC_Hours;
 				sprintf(strtemp, "%02d", Hour);
 				OLED_DrawStr_manual(88, 0, strtemp, 16, 1);//00:00
-
 				if (Date == RTC_DateStruct.RTC_Date) OLED_Refresh();//日没变,直接刷新
 				else//变了
 				{
@@ -393,7 +396,7 @@ void OLED_GUI_update(void* pdata) {
 		}
 
 		OS_EXIT_CRITICAL();
-		delay_ms(333);
+		OSTimeDly(65);
 	}
 }
 
@@ -622,6 +625,8 @@ u8 Remote_Scan(void)
 /**********************           APP 主函数   *************************/
 OS_STK APP_TASK_STK[APP_STK_SIZE];
 OS_EVENT* Message_APP_cmd;
+//0表示未启用，1表示启用
+u8 LQ_clock_state;
 
 void APP_task(void* pdata) {
 	pdata = pdata;
@@ -641,15 +646,29 @@ void APP_task(void* pdata) {
 		printf("\nIndex:%d", cmd->index);
 /*************************************************************************/
 		//是CH+ 信号，修改系统主界面
-		if (app_cmd_index == 3) {
-			Dialog_state = 3;
-		}
-		if (app_cmd_index == 2) {
-			Dialog_state = 2;
-		}
-		if (app_cmd_index == 1) {
+		switch (app_cmd_index)
+		{
+		case 1:
 			Dialog_state = 1;
+			break;
+		case 2:
+			Dialog_state = 2;
+			break;
+		case 3:
+			Dialog_state = 3;
+			break;
+		case 6:
+			//按下播放键
+			if (Dialog_state == 1) //如果是在LQ_clock界面的话，就切换 时钟的显示状态
+			{
+				LQ_clock_state = !LQ_clock_state;
+				Dialog_set(Dialog_state);
+			}
+			break;
+		default:
+			break;
 		}
+
 
 
 		OS_ENTER_CRITICAL();
@@ -659,15 +678,26 @@ void APP_task(void* pdata) {
 }
 
 void Dialog_set(u8 dialog_state) {
+	RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct);
+	RTC_GetDate(RTC_Format_BIN, &RTC_DateStruct);
+
 	if (dialog_state == 1) {
-		show_picture("0:/SYSTEM_WLF/LQ_CLOCK.jpg",1);
+		show_picture((u8*)CLOCK_picname,1);//显示当前应该显示的图像
+		//如果同时处于显示时钟状态，就开启任务
+		if (LQ_clock_state == 1) {
+			OSTaskResume(LQ_CLOCK_TASK_PRIO);
+			OSMboxPost(Message_LQ_clock, &LQ_clock_state);
+			return;
+		}
+	}
+	else {
+		//如果不是处于时钟界面，就自动关闭任务
+		OSTaskSuspend(LQ_CLOCK_TASK_PRIO);
 	}
 
 
-
 	if (dialog_state == 2) {
-		RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct);
-		RTC_GetDate(RTC_Format_BIN, &RTC_DateStruct);
+		
 		if (RTC_DateStruct.RTC_Month == 5 && (RTC_DateStruct.RTC_Date >= 25 && RTC_DateStruct.RTC_Date <= 27)) {
 			show_picture("0:/PICTURE/爱头像.bmp", 1);//生日当天和第二天显示此头像
 
@@ -682,16 +712,107 @@ void Dialog_set(u8 dialog_state) {
 	}
 }
 
-void Show_LQ_CLOCK(void) {
+
+
+
+/**********************           APP 外部函数   *************************/
+
+u8 CLOCK_index;
+void CLOCK_pic_change(u8 hour,u8 minute) 
+{
+	u8 n;
+	n = hour * 2 + minute / 30;
+	//默认颜色和位置
+	CLOCK_height = 100;
+	CLOCK_color = RGB2u16(153, 0, 144);
 	
-	show_picture("0:/SYSTEM_WLF/LQ_CLOCK.jpg", 1);
+		CLOCK_index = n;
+		sprintf(CLOCK_picname, "0:/SYSTEM_WLF/%02d.jpg", CLOCK_index);
+
+		if (n < 12) {//0-11即0:00-5:59
+			CLOCK_height = 30;
+			CLOCK_color = BLACK;
+		}
+		if (n ==12|| n == 13) {
+			CLOCK_height = 30;
+			CLOCK_color = WHITE;
+		}
+		if (n == 18 || n == 19 || n == 33|| n == 34)
+		{//这是女孩子散步的那张图
+			CLOCK_height = 10;
+			CLOCK_color = BLACK;
+		}
+		if (n == 20|| n== 21 || n== 22) {
+			CLOCK_height = 15;
+			CLOCK_color = WHITE;
+		}
+
+
+
+		if (n == 37||n==38) {
+			CLOCK_height = 100;
+			CLOCK_color = RGB2u16(153, 0, 144);
+		}
+		if (n == 39 ) {//拥抱的那张
+			CLOCK_height = 20;
+			CLOCK_color = YELLOW;
+		}
+		if (n >=40) {
+			CLOCK_height = 30;
+			CLOCK_color = WHITE;
+		}
+	
+	
+
+
+}
+
+/*************显示 LQ_CLOCK 函数【1】 【APP】********************/
+
+OS_EVENT* Message_LQ_clock;
+OS_STK LQ_CLOCK_TASK_STK[LQ_CLOCK_STK_SIZE];
+char CLOCK_picname[30];
+u8 CLOCK_height;
+
+u16 CLOCK_color;
+void Show_LQ_CLOCK(void* pdata) {
+	pdata = pdata;
+	OS_CPU_SR cpu_sr;
+	INT8U err;
+	u8 res;
+	u8 hour_10, hour_1, minute_10, minute_1;
+
+
+	while (1) {
+		res=*(u8*)OSMboxPend(Message_LQ_clock, 4000, &err);
+		if (LQ_clock_state == 1) {
+			//记录时间，分配数字
+			hour_10 = RTC_TimeStruct.RTC_Hours / 10;
+			hour_1 = RTC_TimeStruct.RTC_Hours % 10;
+			minute_10 = RTC_TimeStruct.RTC_Minutes / 10;
+			minute_1 = RTC_TimeStruct.RTC_Minutes % 10;
+
+
+
+			show_picture((u8*)CLOCK_picname, 1);
+			OS_ENTER_CRITICAL();
+			LCD_ShowLQ_CLOCK(105, CLOCK_height, ':', 60);//显示冒号
+			LCD_ShowLQ_CLOCK(45, CLOCK_height, hour_10, 60);
+			LCD_ShowLQ_CLOCK(75, CLOCK_height, hour_1, 60);
+			LCD_ShowLQ_CLOCK(135, CLOCK_height, minute_10, 60);
+			LCD_ShowLQ_CLOCK(165, CLOCK_height, minute_1, 60);
+			OS_EXIT_CRITICAL();
+
+		}
+		
+
+	}
 	
 }
 
 
 
-/**********************           APP 外部函数   *************************/
-//显示系统信息函数
+/*************显示系统信息函数【3】********************/
 void lcd_ShowSystemInfo(void) {
 	/*******************基本格局********************/
 	LCD_Clear(WHITE);
