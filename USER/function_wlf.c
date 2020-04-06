@@ -172,7 +172,16 @@ u8 PictureFile_Init(void) {
 	res = f_open(pic_fil_reference, "0:/Picture_reference.wlf", FA_OPEN_EXISTING | FA_WRITE);
 	if (res == FR_NO_FILE) {
 		printf("没有找到文件，创建了一个，请重启!!!\n");
+		POINT_COLOR = RED;
+		LCD_ShowString(20, 150, 220, 16, 16, "没有找到图片索引文件,重试中。");
+		POINT_COLOR = BLACK;
 		f_open(pic_fil_reference, "0:/Picture_reference.wlf", FA_CREATE_NEW | FA_WRITE);
+	}
+	else {
+		printf("找到图片索引文件。\n");
+		POINT_COLOR = BLUE;
+		LCD_ShowString(20, 150, 220, 16, 16, "找到图片索引文件");
+		POINT_COLOR = BLACK;
 	}
 	SD_picinfo_read(pic_fil_reference, 0, pic_reference);//读取第0个序列，值写在index里，其实是图片的数量
 	wlf_picnum = pic_reference->picture_index;
@@ -225,6 +234,7 @@ u8 PictureFile_Init(void) {
 		//与索引文件中记录的数量不符合，重新编撰索引
 		if (curindex != wlf_picnum) 
 		{
+			printf("需要重新写入索引文件。\n");
 			f_closedir(&PictureDir);//先关闭，重新打开一次
 			wlf_picnum = curindex;
 			////////////////////////////////////////////
