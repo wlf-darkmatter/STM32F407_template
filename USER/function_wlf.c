@@ -891,9 +891,9 @@ void lcd_ShowSystemInfo(void) {
 
 	/********************************硬件模块************************************/
 	LCD_DrawLine(8, 57, 232, 57); LCD_DrawLine(8, 58, 232, 58); 
-	LCD_ShowString(8, 60 , 230, 16, 16, "<网络> WiFi模块    [正常]√");
+	LCD_ShowString(8, 60 , 230, 16, 16, "<网络> WiFi模块    [关闭]○");
 	LCD_ShowString(8, 80 , 230, 16, 16, "<控制> 遥控模块    [正常]√");
-	LCD_ShowString(8, 100, 230, 16, 16, "<显示> OLED模块    [正常]√");
+	LCD_ShowString(8, 100, 230, 16, 16, "<显示> OLED模块    [待定]？");
 	LCD_ShowString(8, 120, 230, 16, 16, "<显示> LCD 模块    [正常]√");
 	LCD_ShowString(8, 140, 230, 16, 16, "<储存> SD卡模块    [正常]√");
 	sprintf(string_buff, "总量: %04d MB", STM32F407ZET6_info.SD_total/1024);
