@@ -47,7 +47,7 @@ OS_STK WIFI_DEBUG_TASK_STK[WIFI_DEBUG_STK_SIZE];
 u8 WiFi_State;//[7]位是1，那就是处于debug状态
 void WiFi_Debug(void) {
 	OSTaskCreate(WiFi_Debug_task,(void*)0,(OS_STK*)&WIFI_DEBUG_TASK_STK[WIFI_DEBUG_STK_SIZE-1],WIFI_DEBUG_TASK_PRIO);
-	printf("\n/*********进入ESP8266【Debug】状态，退出请输入：-q \n");
+	printf("\r\n/*********进入ESP8266【Debug】状态，退出请输入：-q \r\n");
 }
 void WiFi_Debug_task(void* pdata) {
 	pdata=pdata;
@@ -100,10 +100,10 @@ void WiFi_Debug_task(void* pdata) {
 			/*******不是退出命令,那就是发送的命令,******/
 			OS_EXIT_CRITICAL();//向ESP8266打印这个需要中断
 			STM32F407ZET6_info.USART1_Busy &= ~(0x01);
-			printf("<----%s\n", USART1_RX_BUF);
+			printf("<----%s\r\n", USART1_RX_BUF);
 			STM32F407ZET6_info.USART1_Busy |= 0x01;
 			USART1_RX_STA = 0;//状态寄存器清空	    
-			usart2_printf("%s\r\n", USART1_RX_BUF);	//发送给esp8266
+			usart2_printf("%s\r\r\n", USART1_RX_BUF);	//发送给esp8266
 		}
 		if (USART2_RX_STA & 0x8000) {
 			len = USART2_RX_STA & 0x7fff;
@@ -172,14 +172,14 @@ u8 PictureFile_Init(void) {
 
 	res = f_open(pic_fil_reference, "0:/Picture_reference.wlf", FA_OPEN_EXISTING | FA_WRITE);
 	if (res == FR_NO_FILE) {
-		printf("没有找到文件，创建了一个，请重启!!!\n");
+		printf("没有找到文件，创建了一个，请重启!!!\r\n");
 		POINT_COLOR = RED;
 		LCD_ShowString(20, 150, 220, 16, 16, "没有找到图片索引文件,重试中。");
 		POINT_COLOR = BLACK;
 		f_open(pic_fil_reference, "0:/Picture_reference.wlf", FA_CREATE_NEW | FA_WRITE);
 	}
 	else {
-		printf("找到图片索引文件。\n");
+		printf("找到图片索引文件。\r\n");
 		POINT_COLOR = BLUE;
 		LCD_ShowString(20, 150, 220, 16, 16, "找到图片索引文件");
 		POINT_COLOR = BLACK;
@@ -235,7 +235,7 @@ u8 PictureFile_Init(void) {
 		//与索引文件中记录的数量不符合，重新编撰索引
 		if (curindex != wlf_picnum) 
 		{
-			printf("需要重新写入索引文件。\n");
+			printf("需要重新写入索引文件。\r\n");
 			f_closedir(&PictureDir);//先关闭，重新打开一次
 			wlf_picnum = curindex;
 			////////////////////////////////////////////
@@ -407,7 +407,7 @@ RTC_DateTypeDef RTC_DateStruct;
 void Show_RTC(void) {
 	u8 Year = RTC_DateStruct.RTC_Year, Month = RTC_DateStruct.RTC_Month, Date = RTC_DateStruct.RTC_Date;
 	u8 Hour = RTC_TimeStruct.RTC_Hours, Minute = RTC_TimeStruct.RTC_Minutes, Second = RTC_TimeStruct.RTC_Seconds;
-	printf("20%02d-%02d-%02d\n%02d:%02d:%02d", Year, Month, Date, Hour, Minute, Second);
+	printf("20%02d-%02d-%02d\r\n%02d:%02d:%02d", Year, Month, Date, Hour, Minute, Second);
 }
 
 /*******************************  USMART  **********************************/
@@ -607,7 +607,7 @@ u8 Remote_Scan(void)
 			t2 = RmtRec;
 			if (t1 == (u8)~t2)
 			{
-//				printf("%d,%d,%d,%d\n", RmtRec >> 24, (RmtRec >> 16) & 0xFF, (RmtRec >> 8) & 0xFF, (RmtRec) & 0xFF);
+//				printf("%d,%d,%d,%d\r\n", RmtRec >> 24, (RmtRec >> 16) & 0xFF, (RmtRec >> 8) & 0xFF, (RmtRec) & 0xFF);
 				sta = t1;//键值正确	
 				RmtRec = 0;
 			}
@@ -697,7 +697,7 @@ void APP_task(void* pdata) {
 		OS_EXIT_CRITICAL();
 
 		OLED_DrawStr(0, 34, (char*)cmd->name, 24, 1);
-//		printf("\nIndex:%d", cmd->index);
+//		printf("\r\nIndex:%d", cmd->index);
 
 //		OS_ENTER_CRITICAL();
 		Dialog_set(Dialog_state);
@@ -774,7 +774,10 @@ void CLOCK_pic_change(u8 hour,u8 minute)
 			CLOCK_height = 15;
 			CLOCK_color = WHITE;
 		}
-
+		if (n == 28) {
+			CLOCK_height = 115;
+			CLOCK_color = BLACK;
+		}
 
 
 		if (n == 37||n==38) {

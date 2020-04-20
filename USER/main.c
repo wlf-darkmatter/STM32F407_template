@@ -123,7 +123,7 @@ void STM32_init(void) {
 	res=PictureFile_Init();/*******************************************************************/
 	sprintf(string_buff, "图片读取完毕，共%d个", STM32F407ZET6_info.Picture_totalnum);
 
-	printf("%s\n",string_buff);
+	printf("%s\r\n",string_buff);
 	if(res==0) LCD_ShowString(20, 230, 200, 16, 16, string_buff);
 	piclib_init();/*******************************************************************/
 	
@@ -139,7 +139,7 @@ void STM32_init(void) {
 	LCD_Clear(PURPLE);
 	show_picture("0:/PICTURE/头像.bmp", 1);//显示图片 
 
-	ESP8266_init();/*******************************************************************/
+//	ESP8266_init();/*******************************************************************/
 
 
 	STM32F407ZET6_info.point_COLOR=&POINT_COLOR;
